@@ -6,21 +6,26 @@ mat-card {
  margin-top: 30%;
 }
 button.login-or-signup {
+  color: white;
+  $button-width: 40%;
+  width: $button-width;
+  left: (100 - $button-width) / 2;
+}
+mat-card, button {
   border-radius: 0px 20px 0px 20px;
-  left: 30%;
-  width:40%;
 }
 
 
 @media only screen and (min-width: 768px) {
   mat-card {
-    width: 60%;
+    width: 40%;
     margin-top: 10%;
     margin-right: auto;
     margin-left: auto;
   }
   button.login-or-signup {
-    width: 25%;
-    left: 37.5%
+    $button-width: 30%;
+    width: $button-width;
+    left: (100 - $button-width) / 2;
   }
 }
