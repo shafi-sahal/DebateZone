@@ -6,21 +6,38 @@ mat-card {
  margin-top: 30%;
 }
 button.login-or-signup {
-  border-radius: 0px 20px 0px 20px;
-  left: 30%;
-  width:40%;
+  color: white;
+  $button-width: 40%;
+  width: $button-width;
+  left: (100 - $button-width) / 2;
 }
 
 
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: 480px)  {
   mat-card {
-    width: 60%;
+    width: 50%;
+    margin-top: 10%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  button.login-or-signup {
+    $button-width: 40%;
+    width: $button-width;
+    left: (100 - $button-width) / 2;
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  mat-card {
+    width: 40%;
     margin-top: 10%;
     margin-right: auto;
     margin-left: auto;
   }
   button.login-or-signup {
-    width: 25%;
-    left: 37.5%
+    $button-width: 30%;
+    width: $button-width;
+    left: (100 - $button-width) / 2;
   }
 }
+
