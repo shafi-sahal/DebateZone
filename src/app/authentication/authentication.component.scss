@@ -11,12 +11,23 @@ button.login-or-signup {
   width: $button-width;
   left: (100 - $button-width) / 2;
 }
-mat-card, button {
-  border-radius: 0px 20px 0px 20px;
+
+
+@media only screen and (min-width: 480px)  {
+  mat-card {
+    width: 50%;
+    margin-top: 10%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  button.login-or-signup {
+    $button-width: 40%;
+    width: $button-width;
+    left: (100 - $button-width) / 2;
+  }
 }
 
-
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: 992px) {
   mat-card {
     width: 40%;
     margin-top: 10%;
@@ -29,3 +40,4 @@ mat-card, button {
     left: (100 - $button-width) / 2;
   }
 }
+

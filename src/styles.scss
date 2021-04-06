@@ -2,3 +2,6 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.mat-card.mat-card, button.mat-raised-button {
+  border-radius: 0px 20px 0px 20px;
+}
