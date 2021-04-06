@@ -1,0 +1,26 @@
+body {
+  background-image: linear-gradient(to top right, #884dff, #eee6ff);
+  overflow: auto;
+}
+mat-card {
+ margin-top: 30%;
+}
+button.login-or-signup {
+  border-radius: 0px 20px 0px 20px;
+  left: 30%;
+  width:40%;
+}
+
+
+@media only screen and (min-width: 768px) {
+  mat-card {
+    width: 60%;
+    margin-top: 10%;
+    margin-right: auto;
+    margin-left: auto;
+  }
+  button.login-or-signup {
+    width: 25%;
+    left: 37.5%
+  }
+}
