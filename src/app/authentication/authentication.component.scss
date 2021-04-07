@@ -4,12 +4,20 @@ body {
 }
 mat-card {
  margin-top: 30%;
+ padding-top: 0%;
+ padding-left: 0%;
+ padding-right: 0%;
 }
 button.login-or-signup {
+  display: block;
   color: white;
+
   $button-width: 40%;
   width: $button-width;
   left: (100 - $button-width) / 2;
+}
+app-authentication-header {
+  display: flex;
 }
 
 
@@ -38,6 +46,9 @@ button.login-or-signup {
     $button-width: 30%;
     width: $button-width;
     left: (100 - $button-width) / 2;
+  }
+  button.login-or-signup:hover {
+    background-color: #aa80ff;
   }
 }
 
