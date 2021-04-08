@@ -1,18 +1,16 @@
-$mat-card-height-for-mobile: 20%;
-$mat-card-height-for-992px: 30%;
-$mat-card-height-for-480px: 40%;
-
 body {
   background-image: linear-gradient(to top right, #884dff, #eee6ff);
   overflow: auto;
-  height: 100%;
 }
 mat-card {
  margin-top: 30%;
+ margin-right: 5%;
+ margin-left: 5%;
+
  padding-top: 0%;
  padding-left: 0%;
  padding-right: 0%;
- height: $mat-card-height-for-mobile;
+
 
 }
 button.login-or-signup {
@@ -24,22 +22,17 @@ button.login-or-signup {
 }
 app-authentication-header {
   display: flex;
-  height: $mat-card-height-for-mobile * 2;
+  height: 70px;
 }
 
 
-@media only screen and (min-width: 480px)  {
+@media only screen and (min-width: 568px) and (orientation: landscape) {
 
   mat-card {
     width: 50%;
     margin-top: 10%;
     margin-left: auto;
     margin-right: auto;
-    height: $mat-card-height-for-480px;
-
-  }
-  app-authentication-header {
-    display: flex;
   }
   button.login-or-signup {
     $button-width: 40%;
@@ -54,11 +47,11 @@ app-authentication-header {
     margin-top: 10%;
     margin-right: auto;
     margin-left: auto;
-    height: $mat-card-height-for-992px;
+
   }
   app-authentication-header {
     display: flex;
-    height: $mat-card-height-for-mobile * 2;
+
   }
   button.login-or-signup {
     $button-width: 30%;
