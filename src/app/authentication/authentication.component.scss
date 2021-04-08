@@ -4,24 +4,30 @@ body {
 }
 mat-card {
  margin-top: 30%;
+ margin-right: 5%;
+ margin-left: 5%;
+
  padding-top: 0%;
  padding-left: 0%;
  padding-right: 0%;
+
+
 }
 button.login-or-signup {
   display: block;
   color: white;
-
   $button-width: 40%;
   width: $button-width;
   left: (100 - $button-width) / 2;
 }
 app-authentication-header {
   display: flex;
+  height: 70px;
 }
 
 
-@media only screen and (min-width: 480px)  {
+@media only screen and (min-width: 568px) and (orientation: landscape) {
+
   mat-card {
     width: 50%;
     margin-top: 10%;
@@ -41,6 +47,11 @@ app-authentication-header {
     margin-top: 10%;
     margin-right: auto;
     margin-left: auto;
+
+  }
+  app-authentication-header {
+    display: flex;
+
   }
   button.login-or-signup {
     $button-width: 30%;

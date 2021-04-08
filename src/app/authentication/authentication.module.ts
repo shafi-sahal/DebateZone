@@ -7,10 +7,11 @@ import {MatInputModule} from '@angular/material/input';
 import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
 import { AuthenticationHeaderComponent } from './authentication-header/authentication-header.component';
+import { LoginComponent } from './login/login.component';
 
 
 @NgModule({
-  declarations: [AuthenticationComponent, AuthenticationHeaderComponent],
+  declarations: [AuthenticationComponent, AuthenticationHeaderComponent, LoginComponent],
   imports: [
     CommonModule,
     AuthenticationRoutingModule,
