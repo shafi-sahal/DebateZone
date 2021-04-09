@@ -2,7 +2,7 @@
 @include mat-core();
 $primary: (
   app-deep-purple: #884dff,
-  contrast: (app-purple: #000000)
+  contrast: (app-deep-purple: #000000)
 );
 
 $app-primary: mat-palette($primary, app-deep-purple);

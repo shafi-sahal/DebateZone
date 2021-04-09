@@ -1,9 +1,13 @@
 @use '../../../assets/colors';
 
+.inputs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
 ::ng-deep mat-form-field {
-  width: 90%;
-  margin-left: 5%;
-  margin-right: 5%;
+  width: 80%;
 
   .mat-form-field-underline {
     border-width: 1px;

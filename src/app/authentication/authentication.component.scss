@@ -4,10 +4,13 @@ body {
   background-image: linear-gradient(to top right, colors.$deep-purple, colors.$light-purple);
   overflow: auto;
 }
+.login-or-signup-form {
+  display: flex;
+  justify-content: center;
+  align-items:center;
+  height: 100%;
+}
 mat-card {
- margin-top: 30%;
- margin-right: 5%;
- margin-left: 5%;
  padding-top: 0%;
  padding-left: 0%;
  padding-right: 0%;
@@ -30,9 +33,6 @@ app-header {
 
   mat-card {
     width: 50%;
-    margin-top: 10%;
-    margin-left: auto;
-    margin-right: auto;
   }
   button.login-or-signup {
     $button-width: 40%;
@@ -44,10 +44,6 @@ app-header {
 @media only screen and (min-width: 992px) {
   mat-card {
     width: 40%;
-    margin-top: 10%;
-    margin-right: auto;
-    margin-left: auto;
-
   }
   app-authentication-header {
     display: flex;
