@@ -1,5 +1,13 @@
-.input-class {
-  width: 100%;
-  margin-right: auto;
-  margin-left: auto;
+@use '../../../assets/colors';
+
+::ng-deep mat-form-field {
+  width: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
+
+  .mat-form-field-underline {
+    border-width: 1px;
+    border-style: solid;
+    border-color: colors.$deep-purple-5;
+  }
 }

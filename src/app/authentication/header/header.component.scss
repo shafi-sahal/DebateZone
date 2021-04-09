@@ -1,6 +1,8 @@
+@use '../../../assets/colors';
+
 button.mat-stroked-button {
   width: 50%;
-  background-color: #ddccff;
+  background-color: colors.$deep-purple-1;
   font-size: 100%;
   border-radius: 0px 0px 0px 0px;
 }

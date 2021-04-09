@@ -1,5 +1,7 @@
+@use '../../assets/colors';
+
 body {
-  background-image: linear-gradient(to top right, #884dff, #eee6ff);
+  background-image: linear-gradient(to top right, colors.$deep-purple, colors.$light-purple);
   overflow: auto;
 }
 mat-card {
@@ -9,8 +11,7 @@ mat-card {
  padding-top: 0%;
  padding-left: 0%;
  padding-right: 0%;
-
-
+ width: 90%;
 }
 button.login-or-signup {
   display: block;
@@ -58,7 +59,7 @@ app-header {
     left: (100 - $button-width) / 2;
   }
   button.login-or-signup:hover {
-    background-color: #aa80ff;
+    background-color: colors.$deep-purple-4;
   }
 }
 
