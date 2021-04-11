@@ -1,6 +1,6 @@
 @use '../../../assets/colors';
 
-.inputs {
+.inputs-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,3 +17,11 @@
     border-color: colors.$deep-purple-5;
   }
 }
+.password {
+  display: flex;
+  flex-direction: row;
+}
+mat-icon {
+  cursor: pointer;
+}
+

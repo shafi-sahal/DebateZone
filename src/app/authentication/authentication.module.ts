@@ -6,6 +6,8 @@ import { AuthenticationComponent } from './authentication.component';
 import {MatInputModule} from '@angular/material/input';
 import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+
 import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './login/login.component';
 
@@ -17,7 +19,8 @@ import { LoginComponent } from './login/login.component';
     AuthenticationRoutingModule,
     MatInputModule,
     MatCardModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule
   ]
 })
 export class AuthenticationModule { }
