@@ -10,11 +10,12 @@ body {
   align-items:center;
   height: 100%;
 }
-mat-card {
+.mat-card {
  padding-top: 0%;
  padding-left: 0%;
  padding-right: 0%;
  width: 90%;
+ box-shadow: -20px 20px 20px colors.$deep-purple-5;
 }
 button.login-or-signup {
   display: block;
@@ -31,7 +32,7 @@ app-header {
 
 @media only screen and (min-width: 568px) and (orientation: landscape) {
 
-  mat-card {
+  .mat-card {
     width: 50%;
   }
   button.login-or-signup {
@@ -42,7 +43,7 @@ app-header {
 }
 
 @media only screen and (min-width: 992px) {
-  mat-card {
+  .mat-card {
     width: 40%;
   }
   app-authentication-header {
