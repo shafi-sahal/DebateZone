@@ -10,10 +10,11 @@ import {MatIconModule} from '@angular/material/icon';
 
 import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './login/login.component';
+import { SignupComponent } from './signup/signup.component';
 
 
 @NgModule({
-  declarations: [AuthenticationComponent, HeaderComponent, LoginComponent],
+  declarations: [AuthenticationComponent, HeaderComponent, LoginComponent, SignupComponent],
   imports: [
     CommonModule,
     AuthenticationRoutingModule,
