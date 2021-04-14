@@ -9,13 +9,12 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 
 import { HeaderComponent } from './header/header.component';
-import { LoginComponent } from './login/login.component';
-import { SignupComponent } from './signup/signup.component';
+import { CredentialsComponent } from './credentials/credentials.component';
 import { CredentialsService } from '../services/credentials.service';
 
 
 @NgModule({
-  declarations: [AuthenticationComponent, HeaderComponent, LoginComponent, SignupComponent],
+  declarations: [AuthenticationComponent, HeaderComponent, CredentialsComponent],
   imports: [
     CommonModule,
     AuthenticationRoutingModule,
