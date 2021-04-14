@@ -11,6 +11,7 @@ import {MatIconModule} from '@angular/material/icon';
 import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
+import { CredentialsService } from '../services/credentials.service';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { SignupComponent } from './signup/signup.component';
     MatCardModule,
     MatButtonModule,
     MatIconModule
-  ]
+  ],
+  providers: [CredentialsService]
 })
 export class AuthenticationModule { }

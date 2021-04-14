@@ -5,8 +5,8 @@
 
   <mat-form-field>
     <div class="password">
-      <input matInput type="password" placeholder="Password">
-      <mat-icon>visibility</mat-icon>
+      <input matInput [type]="credentialsService.getInputType()" placeholder="Password">
+      <mat-icon (click)="credentialsService.toggleVisibility()">{{credentialsService.getVisibilityIcon()}}</mat-icon>
     </div>
   </mat-form-field>
 </div>
