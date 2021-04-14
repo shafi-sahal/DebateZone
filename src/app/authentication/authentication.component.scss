@@ -1,7 +1,7 @@
 @use '../../assets/colors';
 
 body {
-  background-image: linear-gradient(to top right, colors.$deep-purple, colors.$light-purple);
+  background-image: linear-gradient(to top right, colors.$primary-deep, colors.$primary-light);
   overflow: auto;
 }
 .login-or-signup-form {
@@ -15,7 +15,8 @@ body {
  padding-left: 0%;
  padding-right: 0%;
  width: 90%;
- box-shadow: -20px 20px 20px colors.$deep-purple-5;
+ box-shadow: -20px 20px 20px colors.$primary-5;
+
 }
 button.login-or-signup {
   display: block;
@@ -56,7 +57,7 @@ app-header {
     left: (100 - $button-width) / 2;
   }
   button.login-or-signup:hover {
-    background-color: colors.$deep-purple-4;
+    background-color: colors.$primary-4;
   }
 }
 
