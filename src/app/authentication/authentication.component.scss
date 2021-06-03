@@ -33,7 +33,7 @@ app-header {
 }
 
 // default screen width * default mat card width percentage
-$mat-card-constant: 1294 * 45%;
+$mat-card-constant: 640 * 90%;
 @media only screen and (min-width: 640px) and (max-width: 667px) and (orientation: landscape)  {
   .mat-card {
     width: $mat-card-constant / 640;
@@ -57,6 +57,16 @@ $mat-card-constant: 1294 * 45%;
 @media only screen and (min-width: 812px) and (max-width: 823px) and (orientation: landscape)  {
   .mat-card {
     width: $mat-card-constant / 812;
+  }
+}
+@media only screen and (min-width: 823px) and (max-width: 896px) and (orientation: landscape)  {
+  .mat-card {
+    width: $mat-card-constant / 823;
+  }
+}
+@media only screen and (min-width: 896px)and (orientation: landscape)  {
+  .mat-card {
+    width: $mat-card-constant / 896;
   }
 }
 
