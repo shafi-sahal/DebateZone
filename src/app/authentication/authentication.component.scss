@@ -44,9 +44,21 @@ app-header {
   }
 }
 
-@media only screen and (min-width: 731px) and (max-width: 736px) and (orientation: landscape)  {
+@media only screen and (min-width: 731px) and (max-width: 780px) and (orientation: landscape)  {
   .mat-card {
     width: 79%;
+  }
+}
+
+@media only screen and (min-width: 780px) and (max-width: 812px) and (orientation: landscape)  {
+  .mat-card {
+    width: 74%;
+  }
+}
+
+@media only screen and (min-width: 812px) and (max-width: 823px) and (orientation: landscape)  {
+  .mat-card {
+    width: 71%;
   }
 }
 
