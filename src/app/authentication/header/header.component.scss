@@ -1,0 +1,17 @@
+@use '../../../assets/colors';
+
+.mat-button-toggle-group {
+  display: flex;
+  width: 100%;
+  background-color: colors.$primary-2;
+}
+.mat-button-toggle {
+  display: flex;
+  padding-left: 0%;
+  width: 50%;
+  font-size: 20px;
+  border-radius: 0px 0px 0px 0px;
+}
+.mat-button-toggle-group, .top-right-rounded {
+  border-radius: 0px 20px 0px 0px;
+}

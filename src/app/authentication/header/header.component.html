@@ -1,0 +1,4 @@
+<mat-button-toggle-group [value]="false">
+  <mat-button-toggle [value]="false" (change)="emitIsSignup($event.value)">Login</mat-button-toggle>
+  <mat-button-toggle [value]="true" (change)="emitIsSignup($event.value)" class="top-right-rounded">Sign Up</mat-button-toggle>
+</mat-button-toggle-group>

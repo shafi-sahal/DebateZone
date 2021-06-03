@@ -1,0 +1,20 @@
+@use '~@angular/material' as mat;
+@include mat.core();
+$primary: (
+  app-deep-purple: #884dff,
+  contrast: (app-deep-purple: #000000)
+);
+
+$app-primary: mat.define-palette($primary, app-deep-purple);
+$app-accent:  mat.define-palette(mat.$pink-palette, 500, 900, A100);
+$app-warn:    mat.define-palette(mat.$deep-orange-palette);
+
+$app-theme: mat.define-light-theme((
+  color: (
+    primary: $app-primary,
+    accent: $app-accent,
+    warn: $app-warn
+  )
+));
+
+@include mat.all-component-themes($app-theme);

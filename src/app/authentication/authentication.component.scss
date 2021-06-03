@@ -1,0 +1,79 @@
+@use '../../assets/colors';
+@use '../../assets/screens';
+
+body {
+  display: block;
+  background-image: linear-gradient(to top right, #{colors.$primary-deep}, colors.$primary-light);
+  background-attachment: scroll;
+  overflow: auto;
+}
+body.long-height {
+  height: 700px;
+}
+body.normal-height {
+  height: 100%;
+}
+.login-or-signup-form {
+  display: flex;
+  justify-content: center;
+  align-items:center;
+  height: 100%;
+}
+.mat-card {
+ padding-top: 0%;
+ padding-left: 0%;
+ padding-right: 0%;
+ width: 90%;
+ box-shadow: -20px 20px 20px colors.$primary-5, 20px 20px 20px colors.$primary-4;
+}
+
+app-header {
+  display: flex;
+  height: 50px;
+}
+
+@media only screen and (min-width: 640px) and (max-width: 667px) and (orientation: landscape)  {
+  .mat-card {
+    width: 90%;
+  }
+}
+
+@media only screen and (min-width: 667px) and (max-width: 780px) and (orientation: landscape) {
+  .mat-card {
+    width: 86%;
+  }
+}
+
+@media only screen and (min-width: 1280px) {
+  .body-long-height {
+    height: 100%;
+  }
+}
+
+@media only screen and (min-width: 1280px) {
+  .mat-card {
+    width: 40%;
+  }
+}
+
+@media only screen and (min-width: 1294px) {
+  .mat-card {
+    width: 45%;
+  }
+}
+
+@media only screen and (min-width: 1536px) {
+  .mat-card {
+    width: 35%;
+  }
+}
+
+@media only screen and (min-width: 1818px) {
+  .mat-card {
+    width: 30%;
+  }
+  body.long-height {
+    height: 100%;
+  }
+}
+

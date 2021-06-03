@@ -1,0 +1,20 @@
+/* You can add global styles to this file, and also import other style files */
+@use './assets/colors';
+@use './assets/border-radius';
+
+$desktop-min-width: 768px;
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.mat-card.mat-card, button.diagonal-rounded-large, .custom-dialog > mat-dialog-container {
+  border-radius: border-radius.$large;
+}
+button.diagonal-rounded-small {
+  border-radius: border-radius.$small;
+}
+.mat-button-toggle.mat-button-toggle {
+  background-color: colors.$primary-1;
+}
+.mat-button-toggle-checked.mat-button-toggle-checked {
+  background-color: colors.$primary-2;
+}

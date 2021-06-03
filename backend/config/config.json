@@ -1,0 +1,9 @@
+{
+  "development": {
+    "username": "shafi",
+    "password": "shafi",
+    "database": "debatezone",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
