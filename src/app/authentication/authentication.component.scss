@@ -38,6 +38,12 @@ app-header {
   }
 }
 
+@media only screen and (min-width: 667) and (max-width: 731px) and (orientation: landscape)  {
+  .mat-card {
+    width: 90%;
+  }
+}
+
 @media only screen and (min-width: 667px) and (max-width: 780px) and (orientation: landscape) {
   .mat-card {
     width: 86%;
