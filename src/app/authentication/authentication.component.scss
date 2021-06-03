@@ -32,61 +32,54 @@ app-header {
   height: 50px;
 }
 
+// default screen width * default mat card width percentage
+$mat-card-constant: 1294 * 45%;
 @media only screen and (min-width: 640px) and (max-width: 667px) and (orientation: landscape)  {
   .mat-card {
-    width: 90%;
+    width: $mat-card-constant / 640;
   }
 }
-
 @media only screen and (min-width: 667px) and (max-width: 731px) and (orientation: landscape)  {
   .mat-card {
-    width: 87%;
+    width: $mat-card-constant / 667;
   }
 }
-
 @media only screen and (min-width: 731px) and (max-width: 780px) and (orientation: landscape)  {
   .mat-card {
-    width: 79%;
+    width: $mat-card-constant / 731;
   }
 }
-
 @media only screen and (min-width: 780px) and (max-width: 812px) and (orientation: landscape)  {
   .mat-card {
-    width: 74%;
+    width: $mat-card-constant / 780;
   }
 }
-
 @media only screen and (min-width: 812px) and (max-width: 823px) and (orientation: landscape)  {
   .mat-card {
-    width: 71%;
+    width: $mat-card-constant / 812;
   }
 }
-
 
 @media only screen and (min-width: 1280px) {
   .body-long-height {
     height: 100%;
   }
 }
-
 @media only screen and (min-width: 1280px) {
   .mat-card {
     width: 40%;
   }
 }
-
 @media only screen and (min-width: 1294px) {
   .mat-card {
     width: 45%;
   }
 }
-
 @media only screen and (min-width: 1536px) {
   .mat-card {
     width: 35%;
   }
 }
-
 @media only screen and (min-width: 1818px) {
   .mat-card {
     width: 30%;
