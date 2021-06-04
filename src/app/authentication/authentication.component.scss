@@ -32,33 +32,34 @@ app-header {
   height: 50px;
 }
 
+$mat-card-constant: 1294 * 45%;
 
-@media only screen and (min-width: 1280px) {
-  .body-long-height {
-    height: 100%;
-  }
-}
-@media only screen and (min-width: 1280px) {
+@media only screen and (min-width: 768px) {
   .mat-card {
-    width: 40%;
-  }
-}
-@media only screen and (min-width: 1294px) {
-  .mat-card {
-    width: 45%;
-  }
-}
-@media only screen and (min-width: 1536px) {
-  .mat-card {
-    width: 35%;
-  }
-}
-@media only screen and (min-width: 1818px) {
-  .mat-card {
-    width: 30%;
-  }
-  body.long-height {
-    height: 100%;
+    width: $mat-card-constant / 768;
   }
 }
 
+@media only screen and (min-width: 1024px) {
+  .mat-card {
+    width: $mat-card-constant / 1024;
+  }
+}
+
+@media only screen and (min-width: 1280px) {
+  .mat-card {
+    width: $mat-card-constant / 1280;
+  }
+}
+
+@media only screen and (min-width: 1920px) {
+  .mat-card {
+    width: $mat-card-constant / 1920;
+  }
+}
+
+@media only screen and (min-width: 2560px) {
+  .mat-card {
+    width: $mat-card-constant / 2560;
+  }
+}
