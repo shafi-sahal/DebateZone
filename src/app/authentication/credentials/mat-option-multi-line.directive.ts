@@ -21,7 +21,7 @@ export class MatOptionMultiLineDirective implements AfterViewInit {
     */
     const countryContainer = matOptionText.childNodes[0];
     const countryParagraph = countryContainer.childNodes[0] as HTMLParagraphElement;
-    const countryName = countryParagraph.innerText;
+    const countryName = countryParagraph.textContent;
 
     if(countryName === 'Saint Vincent and the Grenadines') {
       countryParagraph.style['width'] = 'calc(100% - 60px)';
