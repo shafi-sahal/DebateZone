@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import { Subject } from 'rxjs';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-authentication',
@@ -7,15 +7,18 @@ import { Subject } from 'rxjs';
   styleUrls: ['./authentication.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AuthenticationComponent implements OnInit {
+export class AuthenticationComponent implements OnInit, OnDestroy {
   isSignUp = new Subject<boolean>();
   classBodyHeight = 'normal-height';
+  private subscriptions = new Subscription();
 
   ngOnInit(): void {
-    this.isSignUp.subscribe(isSignUp => {
-      this.classBodyHeight = isSignUp ? 'long-height' : 'normal-height';
-    });
+    this.subscriptions.add(this.isSignUp.subscribe(isSignUp =>
+      this.classBodyHeight = isSignUp ? 'long-height' : 'normal-height')
+    );
   }
 
   setIsSignup(isSignUp: boolean): void { this.isSignUp.next(isSignUp); }
+
+  ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
 }
