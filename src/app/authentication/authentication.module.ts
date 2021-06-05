@@ -11,6 +11,7 @@ import { AngularMaterialModule } from '../angular-material.module';
 import { AuthenticationService } from './authentication.service';
 import { MatSelectSearchComponent } from '../shared/components/mat-select-search/mat-select-search.component';
 import { MatSelectSearchModule } from 'dist/mat-select-search';
+import { MatOptionMultiLineDirective } from './credentials/mat-option-multi-line.directive';
 
 
 @NgModule({
@@ -19,8 +20,8 @@ import { MatSelectSearchModule } from 'dist/mat-select-search';
     HeaderComponent,
     CredentialsComponent,
     MatSelectSearchComponent,
-    FocusInvalidInputDirective
-
+    FocusInvalidInputDirective,
+    MatOptionMultiLineDirective
   ],
   imports: [
     CommonModule,
