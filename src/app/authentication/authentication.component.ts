@@ -15,7 +15,6 @@ export class AuthenticationComponent implements OnInit {
     this.isSignUp.subscribe(isSignUp => {
       this.classBodyHeight = isSignUp ? 'long-height' : 'normal-height';
     });
-    console.log(document.getElementById('card')?.offsetHeight);
   }
 
   setIsSignup(isSignUp: boolean): void { this.isSignUp.next(isSignUp); }

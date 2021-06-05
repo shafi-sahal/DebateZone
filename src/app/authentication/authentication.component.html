@@ -1,6 +1,6 @@
 <body [class]="classBodyHeight">
   <div class="login-or-signup-form">
-    <mat-card id="card">
+    <mat-card appApplyRenderer>
         <app-header (isSignup)="setIsSignup($event)"></app-header>
         <app-credentials [isSignUp]="isSignUp" ></app-credentials>
     </mat-card>
