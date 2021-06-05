@@ -10,7 +10,7 @@ export class RendererDirective implements OnInit {
   onResize(): void {
     const screenWidth = window.innerWidth;
     const smallestMobileLandScapeScreenWidth = 601;
-    const matCardWidthPercentage = screenWidth < smallestMobileLandScapeScreenWidth ? '90%' : '582px';
-    this.renderer.setStyle(this.matCard.nativeElement, 'width', matCardWidthPercentage);
+    const matCardWidth = screenWidth < smallestMobileLandScapeScreenWidth ? '90%' : '582px';
+    this.renderer.setStyle(this.matCard.nativeElement, 'width', matCardWidth);
   }
 }
