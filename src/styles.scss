@@ -2,8 +2,6 @@
 @use './assets/colors';
 @use './assets/border-radius';
 
-$desktop-min-width: 768px;
-
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mat-card.mat-card, button.diagonal-rounded-large, .custom-dialog > mat-dialog-container {
