@@ -45,9 +45,9 @@ export class MatSelectSearchComponent implements OnInit, OnDestroy {
   }
 
   filterList(event: Event): void {
-    const inputEvent = event as InputEvent;
     this.hasFilteredBefore = true;
     this.isLoading = true;
+    const inputEvent = event as InputEvent;
     this.filteredList = this.searcher.filterList(inputEvent);
 
     if (!this.filteredList) {
