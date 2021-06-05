@@ -5,14 +5,14 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mat-card.mat-card, button.diagonal-rounded-large, .custom-dialog > mat-dialog-container {
-  border-radius: border-radius.$large;
+  border-radius: #{border-radius.$large};
 }
 button.diagonal-rounded-small {
-  border-radius: border-radius.$small;
+  border-radius: #{border-radius.$small};
 }
 .mat-button-toggle.mat-button-toggle {
-  background-color: colors.$primary-1;
+  background-color: #{colors.$primary-1};
 }
 .mat-button-toggle-checked.mat-button-toggle-checked {
-  background-color: colors.$primary-2;
+  background-color: #{colors.$primary-2};
 }

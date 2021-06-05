@@ -3,8 +3,7 @@
 
 body {
   display: block;
-  background-image: linear-gradient(to top right, #{colors.$primary-deep}, colors.$primary-light);
-  background-attachment: scroll;
+  background-image: linear-gradient(to top right, #{colors.$primary-deep}, #{colors.$primary-light});
   overflow: auto;
 }
 body.long-height {
@@ -24,7 +23,7 @@ body.normal-height {
  padding-left: 0%;
  width: 90%;
  padding-right: 0%;
- box-shadow: -20px 20px 20px colors.$primary-5, 20px 20px 20px colors.$primary-4;
+ box-shadow: -20px 20px 20px #{colors.$primary-5}, 20px 20px 20px #{colors.$primary-4};
 }
 
 app-header {
