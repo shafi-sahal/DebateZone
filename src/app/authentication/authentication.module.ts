@@ -11,7 +11,6 @@ import { AngularMaterialModule } from '../angular-material.module';
 import { AuthenticationService } from './authentication.service';
 import { MatSelectSearchComponent } from '../shared/components/mat-select-search/mat-select-search.component';
 import { MatSelectSearchModule } from 'dist/mat-select-search';
-import { RendererDirective } from './renderer.directive';
 
 
 @NgModule({
@@ -20,8 +19,8 @@ import { RendererDirective } from './renderer.directive';
     HeaderComponent,
     CredentialsComponent,
     MatSelectSearchComponent,
-    FocusInvalidInputDirective,
-    RendererDirective
+    FocusInvalidInputDirective
+
   ],
   imports: [
     CommonModule,

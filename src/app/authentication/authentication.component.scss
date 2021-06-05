@@ -22,6 +22,7 @@ body.normal-height {
 .mat-card {
  padding-top: 0%;
  padding-left: 0%;
+ width: 90%;
  padding-right: 0%;
  box-shadow: -20px 20px 20px colors.$primary-5, 20px 20px 20px colors.$primary-4;
 }
@@ -29,6 +30,12 @@ body.normal-height {
 app-header {
   display: flex;
   height: 50px;
+}
+
+@media only screen and (min-width: 601px) {
+  .mat-card {
+    width: 582px;
+  }
 }
 
 @media only screen and (min-width: 568px) and (max-height: 414px) and (orientation: landscape) {
