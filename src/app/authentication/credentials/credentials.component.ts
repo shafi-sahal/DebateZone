@@ -111,6 +111,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
       this.inputDetails = this.inputDetailsSignUp;
       this.buttonText = 'Sign Up';
       this.countryName?.setValue(this.country.name);
+      this.classMatSelectTrigger = 'valid';
       this.password?.setValidators(Validators.minLength(8));
     } else {
       this.inputDetails = this.inputDetailsLogin;
