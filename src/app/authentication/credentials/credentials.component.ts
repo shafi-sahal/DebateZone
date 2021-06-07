@@ -20,7 +20,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   @ViewChild('dialCodeInput') dialCodeInput!: ElementRef;
   buttonText = 'login';
   countries = countries;
-  country = { name: 'India', dialCode: '+91', code: 'IN' };
+  _country = { name: 'India', dialCode: '+91', code: 'IN' };
   filteredCountries: Record<string, string>[] = countries;
   labelUnKnownDialCode = 'Unknown Dial Code';
   classMatSelectTrigger = 'valid';
@@ -57,8 +57,8 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     name: ['',  [Validators.required, Validators.pattern(this.regexName)]],
     username: ['', [Validators.required, validateUsername()]],
     email: ['', [Validators.required, Validators.pattern(this.regexEmail)]],
-    countryName: ['', [Validators.required, Validators.pattern(this.regexCountry)]],
-    mobile: ['', [Validators.required, validateMobile(this.country.code as CountryCode)]],
+    country: ['', [Validators.required, Validators.pattern(this.regexCountry)]],
+    mobile: ['', [Validators.required, validateMobile(this._country.code as CountryCode)]],
     password: ['', Validators.required]
   });
 
@@ -101,7 +101,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   get name(): AbstractControl | null { return this.form.get('name'); }
   get username(): AbstractControl | null { return this.form.get('username'); }
   get email(): AbstractControl | null { return this.form.get('email'); }
-  get countryName(): AbstractControl | null { return this.form.get('countryName'); }
+  get country(): AbstractControl | null { return this.form.get('country'); }
   get mobile(): AbstractControl | null { return this.form.get('mobile'); }
   get password(): AbstractControl | null { return this.form.get('password'); }
 
@@ -110,7 +110,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     if (isSignUp) {
       this.inputDetails = this.inputDetailsSignUp;
       this.buttonText = 'Sign Up';
-      this.countryName?.setValue(this.country.name);
+      this.country?.setValue(this._country.name);
       this.classMatSelectTrigger = 'valid';
       this.password?.setValidators(Validators.minLength(8));
     } else {
@@ -121,18 +121,12 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSubmit(): void {
-    if (this.form.invalid) { return; }
-    this.authenticationService.user = this.form.value;
-    this.authenticationService.addUser();
-  }
-
   onCountrySelectionChange(countryName: string): void {
     const country = this.countries.find(country => country.name === countryName);
     if (country) {
-      this.country = country;
+      this._country = country;
       this.changeMobileValidator();
-      this.countryName?.setValue(this.country.name);
+      this.country?.setValue(this._country.name);
     }
     this.classDialCode = 'dial-code-normal';
   }
@@ -146,28 +140,35 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     const dialCode = '+' + inputValue;
     const country = this.countries.find(country => country.dialCode === dialCode.trim());
     if (country) {
-      this.country = country;
+      this._country = country;
       this.changeMobileValidator();
-      this.countryName?.setValue(this.country.name);
+      this.country?.setValue(this._country.name);
       this.classMatSelectTrigger = 'valid';
     } else {
-      this.countryName?.setValue(this.labelUnKnownDialCode);
+      this.country?.setValue(this.labelUnKnownDialCode);
       this.classMatSelectTrigger = 'invalid';
     }
-    this.countryName?.markAsDirty();
+    this.country?.markAsDirty();
   }
 
   onCountryOpenedChanged(): void {
-    if (this.countryName?.value === this.labelUnKnownDialCode) {
-      this.dialCodeInput.nativeElement.value = this.country.dialCode.replace('+', '');
-      this.countryName.setValue(this.country.name);
+    if (this.country?.value === this.labelUnKnownDialCode) {
+      this.dialCodeInput.nativeElement.value = this._country.dialCode.replace('+', '');
+      this.country.setValue(this._country.name);
       this.classMatSelectTrigger = 'valid';
     }
   }
 
   changeMobileValidator(): void {
-    this.mobile?.setValidators([Validators.required, validateMobile(this.country.code as CountryCode)]);
+    this.mobile?.setValidators([Validators.required, validateMobile(this._country.code as CountryCode)]);
     this.mobile?.updateValueAndValidity();
+  }
+
+  onSubmit(): void {
+    if (this.form.invalid) { return; }
+    this.authenticationService.user = this.form.value;
+    this.authenticationService.countryCode = this._country.code;
+    this.authenticationService.addUser();
   }
 
   ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
