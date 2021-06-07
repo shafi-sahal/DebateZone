@@ -35,7 +35,7 @@ export function validateMobile(countryCode: CountryCode): ValidatorFn {
       const isValid =  mobileParsed.isValid() && mobileParsed.country === countryCode;
       if(!isValid) { return { invalidMobile: true }; }
     } catch {
-      return { unknownError: true };
+      return { invalidMobile: true };
     }
 
     return null;
