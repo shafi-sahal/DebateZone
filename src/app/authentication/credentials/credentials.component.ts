@@ -147,6 +147,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     } else {
       this.country?.setValue(this.labelUnKnownDialCode);
       this.classMatSelectTrigger = 'invalid';
+      if (this.mobile?.value) { this.mobile?.setErrors({ invalidMobile: true }); }
     }
     this.country?.markAsDirty();
   }
