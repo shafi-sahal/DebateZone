@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 import { Subscription } from 'rxjs';
 import { Searcher } from './searcher.service';
@@ -24,10 +25,12 @@ export class MatSelectSearchComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject(MatSelect) private matSelect: MatSelect,
+    @Inject(MatOption) private matOption: MatOption,
     private searcher: Searcher
     ) { }
 
   ngOnInit(): void {
+    if (this.matOption) { this.matOption.disabled = true; }
     this.fullList = this.list;
     this.searcher.initSearch(this.list, this.searchProperties);
     this.subscriptions
@@ -61,6 +64,11 @@ export class MatSelectSearchComponent implements OnInit, OnDestroy {
       return itemCopy;
     });
     this.filtered.emit(listWithoutConcatedValues);
+  }
+
+  stopPropagationForSpaceBar(event: KeyboardEvent): void {
+    if (event.key === ' ' ) { event.stopPropagation(); }
+    console.log(event.key.charCodeAt(0));
   }
 
   ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
