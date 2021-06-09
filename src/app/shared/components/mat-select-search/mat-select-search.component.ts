@@ -66,9 +66,8 @@ export class MatSelectSearchComponent implements OnInit, OnDestroy {
     this.filtered.emit(listWithoutConcatedValues);
   }
 
-  stopPropagationForSpaceBar(event: KeyboardEvent): void {
-    if (event.key === ' ' ) { event.stopPropagation(); }
-    console.log(event.key.charCodeAt(0));
+  stopCharPropagation(event: KeyboardEvent): void {
+    if (event.key === ' ' || (event.key >= 'a' && event.key <= 'z')) { event.stopPropagation(); }
   }
 
   ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
