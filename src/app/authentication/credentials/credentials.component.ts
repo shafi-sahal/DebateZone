@@ -121,6 +121,10 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     }
   }
 
+  trackFunction(index: number, country: Record<string, string>): string {
+    return country.dialCode;
+  }
+
   onCountrySelectionChange(countryName: string): void {
     const country = this.countries.find(country => country.name === countryName);
     if (country) {
