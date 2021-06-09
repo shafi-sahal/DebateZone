@@ -34,17 +34,18 @@ export class MatSelectSearchComponent implements OnInit, OnDestroy {
     this.fullList = this.list;
     this.searcher.initSearch(this.list, this.searchProperties);
     this.subscriptions
-      .add(this.matSelect.openedChange
-      .subscribe(() => {
-        const input = this.element.nativeElement;
-        input.focus();
-        if ((this.filteredList && this.filteredList.length === 0 && this.hasFilteredBefore) || this.clearSearchInput) {
-          input.value = '';
-          this.filtered.emit(this.fullList);
-        }
-      })
+      .add(this.matSelect.openedChange.subscribe(() => this.configureSearchBar())
       .add(this.filtered.subscribe(() => this.isLoading = false))
     );
+  }
+
+  configureSearchBar(): void {
+    const input = this.element.nativeElement;
+    input.focus();
+    if ((this.filteredList && this.filteredList.length === 0 && this.hasFilteredBefore) || this.clearSearchInput) {
+      input.value = '';
+      this.filtered.emit(this.fullList);
+    }
   }
 
   filterList(event: Event): void {

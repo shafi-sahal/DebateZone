@@ -23,6 +23,7 @@ export class AuthenticationService {
     this.parseMobile();
     this._user.password = this.encrypter.encrypt(this._user.password);
   }
+
   set countryCode(countryCode: string) { this._countryCode = countryCode; }
 
   addUser(): Observable<boolean> {
