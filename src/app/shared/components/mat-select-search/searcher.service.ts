@@ -21,6 +21,7 @@ export class Searcher {
       this.list = list;
       this.searchProperty = searchProperties[0];
     }
+    this.previousFilteredList = this.list;
   }
 
   filterList(inputEvent: InputEvent): Record<string, string>[] | undefined {
