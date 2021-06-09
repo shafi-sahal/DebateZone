@@ -4,7 +4,7 @@ import { Observable, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from './user.model';
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
-//import { Encrypter } from '../shared/services/encrypter.service';
+import { Encrypter } from '../shared/services/encrypter.service';
 
 const BACKEND_URL = environment.apiUrl + '/user/';
 
@@ -15,22 +15,23 @@ export class AuthenticationService {
 
   constructor(
     private http: HttpClient,
-    //private encrypter: Encrypter
+    private encrypter: Encrypter
   ) {}
 
-  set user(user: User) { this._user = user; }
+  set user(user: User) {
+    this._user = user;
+    this.parseMobile();
+    this._user.password = this.encrypter.encrypt(this._user.password);
+  }
   set countryCode(countryCode: string) { this._countryCode = countryCode; }
 
-  addUser(): void{
-    this.parseMobile();
-   // this.encrypter.encrypt(this._user.password);
-    console.log(this._user);
-   /* const userAdded = new Subject<boolean>();
+  addUser(): Observable<boolean> {
+    const userAdded = new Subject<boolean>();
     this.http.post<{message: string}>(BACKEND_URL, this._user).subscribe(response => {
       console.log(response);
       userAdded.next(true);
     });
-    return userAdded.asObservable();*/
+    return userAdded.asObservable();
   }
 
   private parseMobile(): void {
