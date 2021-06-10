@@ -21,6 +21,14 @@ module.exports = sequelize.define("user", {
     type: Sequelize.STRING(255),
     allownull: false
   },
+  country: {
+    type: Sequelize.STRING(44),
+    allownull: false
+  },
+  mobile: {
+    type: Sequelize.STRING(20),
+    allownull: false
+  },
   password: {
     type: Sequelize.STRING(255),
     allownull: false
