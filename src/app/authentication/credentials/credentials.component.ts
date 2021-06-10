@@ -6,6 +6,7 @@ import { AuthenticationService } from '../authentication.service';
 import { countries } from '../../../assets/datasets';
 import { validateUsername, validateMobile } from 'src/app/shared/validator';
 import { CountryCode } from 'libphonenumber-js';
+import { MatSelect } from '@angular/material/select';
 
 @Component({
   selector: 'app-credentials',
@@ -18,9 +19,10 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   @Input() isSignUp = new Observable<boolean>();
   @ViewChild('formDirective') formDirective!: FormGroupDirective;
   @ViewChild('dialCodeInput') dialCodeInput!: ElementRef;
+  @ViewChild('countrySelect') countrySelect!: MatSelect;
   buttonText = 'login';
   countries = countries;
-  _country = { name: 'India', dialCode: '+91', code: 'IN' };
+  country = { name: 'India', dialCode: '+91', code: 'IN' };
   filteredCountries: Record<string, string>[] = countries;
   labelUnknownDialCode = 'Unknown Dial Code';
   classDialCode = 'dial-code-normal';
@@ -50,14 +52,12 @@ export class CredentialsComponent implements OnInit, OnDestroy {
 
   private regexName = /^[a-zA-ZàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ'`-]+[ a-zA-ZàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ'`'-]{4,}$/;
   private regexEmail = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
-  private regexCountry = /^((?!Unknown Dial Code).)*$/;
 
   form = this.formBuilder.group({
     name: ['',  [Validators.required, Validators.pattern(this.regexName)]],
     username: ['', [Validators.required, validateUsername()]],
     email: ['', [Validators.required, Validators.pattern(this.regexEmail)]],
-    country: ['', [Validators.required, Validators.pattern(this.regexCountry)]],
-    mobile: ['', [Validators.required, validateMobile(this._country.code as CountryCode)]],
+    mobile: ['', [Validators.required, validateMobile(this.country.code as CountryCode)]],
     password: ['', Validators.required]
   });
 
@@ -100,19 +100,16 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   get name(): AbstractControl | null { return this.form.get('name'); }
   get username(): AbstractControl | null { return this.form.get('username'); }
   get email(): AbstractControl | null { return this.form.get('email'); }
-  get country(): AbstractControl | null { return this.form.get('country'); }
   get mobile(): AbstractControl | null { return this.form.get('mobile'); }
   get password(): AbstractControl | null { return this.form.get('password'); }
 
   getCountryIndex(countryName: string): number { return this.countries.findIndex(country => country.name === countryName); }
-  private countryIndex = this.getCountryIndex(this._country.name);
 
   initForm(isSignUp: boolean): void {
     this.formDirective.resetForm();
     if (isSignUp) {
       this.inputDetails = this.inputDetailsSignUp;
       this.buttonText = 'Sign Up';
-      this.country?.setValue(this.countryIndex);
       this.password?.setValidators(Validators.minLength(8));
     } else {
       this.inputDetails = this.inputDetailsLogin;
@@ -126,13 +123,11 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     return country.dialCode;
   }
 
-  onCountrySelectionChange(countryIndex: number): void {
-    const country = this.countries[countryIndex];
+  onCountrySelectionChange(countryName: string): void {
+    const country = this.countries.find(country => country.name === countryName);
     if (country) {
-      this._country = country;
-      this.countryIndex = countryIndex;
+      this.country = country;
       this.changeMobileValidator();
-      this.country?.setValue(countryIndex);
     }
     this.classDialCode = 'dial-code-normal';
   }
@@ -144,33 +139,31 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   onDialCodeKeyup(): void {
     const inputValue = this.dialCodeInput.nativeElement.value;
     const dialCode = '+' + inputValue;
-    const countryIndex = this.countries.findIndex(country => country.dialCode === dialCode.trim());
-    if (countryIndex === -1) {
-      this.country?.setValue(this.labelUnknownDialCode);
+    const country = this.countries.find(country => country.dialCode === dialCode.trim());
+    if (country) {
+      this.country = country;
+      this.changeMobileValidator();
+    } else {
+      this.countrySelect.value = this.labelUnknownDialCode;
       if (this.mobile?.value) { this.mobile?.setErrors({ invalidMobile: true }); }
-      return;
     }
-    this.countryIndex = countryIndex;
-    this._country = this.countries[this.countryIndex];
-    this.changeMobileValidator();
-    this.country?.setValue(this.countryIndex);
   }
 
   onCountryOpenedChanged(): void {
-    if (this.country?.value === this.labelUnknownDialCode) {
-      this.dialCodeInput.nativeElement.value = this._country.dialCode.replace('+', '');
-      this.country.setValue(this.countryIndex);
+    if (this.countrySelect.value === this.labelUnknownDialCode) {
+      this.dialCodeInput.nativeElement.value = this.country.dialCode.replace('+', '');
+      this.countrySelect.value = this.country.name;
     }
   }
 
   changeMobileValidator(): void {
-    this.mobile?.setValidators([Validators.required, validateMobile(this._country.code as CountryCode)]);
+    this.mobile?.setValidators([Validators.required, validateMobile(this.country.code as CountryCode)]);
     this.mobile?.updateValueAndValidity();
   }
 
   onSubmit(): void {
     if (this.form.invalid) { return; }
-    this.authenticationService.countryCode = this._country.code;
+    this.authenticationService.countryCode = this.country.code;
     this.authenticationService.user = this.form.value;
     this.authenticationService.addUser();
   }
