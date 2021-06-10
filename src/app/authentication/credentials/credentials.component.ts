@@ -120,7 +120,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   }
 
   trackFunction(index: number, country: Record<string, string>): string {
-    return country.dialCode;
+    return country.code;
   }
 
   onCountrySelectionChange(countryName: string): void {
