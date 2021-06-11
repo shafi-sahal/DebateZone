@@ -8,6 +8,6 @@ exports.createUser = (req, res) => {
         message: 'User added'
       });
     })
-    .catch(error => errorHandler(error, res)
+    .catch(error => errorHandler(res, error)
   );
 }
