@@ -13,6 +13,7 @@ import { MatSelectSearchComponent } from '../shared/components/mat-select-search
 import { MatSelectSearchModule } from 'dist/mat-select-search';
 import { MatOptionMultiLineDirective } from './credentials/mat-option-multi-line.directive';
 import { Encrypter } from '../shared/services/encrypter.service';
+import { SpinnerComponent } from '../shared/components/spinner/spinner.component';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { Encrypter } from '../shared/services/encrypter.service';
     HeaderComponent,
     CredentialsComponent,
     MatSelectSearchComponent,
+    SpinnerComponent,
     FocusInvalidInputDirective,
     MatOptionMultiLineDirective
   ],
