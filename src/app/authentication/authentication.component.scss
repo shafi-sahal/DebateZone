@@ -2,9 +2,10 @@
 @use '../../assets/screen-sizes';
 
 body {
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-image: linear-gradient(to top right, #{colors.$primary-deep}, #{colors.$primary-light});
-  overflow: auto;
 }
 body.long-height {
   height: 100%;
@@ -12,12 +13,7 @@ body.long-height {
 body.normal-height {
   height: 100%;
 }
-.login-or-signup-form {
-  display: flex;
-  justify-content: center;
-  align-items:center;
-  height: 100%;
-}
+
 .mat-card {
  padding-top: 0%;
  padding-left: 0%;
