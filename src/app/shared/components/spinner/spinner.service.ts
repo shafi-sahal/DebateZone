@@ -11,9 +11,8 @@ export class Spinner {
     this.overlayRef = this.overlay.create();
   }
 
-  set message(message: string) { this._message = message; }
-
-  show(): void {
+  show(message = ''): void {
+    this._message = message;
     this.overlayRef.attach(new ComponentPortal(SpinnerComponent));
   }
 
