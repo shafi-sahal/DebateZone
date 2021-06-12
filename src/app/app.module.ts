@@ -9,11 +9,14 @@ import { ErrorComponent } from './shared/components/error/error.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ErrorInterceptor } from './error-interceptor';
 import { MatButtonModule } from '@angular/material/button';
+import { SpinnerComponent } from './shared/components/spinner/spinner.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ErrorComponent
+    ErrorComponent,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,
@@ -21,7 +24,8 @@ import { MatButtonModule } from '@angular/material/button';
     BrowserAnimationsModule,
     HttpClientModule,
     MatDialogModule,
-    MatButtonModule
+    MatButtonModule,
+    MatProgressSpinnerModule
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }],
   bootstrap: [AppComponent]
