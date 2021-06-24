@@ -5,7 +5,7 @@ import { Observable} from 'rxjs';
 import { debounceTime, first, map, switchMap } from 'rxjs/operators';
 import { AuthenticationService } from '../authentication/authentication.service';
 
-@Injectable({providedIn: 'root'})
+@Injectable()
 export class UsernameAvailabilityCheck implements AsyncValidator {
   constructor(private authenticationService: AuthenticationService) {}
 

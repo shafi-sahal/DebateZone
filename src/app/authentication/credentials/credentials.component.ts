@@ -12,7 +12,7 @@ import { MatSelect } from '@angular/material/select';
   selector: 'app-credentials',
   templateUrl: './credentials.component.html',
   styleUrls: ['./credentials.component.scss'],
-  providers: [CredentialsService],
+  providers: [CredentialsService, UsernameAvailabilityCheck],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CredentialsComponent implements OnInit, OnDestroy {
@@ -55,7 +55,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
 
   form = this.formBuilder.group({
     name: ['',  [Validators.required, Validators.pattern(this.regexName)]],
-    username: ['', [Validators.required, validateUsername()], this.usernamecheck.validate.bind(this)],
+    username: ['', [Validators.required, validateUsername()], this.usernameAvailabilityCheck.validate.bind(this)],
     email: ['', [Validators.required, Validators.pattern(this.regexEmail)]],
     mobile: ['', [Validators.required, validateMobile(this.country.code as CountryCode)]],
     password: ['', Validators.required]
@@ -91,7 +91,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     public credentialsService: CredentialsService,
     private formBuilder: FormBuilder,
     private authenticationService: AuthenticationService,
-    private usernamecheck: UsernameAvailabilityCheck
+    private usernameAvailabilityCheck: UsernameAvailabilityCheck
   ) {}
 
   ngOnInit(): void {
