@@ -4,7 +4,7 @@ import { Observable, Subscription } from 'rxjs';
 import { CredentialsService } from 'src/app/shared/services/credentials.service';
 import { AuthenticationService } from '../authentication.service';
 import { countries } from '../../../assets/datasets';
-import { validateUsername, validateMobile } from 'src/app/shared/validator';
+import { validateUsername, validateMobile, UsernameAvailabilityCheck } from 'src/app/shared/validator';
 import { CountryCode } from 'libphonenumber-js';
 import { MatSelect } from '@angular/material/select';
 
@@ -55,7 +55,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
 
   form = this.formBuilder.group({
     name: ['',  [Validators.required, Validators.pattern(this.regexName)]],
-    username: ['', [Validators.required, validateUsername()]],
+    username: ['', [Validators.required, validateUsername()], this.usernamecheck.validate.bind(this)],
     email: ['', [Validators.required, Validators.pattern(this.regexEmail)]],
     mobile: ['', [Validators.required, validateMobile(this.country.code as CountryCode)]],
     password: ['', Validators.required]
@@ -91,7 +91,8 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     public credentialsService: CredentialsService,
     private formBuilder: FormBuilder,
     private authenticationService: AuthenticationService,
-  ) { }
+    private usernamecheck: UsernameAvailabilityCheck
+  ) {}
 
   ngOnInit(): void {
     this.subscriptions.add(this.isSignUp.subscribe(isSignUp => this.initForm(isSignUp)));

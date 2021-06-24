@@ -1,21 +1,36 @@
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { Injectable } from '@angular/core';
+import { AbstractControl, AsyncValidator, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { CountryCode, parsePhoneNumber} from 'libphonenumber-js';
+import { Observable} from 'rxjs';
+import { debounceTime, first, map, switchMap } from 'rxjs/operators';
+import { AuthenticationService } from '../authentication/authentication.service';
+
+@Injectable({providedIn: 'root'})
+export class UsernameAvailabilityCheck implements AsyncValidator {
+  constructor(private authenticationService: AuthenticationService) {}
+
+  validate(control: AbstractControl): Observable<ValidationErrors | null> {
+    return control.valueChanges.pipe(
+      debounceTime(1000),
+      switchMap(username => this.authenticationService.isDuplicateUsername(username)),
+      map(isDuplicateUsername => isDuplicateUsername ? { isDuplicateUsername: true } : null),
+      first()
+    );
+  }
+}
 
 export function validateUsername(): ValidatorFn {
   return  (control: AbstractControl): ValidationErrors | null => {
     const username: string = control.value;
     if (!username) { return null; }
 
-    const allowedStartingCharacters = /^[a-zA-Z0-9_]/;
-    if (!allowedStartingCharacters.test(username)) { return { disallowedStartingCharacter: true }; }
+    const disAllowedStartingCharacters = /^[.]/;
+    if (disAllowedStartingCharacters.test(username)) { return { disallowedStartingCharacter: true }; }
 
-    const isConsecutiveAllowedSpecialCharcters = /^(?!.*__)(?!.*\.\.)[a-zA-Z0-9._]/;
-    if (!isConsecutiveAllowedSpecialCharcters.test(username)) { return { consecutiveAllowedSpecialCharacter: true }; }
-
-    const allowedCharacters = /^[a-zA-Z0-9._]+$/;
+    const allowedCharacters = /[a-zA-Z0-9._@-]+$/;
     if (!allowedCharacters.test(username)) { return { disallowedCharacter: true }; }
 
-    const allowedEndingCharcters = /[a-zA-Z0-9._]+(?<!\.)$/;
+    const allowedEndingCharcters = /[a-zA-Z0-9_@-]+(?<!\.)$/;
     if (!allowedEndingCharcters.test(username)) { return { disallowedEndingCharacter: true }; }
 
     if (username.length < 5) { return { isTooSmall: true }; }

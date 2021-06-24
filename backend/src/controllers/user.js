@@ -11,3 +11,10 @@ exports.createUser = (req, res) => {
     .catch(error => errorHandler(res, error)
   );
 }
+
+exports.isDuplicateUsername = (req, res) => {
+  User.findOne({ attributes: ['id'], where: { username: req.params.username } }).then(user =>{
+    const isDuplicateUsername = !!user
+    res.status(200).json({ isDuplicateUsername: isDuplicateUsername });
+  });
+}
