@@ -6,7 +6,7 @@
 input {
   $mat-spinner-width: 25px;
   border: none;
-  width: calc(100% - (#{$mat-spinner-width}));
+  width: calc(100% - #{$mat-spinner-width});
   outline: none;
   margin-top: 2%;
   margin-bottom: 2%;
