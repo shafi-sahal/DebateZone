@@ -4,7 +4,7 @@ import { Observable, Subscription } from 'rxjs';
 import { CredentialsService } from 'src/app/shared/services/credentials.service';
 import { AuthenticationService } from '../authentication.service';
 import { countries } from '../../../assets/datasets';
-import { validateUsername, validateMobile, UsernameAvailabilityCheck } from 'src/app/shared/validator';
+import { validateUsername, validateMobile, UsernameAvailabilityCheck } from 'src/app/authentication/validator';
 import { CountryCode } from 'libphonenumber-js';
 import { MatSelect } from '@angular/material/select';
 

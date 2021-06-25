@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AbstractControl, AsyncValidator, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, AsyncValidator, AsyncValidatorFn, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { CountryCode, parsePhoneNumber} from 'libphonenumber-js';
 import { Observable} from 'rxjs';
 import { debounceTime, first, map, switchMap } from 'rxjs/operators';
-import { AuthenticationService } from '../authentication/authentication.service';
+import { AuthenticationService } from './authentication.service';
 
 @Injectable()
 export class UsernameAvailabilityCheck implements AsyncValidator {
@@ -18,6 +18,11 @@ export class UsernameAvailabilityCheck implements AsyncValidator {
     );
   }
 }
+
+/*@Injectable()
+export class EmailUniquenessChecker implements AsyncValidator {
+  constructor(private authentication)
+}*/
 
 export function validateUsername(): ValidatorFn {
   return  (control: AbstractControl): ValidationErrors | null => {
