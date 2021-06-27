@@ -193,7 +193,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    if (this.form.invalid) { return; }
+    if (this.form.invalid || this.form.pending) { return; }
     this.authenticationService.countryCode = this.country.code;
     this.authenticationService.user = this.form.value;
     this.authenticationService.addUser();
