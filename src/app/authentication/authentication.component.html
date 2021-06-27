@@ -1,4 +1,4 @@
-<body [class]="classBodyHeight">
+<body appAdaptHeight>
     <mat-card>
         <app-header (isSignup)="setIsSignup($event)"></app-header>
         <app-credentials [isSignUp]="isSignUp" ></app-credentials>
