@@ -44,6 +44,10 @@ export class CredentialsComponent implements OnInit, OnDestroy {
       label: '',
       placeholder: ''
     },
+    mobile: {
+      label: '',
+      placeholder: ''
+    },
     password: {
       label: 'Password',
       placeholder: 'Enter your password'
@@ -94,6 +98,10 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     country: {
       label: 'Country',
       placeholder: 'India'
+    },
+    mobile: {
+      label: 'Mobile Number',
+      placeholder: 'Ex: 7012154608'
     },
     password: {
       label: 'Password',
