@@ -1,4 +1,4 @@
-import { AfterViewInit, Directive, ElementRef, OnInit } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef } from '@angular/core';
 
 @Directive({ selector: '[appMultiLine]' })
 export class MatOptionMultiLineDirective implements AfterViewInit {
