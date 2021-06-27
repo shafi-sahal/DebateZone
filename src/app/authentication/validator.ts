@@ -19,10 +19,17 @@ export class UsernameAvailabilityCheck implements AsyncValidator {
   }
 }
 
-/*@Injectable()
-export class EmailUniquenessChecker implements AsyncValidator {
-  constructor(private authentication)
-}*/
+@Injectable()
+export class EmailUniquenessValidator implements AsyncValidator {
+  constructor(private authenticationService: AuthenticationService) {}
+
+  validate(control: AbstractControl): Observable<ValidationErrors | null> {
+    const email = control.value;
+    return this.authenticationService.isDuplicateEmail(email).pipe(
+      map(isDuplicateEmail => isDuplicateEmail ? { isDuplicateEmail: true } : null)
+    );
+  }
+}
 
 export function validateUsername(): ValidatorFn {
   return  (control: AbstractControl): ValidationErrors | null => {

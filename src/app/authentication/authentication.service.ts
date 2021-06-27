@@ -30,8 +30,15 @@ export class AuthenticationService {
   set countryCode(countryCode: string) { this._countryCode = countryCode; }
 
   isDuplicateUsername(username: string): Observable<boolean> {
-    return this.http.get<{ isDuplicateUsername: boolean }>(BACKEND_URL + username).pipe(
-      map(response => response.isDuplicateUsername));
+    return this.http.get<{ isDuplicateUsername: boolean }>(BACKEND_URL + '?username=' + username).pipe(
+      map(response => response.isDuplicateUsername)
+    );
+  }
+
+  isDuplicateEmail(email: string): Observable<boolean> {
+    return this.http.get<{ isDuplicateEmail: boolean }>(BACKEND_URL + '?email=' + email).pipe(
+      map(response => response.isDuplicateEmail)
+    );
   }
 
   addUser(): Observable<boolean> {

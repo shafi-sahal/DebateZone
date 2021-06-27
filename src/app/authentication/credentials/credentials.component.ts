@@ -4,7 +4,7 @@ import { Observable, Subscription } from 'rxjs';
 import { CredentialsService } from 'src/app/shared/services/credentials.service';
 import { AuthenticationService } from '../authentication.service';
 import { countries } from '../../../assets/datasets';
-import { validateUsername, validateMobile, UsernameAvailabilityCheck } from 'src/app/authentication/validator';
+import { validateUsername, validateMobile, UsernameAvailabilityCheck, EmailUniquenessValidator } from 'src/app/authentication/validator';
 import { CountryCode } from 'libphonenumber-js';
 import { MatSelect } from '@angular/material/select';
 
@@ -12,7 +12,7 @@ import { MatSelect } from '@angular/material/select';
   selector: 'app-credentials',
   templateUrl: './credentials.component.html',
   styleUrls: ['./credentials.component.scss'],
-  providers: [CredentialsService, UsernameAvailabilityCheck],
+  providers: [CredentialsService, UsernameAvailabilityCheck, EmailUniquenessValidator],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CredentialsComponent implements OnInit, OnDestroy {
@@ -56,7 +56,14 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   form = this.formBuilder.group({
     name: ['',  [Validators.required, Validators.pattern(this.regexName)]],
     username: ['', [Validators.required, validateUsername()], this.usernameAvailabilityCheck.validate.bind(this)],
-    email: ['', [Validators.required, Validators.pattern(this.regexEmail)]],
+    email: [
+      '',
+      {
+        updateOn: 'blur',
+        validators: [Validators.required, Validators.pattern(this.regexEmail)],
+        asyncValidators: this.emailUniquenessValidator.validate.bind(this),
+      }
+    ],
     mobile: ['', [Validators.required, validateMobile(this.country.code as CountryCode)]],
     password: ['', Validators.required]
   });
@@ -91,7 +98,8 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     public credentialsService: CredentialsService,
     private formBuilder: FormBuilder,
     private authenticationService: AuthenticationService,
-    private usernameAvailabilityCheck: UsernameAvailabilityCheck
+    private usernameAvailabilityCheck: UsernameAvailabilityCheck,
+    private emailUniquenessValidator: EmailUniquenessValidator
   ) {}
 
   ngOnInit(): void {
