@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from './user.model';
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
@@ -24,7 +24,6 @@ export class AuthenticationService {
   set user(user: User) {
     this._user = user;
     this._user.mobile = this.parseMobile(this._user.mobile, this._countryCode);
-    console.log(this._user.password);
   }
 
   set countryCode(countryCode: string) { this._countryCode = countryCode; }
@@ -42,7 +41,8 @@ export class AuthenticationService {
   }
 
   isDuplicateMobile(mobile: string, countryCode: string): Observable<boolean> {
-    return this.http.get<{ isDuplicateMobile: boolean }>(BACKEND_URL + '?mobile=' + this.parseMobile(mobile, countryCode).replace('+', '%2B')).pipe(
+    const mobileParsed = this.parseMobile(mobile, countryCode).replace('+', '%2B');
+    return this.http.get<{ isDuplicateMobile: boolean }>(BACKEND_URL + '?mobile=' + mobileParsed).pipe(
       map(response => response.isDuplicateMobile)
     );
   }
