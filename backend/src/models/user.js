@@ -19,11 +19,13 @@ module.exports = sequelize.define("user", {
   },
   email: {
     type: Sequelize.STRING(255),
-    allownull: false
+    allownull: false,
+    unique: true
   },
   mobile: {
     type: Sequelize.STRING(20),
-    allownull: false
+    allownull: false,
+    unique: true
   },
   password: {
     type: Sequelize.STRING(255),

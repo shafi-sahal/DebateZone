@@ -4,6 +4,6 @@ const UserController = require('../controllers/user');
 const userDataValidation = require('../middleware/user-data-validation');
 
 router.post('', userDataValidation, UserController.createUser);
-router.get('/:username', UserController.isDuplicateUsername);
+router.get('', UserController.isDuplicate);
 
 module.exports = router;
