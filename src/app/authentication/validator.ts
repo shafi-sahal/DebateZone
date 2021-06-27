@@ -31,6 +31,20 @@ export class EmailUniquenessValidator implements AsyncValidator {
   }
 }
 
+@Injectable()
+export class MobileUniquenessValidator implements AsyncValidator {
+  private country = { name: 'India', dialCode: '+91', code: 'IN' };
+
+  constructor(private authenticationService: AuthenticationService) {}
+
+  validate(control: AbstractControl): Observable<ValidationErrors | null> {
+    const mobile = control.value;
+    return this.authenticationService.isDuplicateMobile(mobile, this.country.code).pipe(
+      map(isDuplicateMobile => isDuplicateMobile ? { isDuplicateMobile: true } : null)
+    );
+  }
+}
+
 export function validateUsername(): ValidatorFn {
   return  (control: AbstractControl): ValidationErrors | null => {
     const username: string = control.value;

@@ -14,6 +14,10 @@ exports.isDuplicate = (req, res) => {
     User.findOne({ attributes: ['id'], where: { email: query.email } }).then(user =>
       res.status(200).json({ isDuplicateEmail: !!user })
     );
+  } else if (query.mobile) {
+    User.findOne({ attributes: ['id'], where: { mobile: query.mobile } }).then(user =>
+      res.status(200).json({ isDuplicateMobile: !!user })
+    );
   }
 }
 

@@ -4,7 +4,7 @@ import { Observable, Subscription } from 'rxjs';
 import { CredentialsService } from 'src/app/shared/services/credentials.service';
 import { AuthenticationService } from '../authentication.service';
 import { countries } from '../../../assets/datasets';
-import { validateUsername, validateMobile, UsernameAvailabilityCheck, EmailUniquenessValidator } from 'src/app/authentication/validator';
+import { validateUsername, validateMobile, UsernameAvailabilityCheck, EmailUniquenessValidator, MobileUniquenessValidator } from 'src/app/authentication/validator';
 import { CountryCode } from 'libphonenumber-js';
 import { MatSelect } from '@angular/material/select';
 
@@ -12,7 +12,7 @@ import { MatSelect } from '@angular/material/select';
   selector: 'app-credentials',
   templateUrl: './credentials.component.html',
   styleUrls: ['./credentials.component.scss'],
-  providers: [CredentialsService, UsernameAvailabilityCheck, EmailUniquenessValidator],
+  providers: [CredentialsService, UsernameAvailabilityCheck, EmailUniquenessValidator, MobileUniquenessValidator],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CredentialsComponent implements OnInit, OnDestroy {
@@ -64,7 +64,14 @@ export class CredentialsComponent implements OnInit, OnDestroy {
         asyncValidators: this.emailUniquenessValidator.validate.bind(this),
       }
     ],
-    mobile: ['', [Validators.required, validateMobile(this.country.code as CountryCode)]],
+    mobile: [
+      '',
+      {
+        updateOn: 'blur',
+        validators: [Validators.required, validateMobile(this.country.code as CountryCode)],
+        asyncValidators: this.mobileUniquenessValidator.validate.bind(this)
+      }
+    ],
     password: ['', Validators.required]
   });
 
@@ -99,7 +106,8 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private authenticationService: AuthenticationService,
     private usernameAvailabilityCheck: UsernameAvailabilityCheck,
-    private emailUniquenessValidator: EmailUniquenessValidator
+    private emailUniquenessValidator: EmailUniquenessValidator,
+    private mobileUniquenessValidator: MobileUniquenessValidator
   ) {}
 
   ngOnInit(): void {

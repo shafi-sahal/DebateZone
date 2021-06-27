@@ -23,7 +23,7 @@ export class AuthenticationService {
 
   set user(user: User) {
     this._user = user;
-    this.parseMobile();
+    this._user.mobile = this.parseMobile(this._user.mobile, this._countryCode);
     console.log(this._user.password);
   }
 
@@ -41,6 +41,12 @@ export class AuthenticationService {
     );
   }
 
+  isDuplicateMobile(mobile: string, countryCode: string): Observable<boolean> {
+    return this.http.get<{ isDuplicateMobile: boolean }>(BACKEND_URL + '?mobile=' + this.parseMobile(mobile, countryCode).replace('+', '%2B')).pipe(
+      map(response => response.isDuplicateMobile)
+    );
+  }
+
   addUser(): Observable<boolean> {
     this.spinner.show('Setting up your account...');
     const userAdded = new Subject<boolean>();
@@ -53,8 +59,7 @@ export class AuthenticationService {
     return userAdded.asObservable();
   }
 
-  private parseMobile(): void {
-    const mobileParsed = parsePhoneNumber(this._user.mobile, this._countryCode as CountryCode);
-    this._user.mobile = mobileParsed.number.toString();
+  private parseMobile(mobile: string, countryCode: string): string {
+    return parsePhoneNumber(mobile, countryCode as CountryCode).number.toString();
   }
 }
