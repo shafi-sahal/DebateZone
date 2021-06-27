@@ -58,7 +58,13 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   private regexEmail = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
 
   form = this.formBuilder.group({
-    name: ['',  [Validators.required, Validators.pattern(this.regexName)]],
+    name: [
+      '',
+      {
+        updateOn: 'blur',
+        validators: [Validators.required, Validators.pattern(this.regexName)]
+      }
+    ],
     username: ['', [Validators.required, validateUsername()], this.usernameAvailabilityCheck.validate.bind(this)],
     email: [
       '',
