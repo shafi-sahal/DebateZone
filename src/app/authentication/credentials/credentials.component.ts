@@ -171,13 +171,20 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     const inputValue = this.dialCodeInput.nativeElement.value;
     const dialCode = '+' + inputValue;
     const country = this.countries.find(country => country.dialCode === dialCode.trim());
-    if (country) {
-      this.country = country;
-      this.changeMobileValidator();
-    } else {
+    console.log(country);
+    console.log(this.country);
+    console.log(this.country === country);
+    if (!country) {
       this.countrySelect.value = this.labelUnknownDialCode;
       if (this.mobile?.value) { this.mobile?.setErrors({ invalidMobile: true }); }
+      return;
     }
+    if (this.country.code === country.code) {
+      this.countrySelect.value = this.country.name;
+      return;
+    }
+    this.country = country;
+    this.changeMobileValidator();
   }
 
   onCountryOpenedChanged(): void {
