@@ -17,14 +17,6 @@ exports.isDuplicate = (req, res) => {
   }
 }
 
-exports.isDuplicateUsername = (req, res) => {
-
-}
-
-exports.isDuplicateEmail = (req, res) => {
-
-}
-
 exports.createUser = (req, res) => {
   User.create(req.body).then((response) => {
       res.status(200).json({
