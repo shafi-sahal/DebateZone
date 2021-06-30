@@ -95,7 +95,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     },
     username: {
       label: 'Username',
-      placeholder: 'Ex: Neerja_Bhanot'
+      placeholder: 'Ex: neerjabhanot'
     },
     email: {
       label: 'Email',

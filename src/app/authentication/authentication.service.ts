@@ -4,7 +4,6 @@ import { Observable, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from './user.model';
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
-import { Encrypter } from '../shared/services/encrypter.service';
 import { Spinner } from '../shared/components/spinner/spinner.service';
 import { map } from 'rxjs/operators';
 
@@ -17,7 +16,6 @@ export class AuthenticationService {
 
   constructor(
     private http: HttpClient,
-    private encrypter: Encrypter,
     private spinner: Spinner
   ) {}
 
@@ -50,8 +48,7 @@ export class AuthenticationService {
   addUser(): Observable<boolean> {
     this.spinner.show('Setting up your account...');
     const userAdded = new Subject<boolean>();
-    this.http.post<{message: string}>(BACKEND_URL, {...this._user, password: this.encrypter.encrypt(this._user.password)})
-      .subscribe(response => {
+    this.http.post<{message: string}>(BACKEND_URL, this._user).subscribe(response => {
         console.log(response);
         this.spinner.hide();
         userAdded.next(true);

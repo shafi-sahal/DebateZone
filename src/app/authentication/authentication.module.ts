@@ -12,7 +12,6 @@ import { AuthenticationService } from './authentication.service';
 import { MatSelectSearchComponent } from '../shared/components/mat-select-search/mat-select-search.component';
 import { MatSelectSearchModule } from 'dist/mat-select-search';
 import { MatOptionMultiLineDirective } from './credentials/mat-option-multi-line.directive';
-import { Encrypter } from '../shared/services/encrypter.service';
 import { AdaptHeight } from './adapt-height.directive';
 
 
@@ -33,6 +32,6 @@ import { AdaptHeight } from './adapt-height.directive';
     ReactiveFormsModule,
     MatSelectSearchModule
   ],
-  providers: [AuthenticationService, Encrypter]
+  providers: [AuthenticationService]
 })
 export class AuthenticationModule { }
