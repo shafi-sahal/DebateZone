@@ -48,7 +48,7 @@ export class AuthenticationService {
   addUser(): Observable<boolean> {
     this.spinner.show('Setting up your account...');
     const userAdded = new Subject<boolean>();
-    this.http.post<{message: string}>(BACKEND_URL, this._user).subscribe(response => {
+    this.http.post<{message: string}>(BACKEND_URL + 'signup/', this._user).subscribe(response => {
         console.log(response);
         this.spinner.hide();
         userAdded.next(true);
