@@ -7,19 +7,11 @@ const bcrypt = require('bcrypt');
 
 exports.isDuplicate = (req, res) => {
   const query = req.query;
-  if (query.username) {
-    User.findOne({ attributes: ['id'], where: { username: query.username } }).then(user =>
-      res.status(200).json({ isDuplicateUsername: !!user })
-    );
-  } else if (query.email) {
-    User.findOne({ attributes: ['id'], where: { email: query.email } }).then(user =>
-      res.status(200).json({ isDuplicateEmail: !!user })
-    );
-  } else if (query.mobile) {
-    User.findOne({ attributes: ['id'], where: { mobile: query.mobile } }).then(user =>
-      res.status(200).json({ isDuplicateMobile: !!user })
-    );
+  if (!(query.username || query.email || query.mobile)) {
+    errorHandler(res);
+    return;
   }
+  checkUserExistence(query).then(user => res.status(200).json(user));
 }
 
 exports.createUser = (req, res) => {
@@ -34,6 +26,10 @@ exports.createUser = (req, res) => {
 
 exports.login = (req, res) => {
   const body = req.body;
+  if (!(body.email && body.password)) {
+    errorHandler(res);
+    return;
+  }
   const password = body.password;
   const pepper = process.env.PEPPER;
   User.findOne({ attributes: ['password'], where: { email: body.email } }).then(user => {
@@ -50,3 +46,18 @@ exports.login = (req, res) => {
   .catch(error => errorHandler(res, error));
 }
 
+const checkUserExistence = query => {
+  const conditionKey = Object.keys(query)[0];
+  return new Promise(resolve => {
+    User.findOne({ attributes: ['id'], where: { [conditionKey]: query[conditionKey] } }).then(user => {
+      const resKey = 'isDuplicate' + capitalizeFirstLetter(conditionKey);
+      resolve({ [resKey]: !!user });
+    });
+  });
+}
+
+const capitalizeFirstLetter = word => {
+  const splitted = word.split('');
+  splitted[0] = splitted[0].toUpperCase();
+  return splitted.join('');
+}
