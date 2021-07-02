@@ -42,8 +42,7 @@ exports.login = (req, res) => {
       if (isMatching) { res.status(200).json({ message: 'Login Successfull' }); }
       else { res.status(200).json({ message: 'Invalid login credentials' }); }
     });
-  })
-  .catch(error => errorHandler(res, error));
+  });
 }
 
 const checkUserExistence = query => {
