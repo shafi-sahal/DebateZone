@@ -20,7 +20,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   @ViewChild('formDirective') formDirective!: FormGroupDirective;
   @ViewChild('dialCodeInput') dialCodeInput!: ElementRef;
   @ViewChild('countrySelect') countrySelect!: MatSelect;
-  buttonText = 'login';
+  buttonText = 'Login';
   countries = countries;
   country = { name: 'India', dialCode: '+91', code: 'IN' };
   filteredCountries: Record<string, string>[] = countries;
@@ -194,7 +194,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    if (this.buttonText === 'Sign Up') { this.addUser(); } else { this.login(); }
+    if (this.buttonText === 'Login') { this.login(); } else { this.addUser(); }
   }
 
   addUser(): void {
