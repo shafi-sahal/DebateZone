@@ -1,3 +1,4 @@
+const Sequelize = require('sequelize');
 const errorHandler = require('../error-handler');
 const User = require('../models/user');
 const messages = require('../messages');
@@ -25,23 +26,25 @@ exports.createUser = (req, res) => {
 }
 
 exports.login = (req, res) => {
-  const body = req.body;
-  if (!(body.email && body.password)) {
+  const emailOrUsername = req.body.emailOrUsername;
+  const password = req.body.password;
+  if (!(emailOrUsername && password)) {
     errorHandler(res);
     return;
   }
-  const password = body.password;
   const pepper = process.env.PEPPER;
-  User.findOne({ attributes: ['password'], where: { email: body.email } }).then(user => {
+  User.findOne({
+    attributes: ['password'],
+    where: {
+      [Sequelize.Op.or]: [ { email: emailOrUsername }, { username: emailOrUsername } ]
+    }
+  })
+  .then(user => {
     if (!user) {
-      res.status(200).json({ message: 'Invalid login credentials' });
+      res.status(200).json({ isSuccess: false });
       return;
     }
-
-    bcrypt.compare(password + pepper, user.password).then(isMatching => {
-      if (isMatching) { res.status(200).json({ message: 'Login Successfull' }); }
-      else { res.status(200).json({ message: 'Invalid login credentials' }); }
-    });
+    bcrypt.compare(password + pepper, user.password).then(isMatching =>  res.status(200).json({ isSuccess: isMatching }));
   });
 }
 

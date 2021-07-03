@@ -66,14 +66,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
       }
     ],
     username: ['', [Validators.required, validateUsername()], this.usernameAvailabilityCheck.validate.bind(this)],
-    email: [
-      '',
-      {
-        updateOn: 'blur',
-        validators: [Validators.required, Validators.pattern(this.regexEmail)],
-        asyncValidators: this.emailUniquenessValidator.validate.bind(this),
-      }
-    ],
+    email: [ '', { updateOn: 'blur', validators: [Validators.required] } ],
     mobile: [
       '',
       {
@@ -142,11 +135,16 @@ export class CredentialsComponent implements OnInit, OnDestroy {
       this.inputDetails = this.inputDetailsSignUp;
       this.buttonText = 'Sign Up';
       this.password?.setValidators(Validators.minLength(8));
+      this.email?.setValidators([Validators.pattern(this.regexEmail)]);
+      this.email?.setAsyncValidators(this.emailUniquenessValidator.validate.bind(this));
     } else {
       this.inputDetails = this.inputDetailsLogin;
       this.buttonText = 'Login';
       this.password?.setValidators(Validators.required);
       this.password?.updateValueAndValidity();
+      this.email?.setValidators(Validators.required);
+      this.email?.clearAsyncValidators();
+      this.email?.updateValueAndValidity;
     }
   }
 
@@ -194,10 +192,19 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
+    console.log(this.isSignUp);
+    if (this.buttonText === 'Sign Up') { this.addUser(); } else { this.login(); }
+  }
+
+  addUser(): void {
     if (this.form.invalid || this.form.pending) { return; }
     this.authenticationService.countryCode = this.country.code;
     this.authenticationService.user = this.form.value;
     this.authenticationService.addUser();
+  }
+
+  login(): void {
+    this.authenticationService.login(this.email?.value, this.password?.value);
   }
 
   ngOnDestroy(): void { this.subscriptions.unsubscribe(); }

@@ -7,7 +7,7 @@ import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 import { Spinner } from '../shared/components/spinner/spinner.service';
 import { map } from 'rxjs/operators';
 
-const BACKEND_URL = environment.apiUrl + '/user/';
+const BACKEND_URL = environment.apiUrl + '/user';
 
 @Injectable()
 export class AuthenticationService {
@@ -48,12 +48,19 @@ export class AuthenticationService {
   addUser(): Observable<boolean> {
     this.spinner.show('Setting up your account...');
     const userAdded = new Subject<boolean>();
-    this.http.post<{message: string}>(BACKEND_URL + 'signup/', this._user).subscribe(response => {
+    this.http.post<{message: string}>(BACKEND_URL + '/signup', this._user).subscribe(response => {
         console.log(response);
         this.spinner.hide();
         userAdded.next(true);
     });
     return userAdded.asObservable();
+  }
+
+  login(emailOrUsername: string, password: string): void {
+    const loginData = { emailOrUsername: emailOrUsername, password: password };
+    this.http.post<{ isSuccess: boolean }>(BACKEND_URL, loginData).subscribe(response => {
+      console.log(response.isSuccess);
+    });
   }
 
   private parseMobile(mobile: string, countryCode: string): string {
