@@ -10,8 +10,5 @@ import { Spinner } from '../shared/components/spinner/spinner.service';
 })
 export class AuthenticationComponent {
   isSignUp = new Subject<boolean>();
-
   constructor(private spinner: Spinner) { this.spinner.hide(); }
-
-  setIsSignup(isSignUp: boolean): void { this.isSignUp.next(isSignUp); }
 }
