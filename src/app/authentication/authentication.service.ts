@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from './user.model';
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
@@ -45,18 +45,17 @@ export class AuthenticationService {
 
   addUser(): Observable<boolean> {
     this.spinner.show('Setting up your account...');
-    return this.http.post<{ isSuccess: boolean }>(BACKEND_URL + '/signup', this._user).pipe(map(response => {
-      this.spinner.hide();
-      return response.isSuccess;
-    }));
+    return this.http.post<{ isSuccess: boolean }>(BACKEND_URL + '/signup', this._user).pipe(map(response =>
+      response.isSuccess
+    ));
   }
 
   login(loginKey: string, password: string): Observable<boolean> {
     this.spinner.show('Taking you where you want to go...');
     const loginData = { loginKey: loginKey, password: password };
     return this.http.post<{ isSuccess: boolean }>(BACKEND_URL, loginData).pipe(map(response => {
-      this.spinner.hide();
-      return response.isSuccess;
+     if (!response.isSuccess)  { this.spinner.hide(); }
+     return response.isSuccess;
     }));
   }
 

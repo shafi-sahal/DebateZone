@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
   database: 'debatezone',
-  apiUrl: 'http://localhost:3000/api'
+  apiUrl: 'http://shafisahal-48221.portmap.host:48221/api'
 };
