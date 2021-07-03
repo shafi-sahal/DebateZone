@@ -205,6 +205,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   }
 
   login(): void {
+    if (!(this.email?.value && this.password?.value )) { return; }
     this.authenticationService.login(this.email?.value, this.password?.value).subscribe(authenticated => {
       this.changeDetector.markForCheck();
     });
