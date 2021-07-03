@@ -2,6 +2,7 @@
 
 .env
 # compiled output
+/backend/frontend
 /dist
 /tmp
 /out-tsc
