@@ -3,8 +3,9 @@ import { AfterViewInit, Directive, ElementRef, HostListener } from '@angular/cor
 @Directive({ selector: '[appAdaptHeight]' })
 export class AdaptHeight implements AfterViewInit {
   private body: HTMLBodyElement = this.element.nativeElement;
-  constructor(private element: ElementRef) {}
   private matCard!: HTMLElement;
+
+  constructor(private element: ElementRef) {}
 
   ngAfterViewInit(): void {
     this.matCard = this.body.childNodes[0] as HTMLElement;
