@@ -16,13 +16,7 @@ exports.isDuplicate = (req, res) => {
 }
 
 exports.createUser = (req, res) => {
-  User.create(req.body).then((response) => {
-      res.status(200).json({
-        message: 'User added'
-      });
-    })
-    .catch(error => errorHandler(res, error)
-  );
+  User.create(req.body).then(() => res.status(200).json({ isSuccess: true })).catch(error => errorHandler(res, error));
 }
 
 exports.login = (req, res) => {
