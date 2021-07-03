@@ -57,9 +57,10 @@ export class AuthenticationService {
   }
 
   login(emailOrUsername: string, password: string): void {
+    this.spinner.show('Taking you where you want to go...');
     const loginData = { emailOrUsername: emailOrUsername, password: password };
     this.http.post<{ isSuccess: boolean }>(BACKEND_URL, loginData).subscribe(response => {
-      console.log(response.isSuccess);
+      this.spinner.hide();
     });
   }
 
