@@ -11,8 +11,9 @@ const BACKEND_URL = environment.apiUrl + '/user';
 
 @Injectable()
 export class AuthenticationService {
+  showLoginError = false;
+  countryCode = '';
   private _user!: User;
-  private _countryCode = '';
 
   constructor(
     private http: HttpClient,
@@ -21,10 +22,8 @@ export class AuthenticationService {
 
   set user(user: User) {
     this._user = user;
-    this._user.mobile = this.parseMobile(this._user.mobile, this._countryCode);
+    this._user.mobile = this.parseMobile(this._user.mobile, this.countryCode);
   }
-
-  set countryCode(countryCode: string) { this._countryCode = countryCode; }
 
   isDuplicateUsername(username: string): Observable<boolean> {
     return this.http.get<{ isDuplicateUsername: boolean }>(BACKEND_URL + '?username=' + username).pipe(
@@ -56,12 +55,14 @@ export class AuthenticationService {
     return userAdded.asObservable();
   }
 
-  login(emailOrUsername: string, password: string): void {
+  login(emailOrUsername: string, password: string): Observable<boolean> {
     this.spinner.show('Taking you where you want to go...');
     const loginData = { emailOrUsername: emailOrUsername, password: password };
-    this.http.post<{ isSuccess: boolean }>(BACKEND_URL, loginData).subscribe(response => {
+    return this.http.post<{ isSuccess: boolean }>(BACKEND_URL, loginData).pipe(map(response => {
+      this.showLoginError = !response.isSuccess;
       this.spinner.hide();
-    });
+      return response.isSuccess;
+    }));
   }
 
   private parseMobile(mobile: string, countryCode: string): string {

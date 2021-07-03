@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroupDirective, Validators } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { CredentialsService } from 'src/app/shared/services/credentials.service';
@@ -110,11 +110,12 @@ export class CredentialsComponent implements OnInit, OnDestroy {
 
   constructor(
     public credentialsService: CredentialsService,
+    public authenticationService: AuthenticationService,
     private formBuilder: FormBuilder,
-    private authenticationService: AuthenticationService,
     private usernameAvailabilityCheck: UsernameAvailabilityCheck,
     private emailUniquenessValidator: EmailUniquenessValidator,
-    private mobileUniquenessValidator: MobileUniquenessValidator
+    private mobileUniquenessValidator: MobileUniquenessValidator,
+    private changeDetector: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -130,6 +131,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   getCountryIndex(countryName: string): number { return this.countries.findIndex(country => country.name === countryName); }
 
   initForm(isSignUp: boolean): void {
+    this.authenticationService.showLoginError = false;
     this.formDirective.resetForm();
     if (isSignUp) {
       this.inputDetails = this.inputDetailsSignUp;
@@ -192,7 +194,6 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    console.log(this.isSignUp);
     if (this.buttonText === 'Sign Up') { this.addUser(); } else { this.login(); }
   }
 
@@ -204,7 +205,9 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   }
 
   login(): void {
-    this.authenticationService.login(this.email?.value, this.password?.value);
+    this.authenticationService.login(this.email?.value, this.password?.value).subscribe(authenticated => {
+      this.changeDetector.markForCheck();
+    });
   }
 
   ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
