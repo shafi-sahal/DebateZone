@@ -55,9 +55,9 @@ export class AuthenticationService {
     return userAdded.asObservable();
   }
 
-  login(emailOrUsername: string, password: string): Observable<boolean> {
+  login(loginKey: string, password: string): Observable<boolean> {
     this.spinner.show('Taking you where you want to go...');
-    const loginData = { emailOrUsername: emailOrUsername, password: password };
+    const loginData = { loginKey: loginKey, password: password };
     return this.http.post<{ isSuccess: boolean }>(BACKEND_URL, loginData).pipe(map(response => {
       this.showLoginError = !response.isSuccess;
       this.spinner.hide();

@@ -37,8 +37,8 @@ export class CredentialsComponent implements OnInit, OnDestroy {
       placeholder: ''
     },
     email: {
-      label: 'Email',
-      placeholder: 'Enter your email'
+      label: 'Email, username or mobile',
+      placeholder: 'Enter your email, username or mobile(with country code)'
     },
     country: {
       label: '',

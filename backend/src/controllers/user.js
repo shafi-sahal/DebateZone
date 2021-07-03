@@ -20,9 +20,9 @@ exports.createUser = (req, res) => {
 }
 
 exports.login = (req, res) => {
-  const emailOrUsername = req.body.emailOrUsername;
+  const loginKey = req.body.loginKey;
   const password = req.body.password;
-  if (!(emailOrUsername && password)) {
+  if (!(loginKey && password)) {
     errorHandler(res);
     return;
   }
@@ -30,7 +30,7 @@ exports.login = (req, res) => {
   User.findOne({
     attributes: ['password'],
     where: {
-      [Sequelize.Op.or]: [ { email: emailOrUsername }, { username: emailOrUsername } ]
+      [Sequelize.Op.or]: [ { email: loginKey }, { username: loginKey }, { mobile: loginKey } ]
     }
   })
   .then(user => {
