@@ -22,6 +22,7 @@ exports.createUser = (req, res) => {
 exports.login = (req, res) => {
   const loginKey = req.body.loginKey;
   const password = req.body.password;
+  console.log(password);
   if (!(loginKey && password)) {
     errorHandler(res);
     return;
