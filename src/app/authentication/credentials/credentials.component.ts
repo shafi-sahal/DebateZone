@@ -26,6 +26,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   filteredCountries: Record<string, string>[] = countries;
   labelUnknownDialCode = 'Unknown Dial Code';
   classDialCode = 'dial-code-normal';
+  showLoginError = false;
 
   inputDetails = {
     name: {
@@ -131,7 +132,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   getCountryIndex(countryName: string): number { return this.countries.findIndex(country => country.name === countryName); }
 
   initForm(isSignUp: boolean): void {
-    this.authenticationService.showLoginError = false;
+    this.showLoginError = false;
     this.formDirective.resetForm();
     if (isSignUp) {
       this.inputDetails = this.inputDetailsSignUp;
@@ -207,6 +208,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   login(): void {
     if (!(this.email?.value && this.password?.value )) { return; }
     this.authenticationService.login(this.email?.value, this.password?.value).subscribe(authenticated => {
+      this.showLoginError = !authenticated;
       this.changeDetector.markForCheck();
     });
   }

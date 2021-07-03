@@ -11,7 +11,6 @@ const BACKEND_URL = environment.apiUrl + '/user';
 
 @Injectable()
 export class AuthenticationService {
-  showLoginError = false;
   countryCode = '';
   private _user!: User;
 
@@ -59,7 +58,6 @@ export class AuthenticationService {
     this.spinner.show('Taking you where you want to go...');
     const loginData = { loginKey: loginKey, password: password };
     return this.http.post<{ isSuccess: boolean }>(BACKEND_URL, loginData).pipe(map(response => {
-      this.showLoginError = !response.isSuccess;
       this.spinner.hide();
       return response.isSuccess;
     }));
