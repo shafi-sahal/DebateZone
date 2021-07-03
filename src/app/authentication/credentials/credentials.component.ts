@@ -7,6 +7,7 @@ import { countries } from '../../../assets/datasets';
 import { validateUsername, validateMobile, UsernameAvailabilityCheck, EmailUniquenessValidator, MobileUniquenessValidator } from 'src/app/authentication/validator';
 import { CountryCode } from 'libphonenumber-js';
 import { MatSelect } from '@angular/material/select';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-credentials',
@@ -116,7 +117,8 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     private usernameAvailabilityCheck: UsernameAvailabilityCheck,
     private emailUniquenessValidator: EmailUniquenessValidator,
     private mobileUniquenessValidator: MobileUniquenessValidator,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -202,7 +204,9 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     if (this.form.invalid || this.form.pending) { return; }
     this.authenticationService.countryCode = this.country.code;
     this.authenticationService.user = this.form.value;
-    this.authenticationService.addUser();
+    this.authenticationService.addUser().subscribe(userAdded => {
+      if (userAdded) { this.router.navigate(['home']); }
+    });
   }
 
   login(): void {
@@ -210,6 +214,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     this.authenticationService.login(this.email?.value, this.password?.value).subscribe(authenticated => {
       this.showLoginError = !authenticated;
       this.changeDetector.markForCheck();
+      if (authenticated) { this.router.navigate(['home']); }
     });
   }
 

@@ -45,13 +45,10 @@ export class AuthenticationService {
 
   addUser(): Observable<boolean> {
     this.spinner.show('Setting up your account...');
-    const userAdded = new Subject<boolean>();
-    this.http.post<{ isSuccess: boolean }>(BACKEND_URL + '/signup', this._user).subscribe(response => {
-        console.log(response);
-        this.spinner.hide();
-        userAdded.next(true);
-    });
-    return userAdded.asObservable();
+    return this.http.post<{ isSuccess: boolean }>(BACKEND_URL + '/signup', this._user).pipe(map(response => {
+      this.spinner.hide();
+      return response.isSuccess;
+    }));
   }
 
   login(loginKey: string, password: string): Observable<boolean> {
