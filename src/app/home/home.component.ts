@@ -10,10 +10,10 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private spinner: Spinner
-  ) { }
+  ) { this.spinner.hide(); }
 
   ngOnInit(): void {
-    this.spinner.hide();
+    //this.spinner.hide();
   }
 
 }
