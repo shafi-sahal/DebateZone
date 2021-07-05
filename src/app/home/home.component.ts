@@ -7,7 +7,7 @@ import { Spinner } from '../shared/components/spinner/spinner.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-
+  mode = 'closed'
   constructor(
     private spinner: Spinner
   ) { this.spinner.hide(); }
@@ -15,5 +15,4 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     //this.spinner.hide();
   }
-
 }
