@@ -5,11 +5,13 @@ import { HomeComponent } from './home.component';
 import { AngularMaterialModule } from '../angular-material.module';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import { MenuMobileComponent } from './menu/menu-mobile/menu-mobile.component';
+import { HeaderComponent } from './header/header.component';
 
 @NgModule({
   declarations: [
     HomeComponent,
-    MenuMobileComponent
+    MenuMobileComponent,
+    HeaderComponent
   ],
   imports: [
     CommonModule,
