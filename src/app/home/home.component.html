@@ -1,10 +1,10 @@
 <body>
   <mat-sidenav-container>
-    <mat-sidenav #sidenav>
+    <mat-sidenav appAdaptSideNavToDevice #sidenav>
       <button class="logout" mat-raised-button (click)="onClickLogout()">Logout</button>
     </mat-sidenav>
     <mat-sidenav-content>
-      <button *ngIf="isMobile" mat-icon-button (click)="onMenuClick()"><mat-icon>more_vert</mat-icon></button>
+      <button id="button-menu" mat-icon-button (click)="onMenuClick()"><mat-icon>more_vert</mat-icon></button>
       main content
     </mat-sidenav-content>
   </mat-sidenav-container>

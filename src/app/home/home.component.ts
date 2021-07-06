@@ -22,14 +22,7 @@ export class HomeComponent implements AfterViewInit {
 
   ngAfterViewInit():void {
     console.log(window.innerWidth);
-    if (window.innerWidth < 768) {
-      this.isMobile = true;
-      this.sidenav.mode = 'over';
-    } else {
-      this.isMobile = false;
-      this.sidenav.mode = 'side';
-      this.sidenav.opened = true;
-    }
+
   }
 
   onMenuClick():void {
