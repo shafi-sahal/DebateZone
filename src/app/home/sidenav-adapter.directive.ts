@@ -14,7 +14,6 @@ export class SideNavRenderer implements AfterViewInit {
 
   private adaptSideNavToDevice(): void {
     const buttonMenu = document.getElementById('button-menu');
-    console.log(buttonMenu);
     if (window.innerWidth < 768) {
       this.sidenav.mode = 'over';
       buttonMenu?.removeAttribute('hidden');
