@@ -59,6 +59,10 @@ export class AuthenticationService {
     }));
   }
 
+  getCountryFromMobile(mobile: string): string | undefined {
+    return parsePhoneNumber(mobile).country;
+  }
+
   private parseMobile(mobile: string, countryCode: string): string {
     return parsePhoneNumber(mobile, countryCode as CountryCode).number.toString();
   }

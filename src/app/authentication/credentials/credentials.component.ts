@@ -23,7 +23,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   @ViewChild('countrySelect') countrySelect!: MatSelect;
   buttonText = 'Login';
   countries = countries;
-  country = { name: 'India', dialCode: '+91', code: 'IN' };
+  _country = { name: 'India', dialCode: '+91', code: 'IN' };
   filteredCountries: Record<string, string>[] = countries;
   labelUnknownDialCode = 'Unknown Dial Code';
   classDialCode = 'dial-code-normal';
@@ -73,7 +73,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
       '',
       {
         updateOn: 'blur',
-        validators: [Validators.required, validateMobile(this.country.code as CountryCode)],
+        validators: [Validators.required, validateMobile(this._country.code as CountryCode)],
         asyncValidators: this.mobileUniquenessValidator.validate.bind(this)
       }
     ],
@@ -125,6 +125,12 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     this.subscriptions.add(this.isSignUp.subscribe(isSignUp => this.initForm(isSignUp)));
   }
 
+  set country(country: { name: string, dialCode: string, code: string }) {
+    this._country = country;
+    this.countrySelect.value = this._country.name;
+    this.changeMobileValidator();
+  }
+
   get name(): AbstractControl | null { return this.form.get('name'); }
   get username(): AbstractControl | null { return this.form.get('username'); }
   get email(): AbstractControl | null { return this.form.get('email'); }
@@ -160,7 +166,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   onCountrySelectionChange(countryName: string): void {
     const country = this.countries.find(country => country.name === countryName);
     if (country) {
-      this.country = country;
+      this._country = country;
       this.changeMobileValidator();
     }
     this.classDialCode = 'dial-code-normal';
@@ -176,8 +182,6 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     const country = this.countries.find(country => country.dialCode === dialCode.trim());
     if (country) {
       this.country = country;
-      this.countrySelect.value = this.country.name;
-      this.changeMobileValidator();
     } else {
       this.countrySelect.value = this.labelUnknownDialCode;
       if (this.mobile?.value) { this.mobile?.setErrors({ invalidMobile: true }); }
@@ -186,13 +190,24 @@ export class CredentialsComponent implements OnInit, OnDestroy {
 
   onCountryOpenedChanged(): void {
     if (this.countrySelect.value === this.labelUnknownDialCode) {
-      this.dialCodeInput.nativeElement.value = this.country.dialCode.replace('+', '');
-      this.countrySelect.value = this.country.name;
+      this.dialCodeInput.nativeElement.value = this._country.dialCode.replace('+', '');
+      this.countrySelect.value = this._country.name;
     }
   }
 
+  onMobileInput(number: string): void {
+    const countryCode = this.authenticationService.getCountryFromMobile(number);
+    if (!countryCode) { return; }
+    const country = this.countries.find(country => country.code === countryCode);
+    if (country) {
+      this.country = country;
+      this.dialCodeInput.nativeElement.value = this._country.dialCode.replace('+', '');
+    }
+    console.log(this._country);
+  }
+
   changeMobileValidator(): void {
-    this.mobile?.setValidators([Validators.required, validateMobile(this.country.code as CountryCode)]);
+    this.mobile?.setValidators([Validators.required, validateMobile(this._country.code as CountryCode)]);
     this.mobile?.updateValueAndValidity();
   }
 
@@ -202,7 +217,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
 
   addUser(): void {
     if (this.form.invalid || this.form.pending) { return; }
-    this.authenticationService.countryCode = this.country.code;
+    this.authenticationService.countryCode = this._country.code;
     this.authenticationService.user = this.form.value;
     this.authenticationService.addUser().subscribe(userAdded => {
       if (userAdded) { this.router.navigate(['home']); }
