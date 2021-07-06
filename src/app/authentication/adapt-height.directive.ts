@@ -14,7 +14,7 @@ export class AdaptHeight implements AfterViewInit {
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize(): void { this.adjustScreenHeight(this.matCard.offsetHeight); }
+  private onResize(): void { this.adjustScreenHeight(this.matCard.offsetHeight); }
 
   private adjustScreenHeight(matCardHeight: number): void {
     if (matCardHeight >= window.innerHeight) {
