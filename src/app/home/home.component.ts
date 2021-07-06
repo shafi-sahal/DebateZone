@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
 import { Spinner } from '../shared/components/spinner/spinner.service';
@@ -9,7 +9,7 @@ import { Spinner } from '../shared/components/spinner/spinner.service';
   styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HomeComponent implements AfterViewInit {
+export class HomeComponent {
   @ViewChild('sidenav') sidenav!: MatSidenav;
   mode = 'closed';
   isMobile = true;
@@ -19,14 +19,7 @@ export class HomeComponent implements AfterViewInit {
     private router: Router
   ) { this.spinner.hide(); }
 
+  onMenuClick():void { this.sidenav.toggle(); }
 
-  ngAfterViewInit():void {
-    console.log(window.innerWidth);
-
-  }
-
-  onMenuClick():void {
-    this.sidenav.toggle();
-  }
   onClickLogout(): void { this.router.navigate(['authentication']); }
 }
