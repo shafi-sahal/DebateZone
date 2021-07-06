@@ -170,7 +170,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     this.classDialCode = this.dialCodeInput.nativeElement.value  ? 'dial-code-normal' : 'dial-code-lighter';
   }
 
-  onDialCodeKeyup(): void {
+  onDialCodeInput(): void {
     const inputValue = this.dialCodeInput.nativeElement.value;
     const dialCode = '+' + inputValue;
     const country = this.countries.find(country => country.dialCode === dialCode.trim());
