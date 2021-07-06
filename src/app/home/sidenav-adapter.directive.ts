@@ -10,16 +10,15 @@ export class SideNavRenderer implements AfterViewInit {
   }
 
   @HostListener('window:resize', ['$event'])
-  private onResize(): void { this.adaptSideNavToDevice(); }
-
   private adaptSideNavToDevice(): void {
     const buttonMenu = document.getElementById('button-menu');
     if (window.innerWidth < 768) {
       this.sidenav.mode = 'over';
+      this.sidenav.close();
       buttonMenu?.removeAttribute('hidden');
     } else {
       this.sidenav.mode = 'side';
-      this.sidenav.opened = true;
+      this.sidenav.open();
       buttonMenu?.setAttribute('hidden', 'true');
     }
   }
