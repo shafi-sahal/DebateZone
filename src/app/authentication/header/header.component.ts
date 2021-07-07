@@ -8,8 +8,4 @@ import { Component, Output, EventEmitter, ChangeDetectionStrategy } from '@angul
 })
 export class HeaderComponent {
   @Output() isSignup = new EventEmitter<boolean>();
-
-  emitIsSignup(isSignup: boolean): void {
-    this.isSignup.emit(isSignup);
-  }
 }

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroupDirective, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { CredentialsService } from 'src/app/shared/services/credentials.service';
 import { AuthenticationService } from '../authentication.service';
@@ -59,7 +59,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   private regexName = /^[a-zA-ZàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ'`-]+[ a-zA-ZàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ'`'-]{4,}$/;
   private regexEmail = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
 
-  form = this.formBuilder.group({
+  signUpForm = this.formBuilder.group({
     name: [
       '',
       {
@@ -68,7 +68,13 @@ export class CredentialsComponent implements OnInit, OnDestroy {
       }
     ],
     username: ['', [Validators.required, validateUsername()], this.usernameAvailabilityCheck.validate.bind(this)],
-    email: [ '', { updateOn: 'blur', validators: [Validators.required] } ],
+    email: [
+      '',
+      {
+        updateOn: 'blur',
+        validators: [Validators.required, Validators.pattern(this.regexEmail)],
+        asyncValidators: this.emailUniquenessValidator.validate.bind(this) }
+    ],
     mobile: [
       '',
       {
@@ -77,6 +83,11 @@ export class CredentialsComponent implements OnInit, OnDestroy {
         asyncValidators: this.mobileUniquenessValidator.validate.bind(this)
       }
     ],
+    password: ['', [Validators.required, Validators.minLength(8)]]
+  });
+
+  loginForm = this.formBuilder.group({
+    email: ['', Validators.required],
     password: ['', Validators.required]
   });
 
@@ -131,31 +142,25 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     this.changeMobileValidator();
   }
 
-  get name(): AbstractControl | null { return this.form.get('name'); }
-  get username(): AbstractControl | null { return this.form.get('username'); }
+  get form(): FormGroup { return this.buttonText === 'Login' ? this.loginForm : this.signUpForm; }
+  get name(): AbstractControl | null { return this.signUpForm.get('name'); }
+  get username(): AbstractControl | null { return this.signUpForm.get('username'); }
   get email(): AbstractControl | null { return this.form.get('email'); }
-  get mobile(): AbstractControl | null { return this.form.get('mobile'); }
+  get mobile(): AbstractControl | null { return this.signUpForm.get('mobile'); }
   get password(): AbstractControl | null { return this.form.get('password'); }
 
   getCountryIndex(countryName: string): number { return this.countries.findIndex(country => country.name === countryName); }
 
   initForm(isSignUp: boolean): void {
+    console.log(isSignUp);
     this.showLoginError = false;
     this.formDirective.resetForm();
     if (isSignUp) {
       this.inputDetails = this.inputDetailsSignUp;
       this.buttonText = 'Sign Up';
-      this.password?.setValidators(Validators.minLength(8));
-      this.email?.setValidators([Validators.pattern(this.regexEmail)]);
-      this.email?.setAsyncValidators(this.emailUniquenessValidator.validate.bind(this));
     } else {
       this.inputDetails = this.inputDetailsLogin;
       this.buttonText = 'Login';
-      this.password?.setValidators(Validators.required);
-      this.password?.updateValueAndValidity();
-      this.email?.setValidators(Validators.required);
-      this.email?.clearAsyncValidators();
-      this.email?.updateValueAndValidity;
     }
   }
 
@@ -215,16 +220,16 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   }
 
   addUser(): void {
-    if (this.form.invalid || this.form.pending) { return; }
+    if (this.signUpForm.invalid || this.signUpForm.pending) { return; }
     this.authenticationService.countryCode = this._country.code;
-    this.authenticationService.user = this.form.value;
+    this.authenticationService.user = this.signUpForm.value;
     this.authenticationService.addUser().subscribe(userAdded => {
       if (userAdded) { this.router.navigate(['home']); }
     });
   }
 
   login(): void {
-    if (!(this.email?.value && this.password?.value )) { return; }
+    if (this.loginForm.invalid) { return; }
     this.authenticationService.login(this.email?.value, this.password?.value).subscribe(authenticated => {
       this.showLoginError = !authenticated;
       this.changeDetector.markForCheck();
