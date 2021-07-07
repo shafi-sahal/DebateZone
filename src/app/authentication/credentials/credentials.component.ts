@@ -203,7 +203,6 @@ export class CredentialsComponent implements OnInit, OnDestroy {
       this.country = country;
       this.dialCodeInput.nativeElement.value = this._country.dialCode.replace('+', '');
     }
-    console.log(this._country);
   }
 
   changeMobileValidator(): void {
