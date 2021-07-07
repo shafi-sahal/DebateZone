@@ -73,7 +73,8 @@ export class CredentialsComponent implements OnInit, OnDestroy {
       {
         updateOn: 'blur',
         validators: [Validators.required, Validators.pattern(this.regexEmail)],
-        asyncValidators: this.emailUniquenessValidator.validate.bind(this) }
+        asyncValidators: this.emailUniquenessValidator.validate.bind(this)
+      }
     ],
     mobile: [
       '',
