@@ -158,7 +158,6 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
   getCountryIndex(countryName: string): number { return this.countries.findIndex(country => country.name === countryName); }
 
   initForm(isSignUp: boolean): void {
-    console.log(isSignUp);
     this.showLoginError = false;
     this.formDirective.resetForm();
     if (isSignUp) {
