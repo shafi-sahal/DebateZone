@@ -15,10 +15,7 @@ module.exports = (req, res, next) => {
 
   const isValidData = regexName.test(name) && regexUsername.test(username) && regexEmail.test(email) && isValidMobile && password
                       && password.length >= 8;
-  if (!isValidData) {
-    errorHandler(res);
-    return;
-  }
+  if (!isValidData) { return errorHandler(res); }
   next();
 }
 

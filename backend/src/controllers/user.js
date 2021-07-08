@@ -8,10 +8,7 @@ const bcrypt = require('bcrypt');
 
 exports.isDuplicate = (req, res) => {
   const query = req.query;
-  if (!(query.username || query.email || query.mobile)) {
-    errorHandler(res);
-    return;
-  }
+  if (!(query.username || query.email || query.mobile)) { return errorHandler(res); }
   checkUserExistence(query).then(user => res.status(200).json(user));
 }
 
@@ -22,10 +19,7 @@ exports.createUser = (req, res) => {
 exports.login = (req, res) => {
   const loginKey = req.body.loginKey;
   const password = req.body.password;
-  if (!(loginKey && password)) {
-    errorHandler(res);
-    return;
-  }
+  if (!(loginKey && password)) { return errorHandler(res); }
   const pepper = process.env.PEPPER;
   User.findOne({
     attributes: ['password'],
@@ -34,12 +28,11 @@ exports.login = (req, res) => {
     }
   })
   .then(user => {
-    if (!user) {
-      res.status(200).json({ isSuccess: false });
-      return;
-    }
-    bcrypt.compare(password + pepper, user.password).then(isMatching =>  res.status(200).json({ isSuccess: isMatching }));
-  });
+    if (!user) { return res.status(200).json({ isSuccess: false }); }
+    return bcrypt.compare(password + pepper, user.password)
+  })
+  .then(isMatching => res.status(200).json({ isSuccess: isMatching })
+  );
 }
 
 const checkUserExistence = query => {
