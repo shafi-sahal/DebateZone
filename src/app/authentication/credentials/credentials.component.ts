@@ -139,7 +139,6 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.subscriptions.add(this.isSignUp.subscribe(isSignUp => this.initForm(isSignUp)));
-    //fromEvent(this.mobileNumber.nativeElement, 'blur').subscribe(event => this.blurred.next(event));
   }
 
   set country(country: { name: string, dialCode: string, code: string }) {
@@ -219,6 +218,16 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+
+  clearErrors(control: AbstractControl | null, canAsyncValidate: Subject<boolean>): void {
+    canAsyncValidate.next(false);
+    control?.setErrors(null);
+  }
+
+  onSubmit(): void {
+    if (this.buttonText === 'Login') { this.login(); } else { this.addUser(); }
+  }
+
   private observeFocusChangeOfElement(element: ElementRef, canAsyncValidateElement: Subject<boolean>): void {
     const observableBlurElement = fromEvent(element.nativeElement, 'blur') as Observable<FocusEvent>;
     const observableFocusElement = fromEvent(element.nativeElement, 'focus') as Observable<FocusEvent>;
@@ -234,21 +243,12 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
     this.subscriptions.add(observableFocusElement.subscribe(() => canAsyncValidateElement.next(true)));
   }
 
-  changeMobileValidator(): void {
+  private changeMobileValidator(): void {
     this.mobile?.setValidators([Validators.required, validateMobile(this._country.code as CountryCode)]);
     this.mobile?.updateValueAndValidity();
   }
 
-  clearErrors(control: AbstractControl | null, canAsyncValidate: Subject<boolean>): void {
-    canAsyncValidate.next(false);
-    control?.setErrors(null);
-  }
-
-  onSubmit(): void {
-    if (this.buttonText === 'Login') { this.login(); } else { this.addUser(); }
-  }
-
-  addUser(): void {
+  private addUser(): void {
     if (this.signUpForm.invalid || this.signUpForm.pending) { return; }
     this.authenticationService.countryCode = this._country.code;
     this.authenticationService.user = this.signUpForm.value;
@@ -257,7 +257,7 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  login(): void {
+  private login(): void {
     if (this.loginForm.invalid) { return; }
     this.authenticationService.login(this.email?.value, this.password?.value).subscribe(authenticated => {
       this.showLoginError = !authenticated;
