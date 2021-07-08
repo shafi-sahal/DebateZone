@@ -3,7 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, FormGroupDirective, Validators
 import { fromEvent, Observable, Subject, Subscription } from 'rxjs';
 import { CredentialsService } from 'src/app/shared/services/credentials.service';
 import { AuthenticationService } from '../authentication.service';
-import { countries } from '../../../assets/datasets';
+import { countries } from '../datasets';
 import { validateUsername, validateMobile, UsernameAvailabilityCheck, EmailUniquenessValidator, MobileUniquenessValidator } from 'src/app/authentication/validator';
 import { CountryCode } from 'libphonenumber-js';
 import { MatSelect } from '@angular/material/select';
@@ -22,6 +22,7 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
   @ViewChild('dialCodeInput') dialCodeInput!: ElementRef;
   @ViewChild('countrySelect') countrySelect!: MatSelect;
   @ViewChild('inputMobile') inputMobile!: ElementRef;
+  @ViewChild('inputEmail') inputEmail!: ElementRef;
   buttonText = 'Login';
   countries = countries;
   _country = { name: 'India', dialCode: '+91', code: 'IN' };
@@ -29,7 +30,8 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
   labelUnknownDialCode = 'Unknown Dial Code';
   classDialCode = 'dial-code-normal';
   showLoginError = false;
-  blurredMobile = new Subject<FocusEvent>();
+  canAsyncValidateEmail = new Subject<boolean>();
+  canAsyncValidateMobile = new Subject<boolean>();
 
   inputDetails = {
     name: {
@@ -162,7 +164,10 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
     if (isSignUp) {
       this.inputDetails = this.inputDetailsSignUp;
       this.buttonText = 'Sign Up';
-      setTimeout(() => this.onBlurMobileOrEmail());
+      setTimeout(() => {
+        this.observeFocusChangeOfElement(this.inputMobile, this.canAsyncValidateMobile);
+        this.observeFocusChangeOfElement(this.inputEmail, this.canAsyncValidateEmail);
+      });
     } else {
       this.inputDetails = this.inputDetailsLogin;
       this.buttonText = 'Login';
@@ -215,14 +220,29 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  private onBlurMobileOrEmail(): void {
-    const obs = fromEvent(this.inputMobile.nativeElement, 'blur') as Observable<FocusEvent>;
-    this.subscriptions.add(obs.subscribe(blur => this.blurredMobile.next(blur)));
+  private observeFocusChangeOfElement(element: ElementRef, canAsyncValidateElement: Subject<boolean>): void {
+    const observableBlurElement = fromEvent(element.nativeElement, 'blur') as Observable<FocusEvent>;
+    const observableFocusElement = fromEvent(element.nativeElement, 'focus') as Observable<FocusEvent>;
+
+    this.subscriptions.add(observableBlurElement.subscribe(blur => {
+      const button = (blur.relatedTarget as HTMLButtonElement);
+      if (button && button.textContent === 'Login') {
+        canAsyncValidateElement.next(false);
+      } else {
+        canAsyncValidateElement.next(true);
+      }
+    }));
+    this.subscriptions.add(observableFocusElement.subscribe(() => canAsyncValidateElement.next(true)));
   }
 
   changeMobileValidator(): void {
     this.mobile?.setValidators([Validators.required, validateMobile(this._country.code as CountryCode)]);
     this.mobile?.updateValueAndValidity();
+  }
+
+  clearErrors(): void {
+    this.canAsyncValidateMobile.next(false);
+    this.mobile?.setErrors(null);
   }
 
   onSubmit(): void {
@@ -246,6 +266,6 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
       if (authenticated) { this.router.navigate(['home']); }
     });
   }
-  print(event: any) {console.log(event);}
+  print(event: any): void{console.log(event); }
   ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
 }
