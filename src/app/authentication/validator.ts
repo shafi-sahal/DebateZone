@@ -21,20 +21,19 @@ export class UsernameAvailabilityCheck implements AsyncValidator {
 
 @Injectable()
 export class EmailUniquenessValidator implements AsyncValidator {
-  private focusChangedEmail = new Subject<FocusEvent>();
+  private canAsyncValidateEmail = new Subject<boolean>();
 
   constructor(private authenticationService: AuthenticationService) {}
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
     const email = control.value;
-    return this.focusChangedEmail.pipe(
-      switchMap(blur => {
-        const isBlurredbyLoginClick = (blur.relatedTarget as HTMLButtonElement).textContent === 'Login';
-        if (isBlurredbyLoginClick) { return of(false); }
+    return this.canAsyncValidateEmail.pipe(
+      first(),
+      switchMap(canValidate => {
+        if (!canValidate) { return of(false); }
         return this.authenticationService.isDuplicateEmail(email);
       }),
-      map(isDuplicateEmail => isDuplicateEmail ? { isDuplicateEmail: true } : null),
-      first()
+      map(isDuplicateEmail => isDuplicateEmail ? { isDuplicateEmail: true } : null)
     );
   }
 }

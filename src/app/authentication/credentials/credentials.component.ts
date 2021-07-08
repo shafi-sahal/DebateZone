@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { fromEvent, Observable, Subject, Subscription } from 'rxjs';
 import { CredentialsService } from 'src/app/shared/services/credentials.service';
 import { AuthenticationService } from '../authentication.service';
@@ -240,9 +240,9 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
     this.mobile?.updateValueAndValidity();
   }
 
-  clearErrors(): void {
-    this.canAsyncValidateMobile.next(false);
-    this.mobile?.setErrors(null);
+  clearErrors(control: AbstractControl | null, canAsyncValidate: Subject<boolean>): void {
+    canAsyncValidate.next(false);
+    control?.setErrors(null);
   }
 
   onSubmit(): void {
