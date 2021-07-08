@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AbstractControl, AsyncValidator, AsyncValidatorFn, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, AsyncValidator, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { CountryCode, parsePhoneNumber} from 'libphonenumber-js';
-import { Observable} from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { debounceTime, first, map, switchMap } from 'rxjs/operators';
 import { AuthenticationService } from './authentication.service';
 
@@ -34,13 +34,19 @@ export class EmailUniquenessValidator implements AsyncValidator {
 @Injectable()
 export class MobileUniquenessValidator implements AsyncValidator {
   private _country = { name: 'India', dialCode: '+91', code: 'IN' };
-
+  private blurredMobile = new Subject<FocusEvent>();
   constructor(private authenticationService: AuthenticationService) {}
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
     const mobile = control.value;
-    return this.authenticationService.isDuplicateMobile(mobile, this._country.code).pipe(
-      map(isDuplicateMobile => isDuplicateMobile ? { isDuplicateMobile: true } : null)
+    return this.blurredMobile.pipe(
+      switchMap(blur => {
+        const isBlurredbyLoginClick = (blur.relatedTarget as HTMLButtonElement).textContent === 'Login';
+        if (isBlurredbyLoginClick) { return of(false); }
+        return this.authenticationService.isDuplicateMobile(mobile, this._country.code);
+      }),
+      map(isDuplicateMobile => isDuplicateMobile ? { isDuplicateMobile: true } : null),
+      first()
     );
   }
 }

@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
+import { fromEvent, Observable, Subject, Subscription } from 'rxjs';
 import { CredentialsService } from 'src/app/shared/services/credentials.service';
 import { AuthenticationService } from '../authentication.service';
 import { countries } from '../../../assets/datasets';
@@ -16,11 +16,12 @@ import { Router } from '@angular/router';
   providers: [CredentialsService, UsernameAvailabilityCheck, EmailUniquenessValidator, MobileUniquenessValidator],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CredentialsComponent implements OnInit, OnDestroy {
+export class CredentialsComponent implements AfterViewInit, OnDestroy {
   @Input() isSignUp = new Observable<boolean>();
   @ViewChild('formDirective') formDirective!: FormGroupDirective;
   @ViewChild('dialCodeInput') dialCodeInput!: ElementRef;
   @ViewChild('countrySelect') countrySelect!: MatSelect;
+  @ViewChild('inputMobile') inputMobile!: ElementRef;
   buttonText = 'Login';
   countries = countries;
   _country = { name: 'India', dialCode: '+91', code: 'IN' };
@@ -28,6 +29,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   labelUnknownDialCode = 'Unknown Dial Code';
   classDialCode = 'dial-code-normal';
   showLoginError = false;
+  blurredMobile = new Subject<FocusEvent>();
 
   inputDetails = {
     name: {
@@ -133,8 +135,9 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     private router: Router
   ) {}
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.subscriptions.add(this.isSignUp.subscribe(isSignUp => this.initForm(isSignUp)));
+    //fromEvent(this.mobileNumber.nativeElement, 'blur').subscribe(event => this.blurred.next(event));
   }
 
   set country(country: { name: string, dialCode: string, code: string }) {
@@ -159,6 +162,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     if (isSignUp) {
       this.inputDetails = this.inputDetailsSignUp;
       this.buttonText = 'Sign Up';
+      setTimeout(() => this.onBlurMobileOrEmail());
     } else {
       this.inputDetails = this.inputDetailsLogin;
       this.buttonText = 'Login';
@@ -211,6 +215,11 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     }
   }
 
+  private onBlurMobileOrEmail(): void {
+    const obs = fromEvent(this.inputMobile.nativeElement, 'blur') as Observable<FocusEvent>;
+    this.subscriptions.add(obs.subscribe(blur => this.blurredMobile.next(blur)));
+  }
+
   changeMobileValidator(): void {
     this.mobile?.setValidators([Validators.required, validateMobile(this._country.code as CountryCode)]);
     this.mobile?.updateValueAndValidity();
@@ -237,6 +246,6 @@ export class CredentialsComponent implements OnInit, OnDestroy {
       if (authenticated) { this.router.navigate(['home']); }
     });
   }
-
+  print(event: any) {console.log(event);}
   ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
 }
