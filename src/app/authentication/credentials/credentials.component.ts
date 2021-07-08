@@ -266,6 +266,6 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
       if (authenticated) { this.router.navigate(['home']); }
     });
   }
-  print(event: any): void{console.log(event); }
+
   ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
 }
