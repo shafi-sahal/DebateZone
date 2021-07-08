@@ -21,12 +21,20 @@ export class UsernameAvailabilityCheck implements AsyncValidator {
 
 @Injectable()
 export class EmailUniquenessValidator implements AsyncValidator {
+  private focusChangedEmail = new Subject<FocusEvent>();
+
   constructor(private authenticationService: AuthenticationService) {}
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
     const email = control.value;
-    return this.authenticationService.isDuplicateEmail(email).pipe(
-      map(isDuplicateEmail => isDuplicateEmail ? { isDuplicateEmail: true } : null)
+    return this.focusChangedEmail.pipe(
+      switchMap(blur => {
+        const isBlurredbyLoginClick = (blur.relatedTarget as HTMLButtonElement).textContent === 'Login';
+        if (isBlurredbyLoginClick) { return of(false); }
+        return this.authenticationService.isDuplicateEmail(email);
+      }),
+      map(isDuplicateEmail => isDuplicateEmail ? { isDuplicateEmail: true } : null),
+      first()
     );
   }
 }
@@ -34,19 +42,19 @@ export class EmailUniquenessValidator implements AsyncValidator {
 @Injectable()
 export class MobileUniquenessValidator implements AsyncValidator {
   private _country = { name: 'India', dialCode: '+91', code: 'IN' };
-  private blurredMobile = new Subject<FocusEvent>();
+  private canAsyncValidateMobile = new Subject<boolean>();
+
   constructor(private authenticationService: AuthenticationService) {}
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
     const mobile = control.value;
-    return this.blurredMobile.pipe(
-      switchMap(blur => {
-        const isBlurredbyLoginClick = (blur.relatedTarget as HTMLButtonElement).textContent === 'Login';
-        if (isBlurredbyLoginClick) { return of(false); }
+    return this.canAsyncValidateMobile.pipe(
+      first(),
+      switchMap(canValidate => {
+        if (!canValidate) { return of(false); }
         return this.authenticationService.isDuplicateMobile(mobile, this._country.code);
       }),
-      map(isDuplicateMobile => isDuplicateMobile ? { isDuplicateMobile: true } : null),
-      first()
+      map(isDuplicateMobile => isDuplicateMobile ? { isDuplicateMobile: true } : null)
     );
   }
 }

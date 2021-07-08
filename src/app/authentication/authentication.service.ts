@@ -60,7 +60,7 @@ export class AuthenticationService {
   }
 
   getCountryFromMobile(mobile: string): string | undefined {
-    return parsePhoneNumber(mobile).country;
+    try { return parsePhoneNumber(mobile).country; } catch { return undefined; }
   }
 
   private parseMobile(mobile: string, countryCode: string): string {
