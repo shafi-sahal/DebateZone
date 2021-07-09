@@ -55,11 +55,11 @@ export class AuthenticationService {
     this.spinner.show('Taking you where you want to go...');
     const loginData = { loginKey: loginKey, password: password };
     return this.http.post<{ isSuccess: boolean }>(BACKEND_URL, loginData).pipe(map(response => {
+      console.log(response);
      if (!response.isSuccess)  { this.spinner.hide(); }
      return response.isSuccess;
     }),
-    catchError(() => of(false))
-    );
+    catchError(() => of(false)));
   }
 
   getCountryFromMobile(mobile: string): string | undefined {
