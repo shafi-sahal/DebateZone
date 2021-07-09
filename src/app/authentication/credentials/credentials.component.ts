@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { fromEvent, Observable, Subject, Subscription } from 'rxjs';
 import { CredentialsService } from 'src/app/shared/services/credentials.service';
 import { AuthenticationService } from '../authentication.service';
@@ -30,8 +30,8 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
   labelUnknownDialCode = 'Unknown Dial Code';
   classDialCode = 'dial-code-normal';
   showLoginError = false;
-  canAsyncValidateEmail = new Subject<boolean>();
-  canAsyncValidateMobile = new Subject<boolean>();
+  shouldAsyncValidateEmail = new Subject<boolean>();
+  shouldAsyncValidateMobile = new Subject<boolean>();
 
   inputDetails = {
     name: {
@@ -163,8 +163,8 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
       this.inputDetails = this.inputDetailsSignUp;
       this.buttonText = 'Sign Up';
       setTimeout(() => {
-        this.observeFocusChangeOfElement(this.inputMobile, this.canAsyncValidateMobile);
-        this.observeFocusChangeOfElement(this.inputEmail, this.canAsyncValidateEmail);
+        this.observeFocusChangeOfElement(this.inputMobile, this.shouldAsyncValidateMobile);
+        this.observeFocusChangeOfElement(this.inputEmail, this.shouldAsyncValidateEmail);
       });
     } else {
       this.inputDetails = this.inputDetailsLogin;
