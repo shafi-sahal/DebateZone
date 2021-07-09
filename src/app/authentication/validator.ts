@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AbstractControl, AsyncValidator, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { CountryCode, parsePhoneNumber} from 'libphonenumber-js';
 import { Observable, of, Subject } from 'rxjs';
-import { debounceTime, first, map, switchMap } from 'rxjs/operators';
+import { catchError, debounceTime, first, map, switchMap } from 'rxjs/operators';
 import { AuthenticationService } from './authentication.service';
 
 @Injectable()
@@ -14,7 +14,8 @@ export class UsernameAvailabilityCheck implements AsyncValidator {
       debounceTime(1000),
       switchMap(username => this.authenticationService.isDuplicateUsername(username)),
       map(isDuplicateUsername => isDuplicateUsername ? { isDuplicateUsername: true } : null),
-      first()
+      first(),
+      catchError(() => of({ unknownError: true }))
     );
   }
 }
@@ -33,7 +34,8 @@ export class EmailUniquenessValidator implements AsyncValidator {
         if (!canValidate) { return of(false); }
         return this.authenticationService.isDuplicateEmail(email);
       }),
-      map(isDuplicateEmail => isDuplicateEmail ? { isDuplicateEmail: true } : null)
+      map(isDuplicateEmail => isDuplicateEmail ? { isDuplicateEmail: true } : null),
+      catchError(() => of({ unknownError: true }))
     );
   }
 }
@@ -53,7 +55,8 @@ export class MobileUniquenessValidator implements AsyncValidator {
         if (!canValidate) { return of(false); }
         return this.authenticationService.isDuplicateMobile(mobile, this._country.code);
       }),
-      map(isDuplicateMobile => isDuplicateMobile ? { isDuplicateMobile: true } : null)
+      map(isDuplicateMobile => isDuplicateMobile ? { isDuplicateMobile: true } : null),
+      catchError(() => of({ unknownError: true }))
     );
   }
 }
