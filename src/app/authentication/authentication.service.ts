@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from './user.model';
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 import { Spinner } from '../shared/components/spinner/spinner.service';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
+import { error } from 'selenium-webdriver';
 
 const BACKEND_URL = environment.apiUrl + '/user';
 
@@ -56,7 +57,9 @@ export class AuthenticationService {
     return this.http.post<{ isSuccess: boolean }>(BACKEND_URL, loginData).pipe(map(response => {
      if (!response.isSuccess)  { this.spinner.hide(); }
      return response.isSuccess;
-    }));
+    }),
+    catchError(() => of(false))
+    );
   }
 
   getCountryFromMobile(mobile: string): string | undefined {
