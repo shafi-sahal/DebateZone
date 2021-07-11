@@ -219,8 +219,8 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
   }
 
 
-  clearErrors(control: AbstractControl | null, canAsyncValidate: Subject<boolean>): void {
-    canAsyncValidate.next(false);
+  clearErrors(control: AbstractControl | null, canAsyncValidate?: Subject<boolean>): void {
+    canAsyncValidate?.next(false);
     control?.setErrors(null);
   }
 
