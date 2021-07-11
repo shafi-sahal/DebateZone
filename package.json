@@ -29,6 +29,7 @@
     "jquery": "^3.6.0",
     "jsonwebtoken": "^8.5.1",
     "libphonenumber-js": "^1.9.18",
+    "mat-select-search": "^0.0.1",
     "mysql2": "^2.2.5",
     "rxjs": "~6.6.0",
     "sequelize": "^6.6.2",

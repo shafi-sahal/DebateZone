@@ -1,5 +1,5 @@
 const parsePhoneNumber = require('libphonenumber-js');
-const errorHandler = require('../error-handler');
+const errorHandler = require('../shared/error-handler');
 
 module.exports = (req, res, next) => {
   const body = req.body;
@@ -15,13 +15,13 @@ module.exports = (req, res, next) => {
 
   const isValidData = regexName.test(name) && regexUsername.test(username) && regexEmail.test(email) && isValidMobile && password
                       && password.length >= 8;
-  if (!isValidData) { return errorHandler(res); }
+  if (!isValidData) return errorHandler(res);
   next();
 }
 
 const isMobileValid = number => {
-  if (!number) { return false; }
+  if (!number) return false;
   const mobileParsed = parsePhoneNumber(number);
-  if (!mobileParsed) { return false; }
+  if (!mobileParsed) return false;
   return mobileParsed.isValid();
 }

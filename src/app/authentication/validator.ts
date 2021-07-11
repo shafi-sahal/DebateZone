@@ -22,16 +22,16 @@ export class UsernameAvailabilityCheck implements AsyncValidator {
 
 @Injectable()
 export class EmailUniquenessValidator implements AsyncValidator {
-  private canAsyncValidateEmail = new Subject<boolean>();
+  private shouldAsyncValidateEmail = new Subject<boolean>();
 
   constructor(private authenticationService: AuthenticationService) {}
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
     const email = control.value;
-    return this.canAsyncValidateEmail.pipe(
+    return this.shouldAsyncValidateEmail.pipe(
       first(),
       switchMap(canValidate => {
-        if (!canValidate) { return of(false); }
+        if (!canValidate) return of(false);
         return this.authenticationService.isDuplicateEmail(email);
       }),
       map(isDuplicateEmail => isDuplicateEmail ? { isDuplicateEmail: true } : null),
@@ -43,16 +43,16 @@ export class EmailUniquenessValidator implements AsyncValidator {
 @Injectable()
 export class MobileUniquenessValidator implements AsyncValidator {
   private _country = { name: 'India', dialCode: '+91', code: 'IN' };
-  private canAsyncValidateMobile = new Subject<boolean>();
+  private shouldAsyncValidateMobile = new Subject<boolean>();
 
   constructor(private authenticationService: AuthenticationService) {}
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
     const mobile = control.value;
-    return this.canAsyncValidateMobile.pipe(
+    return this.shouldAsyncValidateMobile.pipe(
       first(),
       switchMap(canValidate => {
-        if (!canValidate) { return of(false); }
+        if (!canValidate) return of(false);
         return this.authenticationService.isDuplicateMobile(mobile, this._country.code);
       }),
       map(isDuplicateMobile => isDuplicateMobile ? { isDuplicateMobile: true } : null),
@@ -64,19 +64,19 @@ export class MobileUniquenessValidator implements AsyncValidator {
 export function validateUsername(): ValidatorFn {
   return  (control: AbstractControl): ValidationErrors | null => {
     const username: string = control.value;
-    if (!username) { return null; }
+    if (!username) return null;
 
     const disAllowedStartingCharacters = /^[.]/;
-    if (disAllowedStartingCharacters.test(username)) { return { disallowedStartingCharacter: true }; }
+    if (disAllowedStartingCharacters.test(username)) return { disallowedStartingCharacter: true };
 
     const allowedCharacters = /[a-zA-Z0-9._@-]+$/;
-    if (!allowedCharacters.test(username)) { return { disallowedCharacter: true }; }
+    if (!allowedCharacters.test(username)) return { disallowedCharacter: true };
 
     const allowedEndingCharcters = /[a-zA-Z0-9_@-]+(?<!\.)$/;
-    if (!allowedEndingCharcters.test(username)) { return { disallowedEndingCharacter: true }; }
+    if (!allowedEndingCharcters.test(username)) return { disallowedEndingCharacter: true };
 
-    if (username.length < 5) { return { isTooSmall: true }; }
-    if (username.length > 30) { return { isTooBig: true }; }
+    if (username.length < 5) return { isTooSmall: true };
+    if (username.length > 30) return { isTooBig: true };
 
     return null;
   };
@@ -85,12 +85,12 @@ export function validateUsername(): ValidatorFn {
 export function validateMobile(countryCode: CountryCode): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const mobile: string = control.value;
-    if (!mobile) { return null; }
+    if (!mobile) return null;
 
     try {
       const mobileParsed = parsePhoneNumber(mobile, countryCode);
       const isValid =  mobileParsed.isValid() && mobileParsed.country === countryCode;
-      if(!isValid) { return { invalidMobile: true }; }
+      if(!isValid) return { invalidMobile: true };
     } catch {
       return { invalidMobile: true };
     }

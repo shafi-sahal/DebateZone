@@ -225,7 +225,7 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
   }
 
   onSubmit(): void {
-    if (this.buttonText === 'Login') { this.login(); } else { this.addUser(); }
+    if (this.buttonText === 'Login')  this.login();  else  this.addUser();
   }
 
   private observeFocusChangeOfElement(element: ElementRef, canAsyncValidateElement: Subject<boolean>): void {
@@ -249,7 +249,7 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
   }
 
   private addUser(): void {
-    if (this.signUpForm.invalid || this.signUpForm.pending) { return; }
+    if (this.signUpForm.invalid || this.signUpForm.pending) return;
     this.authenticationService.countryCode = this._country.code;
     this.authenticationService.user = this.signUpForm.value;
     this.authenticationService.addUser().subscribe(userAdded => {
@@ -258,7 +258,7 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
   }
 
   private login(): void {
-    if (this.loginForm.invalid) { return; }
+    if (this.loginForm.invalid) return;
     this.authenticationService.login(this.email?.value, this.password?.value).subscribe(authenticated => {
       this.showLoginError = !authenticated;
       this.changeDetector.markForCheck();

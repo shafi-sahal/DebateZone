@@ -1,38 +1,41 @@
 const Sequelize = require('sequelize');
-const errorHandler = require('../error-handler');
+const errorHandler = require('../shared/error-handler');
 const User = require('../models/user');
 const messages = require('../messages');
 const querystring = require('querystring');
 const url = require('url');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 exports.isDuplicate = (req, res) => {
   const query = req.query;
-  if (!(query.username || query.email || query.mobile)) { return errorHandler(res); }
+  if (!(query.username || query.email || query.mobile)) return errorHandler(res);
   checkUserExistence(query).then(user => res.status(200).json(user));
 }
 
 exports.createUser = (req, res) => {
-  User.create(req.body).then(() => res.status(200).json({ isSuccess: true })).catch(error => errorHandler(res, error));
+  User.create(req.body).then(() => res.status(201).end()).catch(error => errorHandler(res, error));
 }
 
 exports.login = (req, res) => {
   const loginKey = req.body.loginKey;
   const password = req.body.password;
-  if (!(loginKey && password)) { return errorHandler(res); }
+  if (!(loginKey && password)) return errorHandler(res);
   const pepper = process.env.PEPPER;
+  let fetchedUser;
   User.findOne({
-    attributes: ['password'],
+    attributes: ['id', 'password'],
     where: {
       [Sequelize.Op.or]: [ { email: loginKey }, { username: loginKey }, { mobile: loginKey } ]
     }
   })
   .then(user => {
-    if (!user) { return res.status(200).json({ isSuccess: false }); }
-    return bcrypt.compare(password + pepper, user.password)
+    if (!user) return res.status(401).end();
+    bcrypt.compare(password + pepper, user.password).then(isMatching => {
+      if (isMatching) res.status(200).end(); else res.status(401).end();
+    });
   })
-  .then(isMatching => res.status(200).json({ isSuccess: isMatching })
-  );
+
 }
 
 const checkUserExistence = query => {

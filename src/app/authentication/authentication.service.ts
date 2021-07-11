@@ -46,20 +46,13 @@ export class AuthenticationService {
 
   addUser(): Observable<boolean> {
     this.spinner.show('Setting up your account...');
-    return this.http.post<{ isSuccess: boolean }>(BACKEND_URL + '/signup', this._user).pipe(map(response =>
-      response.isSuccess
-    ));
+    return this.http.post(BACKEND_URL + '/signup', this._user).pipe(map(() => true), catchError(() => of(false)));
   }
 
   login(loginKey: string, password: string): Observable<boolean> {
     this.spinner.show('Taking you where you want to go...');
     const loginData = { loginKey: loginKey, password: password };
-    return this.http.post<{ isSuccess: boolean }>(BACKEND_URL, loginData).pipe(map(response => {
-      console.log(response);
-     if (!response.isSuccess)  { this.spinner.hide(); }
-     return response.isSuccess;
-    }),
-    catchError(() => of(false)));
+    return this.http.post(BACKEND_URL, loginData).pipe(map(() => true), catchError(() => of(false)));
   }
 
   getCountryFromMobile(mobile: string): string | undefined {

@@ -16,12 +16,12 @@ export class ErrorInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         let errorMessage = 'An unknown error occured';
         this.spinner.hide();
-        if (error.status === 401) { return throwError(error); }
+        if (error.status === 401) return throwError(error);
         if (error.error.message) {
           errorMessage = error.error.message;
         }
         this.dialog.open(ErrorComponent, { data: { message: errorMessage }, panelClass: 'custom-dialog' });
-        if (error.status === 0) { return of(error.error); }
+        if (error.status === 0) return of(error.error);
         return throwError(error);
       })
     );
