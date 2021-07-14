@@ -1,6 +1,6 @@
-const errorHandler = (res, error = 'Unknown Error') => {
+const errorHandler = (res, error = 'Unknown Error', status = 500) => {
   console.log(error);
-  res.status(500).end();
+  res.status(status).end();
 };
 
 module.exports = errorHandler;

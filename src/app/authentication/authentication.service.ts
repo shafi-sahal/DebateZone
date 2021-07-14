@@ -6,7 +6,7 @@ import { User } from './user.model';
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 import { Spinner } from '../shared/components/spinner/spinner.service';
 import { catchError, map } from 'rxjs/operators';
-import { error } from 'selenium-webdriver';
+import { SessionService } from '../session.service';
 
 const BACKEND_URL = environment.apiUrl + '/user';
 
@@ -14,16 +14,20 @@ const BACKEND_URL = environment.apiUrl + '/user';
 export class AuthenticationService {
   countryCode = '';
   private _user!: User;
+  private _token = '';
 
   constructor(
     private http: HttpClient,
-    private spinner: Spinner
+    private spinner: Spinner,
+    private sessionService: SessionService
   ) {}
 
   set user(user: User) {
     this._user = user;
     this._user.mobile = this.parseMobile(this._user.mobile, this.countryCode);
   }
+
+  get token(): string { return this._token; }
 
   isDuplicateUsername(username: string): Observable<boolean> {
     return this.http.get<{ isDuplicateUsername: boolean }>(BACKEND_URL + '?username=' + username).pipe(
@@ -52,7 +56,14 @@ export class AuthenticationService {
   login(loginKey: string, password: string): Observable<boolean> {
     this.spinner.show('Taking you where you want to go...');
     const loginData = { loginKey: loginKey, password: password };
-    return this.http.post(BACKEND_URL, loginData).pipe(map(() => true), catchError(() => of(false)));
+    return this.http.post<{ token: string }>(BACKEND_URL, loginData).pipe(
+      map(response => {
+        this._token = response.token;
+        this.sessionService.writeToken(this._token);
+        return true;
+      }),
+      catchError(() => of(false))
+    );
   }
 
   getCountryFromMobile(mobile: string): string | undefined {

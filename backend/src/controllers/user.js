@@ -5,7 +5,8 @@ const messages = require('../messages');
 const querystring = require('querystring');
 const url = require('url');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const { throwError } = require('rxjs');
+const { createSigner } = require('fast-jwt');
 
 exports.isDuplicate = (req, res) => {
   const query = req.query;
@@ -22,7 +23,8 @@ exports.login = (req, res) => {
   const password = req.body.password;
   if (!(loginKey && password)) return errorHandler(res);
   const pepper = process.env.PEPPER;
-  let fetchedUser;
+  let fetchedUserId;
+
   User.findOne({
     attributes: ['id', 'password'],
     where: {
@@ -30,11 +32,26 @@ exports.login = (req, res) => {
     }
   })
   .then(user => {
-    if (!user) return res.status(401).end();
-    bcrypt.compare(password + pepper, user.password).then(isMatching => {
-      if (isMatching) res.status(200).end(); else res.status(401).end();
-    });
+    if (!user) throw(404);
+    fetchedUserId = user.id;
+    const pepper = process.env.PEPPER;
+    return bcrypt.compare(password + pepper, user.password)
   })
+  .then(isMatching => {
+    if (!isMatching) return res.status(401).end();
+    const sign = createSigner({ key: process.env.JWT_SECRET });
+    const token = sign({ userId: fetchedUserId });
+    res.json({ token: token });
+  })
+  .catch(error => {
+    /*
+      A 404 error code is turned to 401 due to security reasons.
+      The client should not be able to tell whether the username or password is wrong specifically to make it more difficult for
+      unauthorized access.
+      This behaviuor does not decrease user friendliness as users can login using their email, username or mobile.
+    */
+    if (error === 404) errorHandler(res, error, 401); else errorHandler(res, error);
+  });
 
 }
 
