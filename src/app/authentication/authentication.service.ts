@@ -50,7 +50,14 @@ export class AuthenticationService {
 
   addUser(): Observable<boolean> {
     this.spinner.show('Setting up your account...');
-    return this.http.post(BACKEND_URL + '/signup', this._user).pipe(map(() => true), catchError(() => of(false)));
+    return this.http.post<{ token: string }>(BACKEND_URL + '/signup', this._user).pipe(
+      map(response => {
+        this._token = response.token;
+        this.sessionService.writeToken(this._token);
+        return true;
+      }),
+      catchError(() => of(false))
+    );
   }
 
   login(loginKey: string, password: string): Observable<boolean> {

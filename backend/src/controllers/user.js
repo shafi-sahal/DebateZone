@@ -15,7 +15,11 @@ exports.isDuplicate = (req, res) => {
 }
 
 exports.createUser = (req, res) => {
-  User.create(req.body).then(() => res.status(201).end()).catch(error => errorHandler(res, error));
+  User.create(req.body).then(user =>
+    res.status(201).json({ token: generateToken({ userId: user.id }) })
+  )
+  .catch(error => errorHandler(res, error)
+  );
 }
 
 exports.login = (req, res) => {
@@ -39,9 +43,9 @@ exports.login = (req, res) => {
   })
   .then(isMatching => {
     if (!isMatching) return res.status(401).end();
-    const sign = createSigner({ key: process.env.JWT_SECRET });
-    const token = sign({ userId: fetchedUserId });
-    res.json({ token: token });
+    res.json({
+       token: generateToken({ userId: fetchedUserId })
+    });
   })
   .catch(error => {
     /*
@@ -69,4 +73,9 @@ const capitalizeFirstLetter = word => {
   const splitted = word.split('');
   splitted[0] = splitted[0].toUpperCase();
   return splitted.join('');
+}
+
+const generateToken = payload => {
+  const sign = createSigner({ key: process.env.JWT_SECRET });
+  return sign(payload);
 }
