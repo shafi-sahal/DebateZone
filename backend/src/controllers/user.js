@@ -11,7 +11,7 @@ const { createSigner } = require('fast-jwt');
 exports.isDuplicate = (req, res) => {
   const query = req.query;
   if (!(query.username || query.email || query.mobile)) return errorHandler(res);
-  checkUserExistence(query).then(user => res.status(200).json(user));
+  checkUserExistence(query).then(hasUser => res.status(200).json(hasUser));
 }
 
 exports.createUser = (req, res) => {
