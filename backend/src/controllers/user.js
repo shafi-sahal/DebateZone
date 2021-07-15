@@ -16,7 +16,9 @@ exports.isDuplicate = (req, res) => {
 
 exports.createUser = (req, res) => {
   User.create(req.body).then(user =>
-    res.status(201).json({ token: generateToken({ userId: user.id }) })
+    res.status(201).json({
+       token: generateToken({ userId: user.id })
+    })
   )
   .catch(error => errorHandler(res, error)
   );
@@ -42,7 +44,7 @@ exports.login = (req, res) => {
     return bcrypt.compare(password + pepper, user.password)
   })
   .then(isMatching => {
-    if (!isMatching) return res.status(401).end();
+    if (!isMatching) return res.sendStatus(401);
     res.json({
        token: generateToken({ userId: fetchedUserId })
     });
@@ -56,7 +58,6 @@ exports.login = (req, res) => {
     */
     if (error === 404) errorHandler(res, error, 401); else errorHandler(res, error);
   });
-
 }
 
 const checkUserExistence = query => {
