@@ -234,11 +234,8 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
 
     this.subscriptions.add(observableBlurElement.subscribe(blur => {
       const button = (blur.relatedTarget as HTMLButtonElement);
-      if (button && button.textContent === 'Login') {
-        canAsyncValidateElement.next(false);
-      } else {
-        canAsyncValidateElement.next(true);
-      }
+      const isBlurredByloginClick = button && button.textContent === 'Login';
+      canAsyncValidateElement.next(!isBlurredByloginClick);
     }));
     this.subscriptions.add(observableFocusElement.subscribe(() => canAsyncValidateElement.next(true)));
   }
