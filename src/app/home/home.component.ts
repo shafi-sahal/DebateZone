@@ -10,7 +10,7 @@ import { Spinner } from '../shared/components/spinner/spinner.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent {
-  @ViewChild('sidenav') sidenav!: MatSidenav;
+  @ViewChild(MatSidenav) sidenav!: MatSidenav;
   mode = 'closed';
   isMobile = true;
 

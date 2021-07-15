@@ -1,11 +1,11 @@
-import { AfterViewInit, Directive, ElementRef, HostListener } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, HostListener, Renderer2 } from '@angular/core';
 
 @Directive({ selector: '[appAdaptHeight]' })
 export class AdaptHeight implements AfterViewInit {
   private body: HTMLBodyElement = this.element.nativeElement;
   private matCard!: HTMLElement;
 
-  constructor(private element: ElementRef) {}
+  constructor(private element: ElementRef, private renderer: Renderer2) {}
 
   ngAfterViewInit(): void {
     console.log(this.element);
@@ -20,9 +20,9 @@ export class AdaptHeight implements AfterViewInit {
 
   private adjustScreenHeight(matCardHeight: number): void {
     if (matCardHeight >= window.innerHeight) {
-      this.body.style.height = matCardHeight + 100 + 'px';
+      this.renderer.setStyle(this.body, 'height', matCardHeight + 100 + 'px');
     } else {
-      this.body.style.height = window.innerHeight + 'px';
+      this.renderer.setStyle(this.body, 'height', window.innerHeight + 'px');
     }
   }
 }

@@ -1,30 +1,33 @@
-import { AfterViewInit, Directive, HostListener} from '@angular/core';
+import { AfterViewInit, ContentChild, Directive, ElementRef, HostListener, Renderer2 } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { screenSizes } from '../../assets/screen-sizes';
 
-@Directive({ selector: '[appAdaptSideNavToDevice]' })
-export class SideNavRenderer implements AfterViewInit {
-  private previousWindowWidth = 0;
+@Directive({ selector: '[appAdaptSidenavToDevice]' })
+export class SidenavAdapter implements AfterViewInit {
+  @ContentChild('sidenav') sidenav!: MatSidenav;
+  @ContentChild('buttonMenu', { read: ElementRef }) buttonMenu!: ElementRef;
+  private previousIsMobile = true;
 
-  constructor (private sidenav: MatSidenav) {}
+  constructor(private renderer: Renderer2) {}
 
   ngAfterViewInit(): void {
-    this.adaptSideNavToDevice();
+    this.adaptSidenavToedvice();
   }
 
   @HostListener('window:resize', ['$event'])
-  private adaptSideNavToDevice(): void {
-    const windowWidth = window.innerWidth;
-    const buttonMenu = document.getElementById('button-menu');
-    if (windowWidth < screenSizes.desktopWidth) {
+  private adaptSidenavToedvice(): void {
+    const isMobile = window.innerWidth < screenSizes.desktopWidth;
+
+    if (isMobile) {
       this.sidenav.mode = 'over';
-      if (this.previousWindowWidth >= screenSizes.desktopWidth) { this.sidenav.close(); }
-      buttonMenu?.removeAttribute('hidden');
+      if (!this.previousIsMobile) this.sidenav.close();
+      this.renderer.removeAttribute(this.buttonMenu.nativeElement, 'hidden');
     } else {
       this.sidenav.mode = 'side';
       this.sidenav.open();
-      buttonMenu?.setAttribute('hidden', 'true');
+      this.renderer.setAttribute(this.buttonMenu.nativeElement, 'hidden', 'true');
     }
-    this.previousWindowWidth = windowWidth;
+
+    this.previousIsMobile = isMobile;
   }
 }

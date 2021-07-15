@@ -1,12 +1,13 @@
-import { AfterViewInit, Directive, ElementRef } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Renderer2 } from '@angular/core';
 
 @Directive({ selector: '[appMultiLine]' })
 export class MatOptionMultiLineDirective implements AfterViewInit {
-  constructor(private matOption: ElementRef) {}
+  constructor(private matOption: ElementRef, private renderer: Renderer2) {}
 
   ngAfterViewInit(): void {
     const matOptionText: HTMLSpanElement = this.matOption.nativeElement.childNodes[1];
-    matOptionText.style.cssText = 'line-height: initial; white-space: normal;';
+    this.renderer.setStyle(matOptionText, 'line-height', 'initial');
+    this.renderer.setStyle(matOptionText, 'white-space', 'normal');
 
     /*
       The country 'Saint Vincent and the Grenadines' and it's country code are taking much width in the mat-options causing to
@@ -24,7 +25,7 @@ export class MatOptionMultiLineDirective implements AfterViewInit {
     const countryName = countryParagraph.textContent;
 
     if(countryName === 'Saint Vincent and the Grenadines') {
-      countryParagraph.style['width'] = 'calc(100% - 60px)';
+      this.renderer.setStyle(countryParagraph, 'width', 'calc(100% - 60px)');
     }
   }
 }
