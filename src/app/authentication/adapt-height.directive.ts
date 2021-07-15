@@ -8,7 +8,6 @@ export class AdaptHeight implements AfterViewInit {
   constructor(private element: ElementRef, private renderer: Renderer2) {}
 
   ngAfterViewInit(): void {
-    console.log(this.element);
     const matCard = document.getElementById('mat-card');
     if (matCard) { this.matCard = matCard; }
     const resizeObserver = new ResizeObserver(() => this.adjustScreenHeight(this.matCard.offsetHeight));
