@@ -1,10 +1,14 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, ViewChild
+} from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { fromEvent, Observable, Subject, Subscription } from 'rxjs';
 import { CredentialsService } from 'src/app/shared/services/credentials.service';
 import { AuthenticationService } from '../authentication.service';
 import { countries } from '../datasets';
-import { validateUsername, validateMobile, UsernameAvailabilityCheck, EmailUniquenessValidator, MobileUniquenessValidator } from 'src/app/authentication/validator';
+import {
+  validateUsername, validateMobile, UsernameAvailabilityCheck, EmailUniquenessValidator, MobileUniquenessValidator
+} from 'src/app/authentication/validator';
 import { CountryCode } from 'libphonenumber-js';
 import { MatSelect } from '@angular/material/select';
 import { Router } from '@angular/router';
