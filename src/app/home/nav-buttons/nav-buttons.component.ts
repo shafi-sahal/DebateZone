@@ -12,7 +12,7 @@ export class NavButtonsComponent {
   constructor(public sessionService: SessionService, private router: Router) { }
 
   onClickLogout(): void {
-    this.sessionService.clearToken();
+    this.sessionService.destroySession();
     this.router.navigate(['authentication']);
   }
 }

@@ -11,7 +11,7 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
     'Access-Control-Allow-Headers',
-    'Content-Type'
+    'Content-Type, Authorization'
   );
   res.setHeader('Acess-Control-Allow-Methods', 'GET, POST');
   next();

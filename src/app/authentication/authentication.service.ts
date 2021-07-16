@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { User } from './user.model';
+import { User } from '../shared/models/user.model';
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 import { Spinner } from '../shared/components/spinner/spinner.service';
 import { catchError, map } from 'rxjs/operators';
@@ -24,7 +24,7 @@ export class AuthenticationService {
 
   set user(user: User) {
     this._user = user;
-    this._user.mobile = this.parseMobile(this._user.mobile, this.countryCode);
+    if (this._user.mobile) this._user.mobile = this.parseMobile(this._user.mobile, this.countryCode);
   }
 
   isDuplicateUsername(username: string): Observable<boolean> {
@@ -48,9 +48,9 @@ export class AuthenticationService {
 
   addUser(): Observable<boolean> {
     this.spinner.show('Setting up your account...');
-    return this.http.post<{ token: string, username: string }>(USER_URL + '/signup', this._user).pipe(
+    return this.http.post<{ token: string, user: User }>(USER_URL + '/signup', this._user).pipe(
       map(response => {
-        this.sessionService.writeToken(response.token);
+        this.sessionService.createSession(response.token, response.user);
         return true;
       }),
       catchError(() => of(false))
@@ -60,9 +60,9 @@ export class AuthenticationService {
   login(loginKey: string, password: string): Observable<boolean> {
     this.spinner.show('Taking you where you want to go...');
     const loginData = { loginKey: loginKey, password: password };
-    return this.http.post<{ token: string, username: string }>(USER_URL, loginData).pipe(
+    return this.http.post<{ token: string, user: User }>(USER_URL, loginData).pipe(
       map(response => {
-        this.sessionService.writeToken(response.token);
+        this.sessionService.createSession(response.token, response.user);
         return true;
       }),
       catchError(() => of(false))

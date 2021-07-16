@@ -33,23 +33,23 @@ exports.login = (req, res) => {
   let fetchedUser;
 
   User.findOne({
-    attributes: ['id', 'username', 'password'],
+    attributes: ['id', 'name', 'username', 'password'],
     where: {
       [Sequelize.Op.or]: [ { email: loginKey }, { username: loginKey }, { mobile: loginKey } ]
     }
   })
   .then(user => {
     if (!user) throw(404);
-    fetchedUser = user;
+    fetchedUser = {...user.dataValues};
     const pepper = process.env.PEPPER;
     return bcrypt.compare(password + pepper, user.password)
   })
   .then(isMatching => {
     if (!isMatching) return res.sendStatus(401);
-    console.log(fetchedUser);
-    res.json({
-      token: generateToken({ userId: fetchedUser.id })
-    })
+    const token = generateToken({ userId: fetchedUser.id });
+    delete fetchedUser.password;
+    delete fetchedUser.id;
+    res.json({ token: token, user: fetchedUser })
   })
   .catch(error => {
     /*
@@ -60,6 +60,12 @@ exports.login = (req, res) => {
     */
     if (error === 404) errorHandler(res, error, 401); else errorHandler(res, error);
   });
+}
+
+exports.fetchUser = (req, res) => {
+  User.findOne({ attributes: ['name', 'username'], where: { id: req.userId } })
+  .then(user => res.json({ user: user }))
+  .catch(error => errorHandler(res, error));
 }
 
 const checkUserExistence = query => {
