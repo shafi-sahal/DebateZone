@@ -18,7 +18,7 @@ export class AppComponent implements OnInit, OnDestroy {
   ) { this.spinner.show('I am coming...'); }
 
   ngOnInit(): void {
-    window.addEventListener('storage', () => this.checkAuthentication());
+    window.addEventListener('storage', (event) => { if (event.storageArea === localStorage) this.checkAuthentication(); });
   }
 
   ngOnDestroy(): void {
