@@ -254,7 +254,7 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
     this.authenticationService.countryCode = this._country.code;
     this.authenticationService.user = this.signUpForm.value;
     this.authenticationService.addUser().subscribe(userAdded => {
-      if (userAdded) { this.router.navigate(['home']); }
+      if (userAdded) { this.router.navigate(['']); }
     });
   }
 
@@ -263,7 +263,7 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
     this.authenticationService.login(this.email?.value, this.password?.value).subscribe(authenticated => {
       this.showLoginError = !authenticated;
       this.changeDetector.markForCheck();
-      if (authenticated) { this.router.navigate(['home']); }
+      if (authenticated) { this.router.navigate(['']); }
     });
   }
 
