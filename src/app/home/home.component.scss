@@ -1,21 +1,15 @@
-body {
-  display: flex;
-  flex-direction: column;
-  background-color: bisque;
-}
+@use '../../assets/styles/screen-sizes';
+
 mat-sidenav-container {
   width: 100%;
   height: 100%;
 }
 mat-sidenav {
+  display: flex;
+  align-items: center;
   width: 240px;
 }
-button.logout {
-  margin-top: 10%;
-  margin-left: 10%;
-}
-
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: #{screen-sizes.$small-desktop-width}) {
   mat-sidenav {
     width: 270px;
   }

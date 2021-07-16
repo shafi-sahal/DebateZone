@@ -12,19 +12,8 @@ import { Spinner } from '../shared/components/spinner/spinner.service';
 })
 export class HomeComponent {
   @ViewChild(MatSidenav) sidenav!: MatSidenav;
-  mode = 'closed';
-  isMobile = true;
 
-  constructor(
-    private spinner: Spinner,
-    private router: Router,
-    private sessionService: SessionService
-  ) { this.spinner.hide(); }
+  constructor(private spinner: Spinner) { this.spinner.hide(); }
 
   onMenuClick():void { this.sidenav.toggle(); }
-
-  onClickLogout(): void {
-    this.sessionService.clearUser();
-    this.router.navigate(['authentication']);
-  }
 }

@@ -1,7 +1,7 @@
 <body>
   <mat-sidenav-container appAdaptSidenavToDevice>
-    <mat-sidenav #sidenav>
-      <button class="logout" mat-raised-button (click)="onClickLogout()">Logout</button>
+    <mat-sidenav #sidenav [autoFocus]="false">
+      <app-nav-buttons></app-nav-buttons>
     </mat-sidenav>
     <mat-sidenav-content>
       <button #buttonMenu mat-icon-button (click)="onMenuClick()"><mat-icon>more_vert</mat-icon></button>
