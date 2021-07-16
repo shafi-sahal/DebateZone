@@ -24,7 +24,7 @@ export class HomeComponent {
   onMenuClick():void { this.sidenav.toggle(); }
 
   onClickLogout(): void {
-    this.sessionService.clearUser();
+    this.sessionService.clearToken();
     this.router.navigate(['authentication']);
   }
 }

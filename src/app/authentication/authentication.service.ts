@@ -49,7 +49,7 @@ export class AuthenticationService {
     this.spinner.show('Setting up your account...');
     return this.http.post<{ token: string, userId: number }>(BACKEND_URL + '/signup', this._user).pipe(
       map(response => {
-        this.sessionService.writeUser(response.token, response.userId);
+        this.sessionService.writeToken(response.token);
         return true;
       }),
       catchError(() => of(false))
@@ -61,7 +61,7 @@ export class AuthenticationService {
     const loginData = { loginKey: loginKey, password: password };
     return this.http.post<{ token: string, userId: number }>(BACKEND_URL, loginData).pipe(
       map(response => {
-        this.sessionService.writeUser(response.token, response.userId);
+        this.sessionService.writeToken(response.token);
         return true;
       }),
       catchError(() => of(false))
