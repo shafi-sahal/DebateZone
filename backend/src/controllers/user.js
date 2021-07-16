@@ -7,6 +7,7 @@ const url = require('url');
 const bcrypt = require('bcrypt');
 const { throwError } = require('rxjs');
 const { createSigner } = require('fast-jwt');
+const user = require('../models/user');
 
 exports.isDuplicate = (req, res) => {
   const query = req.query;
@@ -17,7 +18,8 @@ exports.isDuplicate = (req, res) => {
 exports.createUser = (req, res) => {
   User.create(req.body).then(user =>
     res.status(201).json({
-      token: generateToken({ userId: user.id })
+      token: generateToken({ userId: user.id }),
+      username: user.username
     })
   )
   .catch(error => errorHandler(res, error)
@@ -29,24 +31,26 @@ exports.login = (req, res) => {
   const password = req.body.password;
   if (!(loginKey && password)) return errorHandler(res);
   const pepper = process.env.PEPPER;
-  let fetchedUserId;
+  let fetchedUser;
 
   User.findOne({
-    attributes: ['id', 'password'],
+    attributes: ['id', 'username', 'password'],
     where: {
       [Sequelize.Op.or]: [ { email: loginKey }, { username: loginKey }, { mobile: loginKey } ]
     }
   })
   .then(user => {
     if (!user) throw(404);
-    fetchedUserId = user.id;
+    fetchedUser = user;
     const pepper = process.env.PEPPER;
     return bcrypt.compare(password + pepper, user.password)
   })
   .then(isMatching => {
     if (!isMatching) return res.sendStatus(401);
+    console.log(fetchedUser);
     res.json({
-       token: generateToken({ userId: fetchedUserId })
+      token: generateToken({ userId: fetchedUser.id }),
+      username: fetchedUser.username
     })
   })
   .catch(error => {

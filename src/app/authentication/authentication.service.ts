@@ -47,9 +47,9 @@ export class AuthenticationService {
 
   addUser(): Observable<boolean> {
     this.spinner.show('Setting up your account...');
-    return this.http.post<{ token: string, userId: number }>(BACKEND_URL + '/signup', this._user).pipe(
+    return this.http.post<{ token: string, username: string }>(BACKEND_URL + '/signup', this._user).pipe(
       map(response => {
-        this.sessionService.writeToken(response.token);
+        this.sessionService.writeUser(response.token, response.username);
         return true;
       }),
       catchError(() => of(false))
@@ -59,9 +59,9 @@ export class AuthenticationService {
   login(loginKey: string, password: string): Observable<boolean> {
     this.spinner.show('Taking you where you want to go...');
     const loginData = { loginKey: loginKey, password: password };
-    return this.http.post<{ token: string, userId: number }>(BACKEND_URL, loginData).pipe(
+    return this.http.post<{ token: string, username: string }>(BACKEND_URL, loginData).pipe(
       map(response => {
-        this.sessionService.writeToken(response.token);
+        this.sessionService.writeUser(response.token, response.username);
         return true;
       }),
       catchError(() => of(false))

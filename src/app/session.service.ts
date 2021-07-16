@@ -10,15 +10,18 @@ export class SessionService {
 
   get authenticated(): boolean { return this._authenticated; }
 
-  writeToken(token: string): void {
+  writeUser(token: string, username: string): void {
     localStorage.setItem('token', token);
+    localStorage.setItem('username', username);
     this._authenticated = true;
   }
 
   readToken(): string | null { return localStorage.getItem('token'); }
+  readUsername(): string | null { return localStorage.getItem('username'); }
 
-  clearToken(): void {
+  clearUser(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('username');
     this._authenticated = false;
   }
 }
