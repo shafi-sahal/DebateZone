@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { SessionService } from './session.service';
 import { Spinner } from './shared/components/spinner/spinner.service';
@@ -8,7 +8,7 @@ import { Spinner } from './shared/components/spinner/spinner.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent {
   title = 'DebateZone';
 
   constructor(
@@ -17,15 +17,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private router: Router
   ) { this.spinner.show('I am coming...'); }
 
-  ngOnInit(): void {
-    window.addEventListener('storage', (event) => { if (event.storageArea === localStorage) this.checkAuthentication(); });
-  }
-
-  ngOnDestroy(): void {
-    window.removeEventListener('storage', this.checkAuthentication);
-  }
-
-  private checkAuthentication():void {
+  @HostListener('window:storage', ['$event'])
+  private checkAuthentication(): void {
     if (!this.sessionService.readToken()) this.router.navigate(['authentication']);
   }
 }
