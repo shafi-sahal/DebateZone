@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { SessionService } from './session.service';
 import { Spinner } from './shared/components/spinner/spinner.service';
 
