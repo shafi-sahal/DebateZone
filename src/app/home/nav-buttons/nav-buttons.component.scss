@@ -1,0 +1,18 @@
+@use '../../../assets/styles/screen-sizes';
+
+body {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+}
+p {
+  margin: 10%;
+}
+button {
+  text-align: left;
+  height: 50px;
+}
+
+@media only screen and (min-width: #{screen-sizes.$small-desktop-width}) {
+  
+}
