@@ -8,7 +8,8 @@ import { Spinner } from '../shared/components/spinner/spinner.service';
 import { catchError, map } from 'rxjs/operators';
 import { SessionService } from '../session.service';
 
-const BACKEND_URL = environment.apiUrl + '/user';
+const USER_URL = environment.apiUrl + '/user';
+const DUPLICATE_CHECK_USER_URL = USER_URL + '/check-duplicate';
 
 @Injectable()
 export class AuthenticationService {
@@ -27,29 +28,29 @@ export class AuthenticationService {
   }
 
   isDuplicateUsername(username: string): Observable<boolean> {
-    return this.http.get<{ isDuplicateUsername: boolean }>(BACKEND_URL + '?username=' + username).pipe(
+    return this.http.get<{ isDuplicateUsername: boolean }>(DUPLICATE_CHECK_USER_URL + '?username=' + username).pipe(
       map(response => response.isDuplicateUsername)
     );
   }
 
   isDuplicateEmail(email: string): Observable<boolean> {
-    return this.http.get<{ isDuplicateEmail: boolean }>(BACKEND_URL + '?email=' + email).pipe(
+    return this.http.get<{ isDuplicateEmail: boolean }>(DUPLICATE_CHECK_USER_URL + '?email=' + email).pipe(
       map(response => response.isDuplicateEmail)
     );
   }
 
   isDuplicateMobile(mobile: string, countryCode: string): Observable<boolean> {
     const mobileParsed = this.parseMobile(mobile, countryCode).replace('+', '%2B');
-    return this.http.get<{ isDuplicateMobile: boolean }>(BACKEND_URL + '?mobile=' + mobileParsed).pipe(
+    return this.http.get<{ isDuplicateMobile: boolean }>(DUPLICATE_CHECK_USER_URL + '?mobile=' + mobileParsed).pipe(
       map(response => response.isDuplicateMobile)
     );
   }
 
   addUser(): Observable<boolean> {
     this.spinner.show('Setting up your account...');
-    return this.http.post<{ token: string, username: string }>(BACKEND_URL + '/signup', this._user).pipe(
+    return this.http.post<{ token: string, username: string }>(USER_URL + '/signup', this._user).pipe(
       map(response => {
-        this.sessionService.writeUser(response.token, response.username);
+        this.sessionService.writeToken(response.token);
         return true;
       }),
       catchError(() => of(false))
@@ -59,9 +60,9 @@ export class AuthenticationService {
   login(loginKey: string, password: string): Observable<boolean> {
     this.spinner.show('Taking you where you want to go...');
     const loginData = { loginKey: loginKey, password: password };
-    return this.http.post<{ token: string, username: string }>(BACKEND_URL, loginData).pipe(
+    return this.http.post<{ token: string, username: string }>(USER_URL, loginData).pipe(
       map(response => {
-        this.sessionService.writeUser(response.token, response.username);
+        this.sessionService.writeToken(response.token);
         return true;
       }),
       catchError(() => of(false))

@@ -6,6 +6,6 @@ const encryptPassword = require('../middleware/encrypt-password');
 
 router.post('', UserController.login);
 router.post('/signup', userDataValidation, encryptPassword, UserController.createUser);
-router.get('', UserController.isDuplicate);
+router.get('/check-duplicate', UserController.isDuplicate);
 
 module.exports = router;
