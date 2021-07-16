@@ -17,7 +17,8 @@ exports.isDuplicate = (req, res) => {
 exports.createUser = (req, res) => {
   User.create(req.body).then(user =>
     res.status(201).json({
-       token: generateToken({ userId: user.id })
+       token: generateToken({ userId: user.id }),
+       userId: user.id
     })
   )
   .catch(error => errorHandler(res, error)
@@ -46,7 +47,8 @@ exports.login = (req, res) => {
   .then(isMatching => {
     if (!isMatching) return res.sendStatus(401);
     res.json({
-       token: generateToken({ userId: fetchedUserId })
+       token: generateToken({ userId: fetchedUserId }),
+       userId: fetchedUserId
     });
   })
   .catch(error => {

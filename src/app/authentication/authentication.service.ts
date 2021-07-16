@@ -14,7 +14,6 @@ const BACKEND_URL = environment.apiUrl + '/user';
 export class AuthenticationService {
   countryCode = '';
   private _user!: User;
-  private _token = '';
 
   constructor(
     private http: HttpClient,
@@ -26,8 +25,6 @@ export class AuthenticationService {
     this._user = user;
     this._user.mobile = this.parseMobile(this._user.mobile, this.countryCode);
   }
-
-  get token(): string { return this._token; }
 
   isDuplicateUsername(username: string): Observable<boolean> {
     return this.http.get<{ isDuplicateUsername: boolean }>(BACKEND_URL + '?username=' + username).pipe(
@@ -50,10 +47,9 @@ export class AuthenticationService {
 
   addUser(): Observable<boolean> {
     this.spinner.show('Setting up your account...');
-    return this.http.post<{ token: string }>(BACKEND_URL + '/signup', this._user).pipe(
+    return this.http.post<{ token: string, userId: number }>(BACKEND_URL + '/signup', this._user).pipe(
       map(response => {
-        this._token = response.token;
-        this.sessionService.writeToken(this._token);
+        this.sessionService.writeUser(response.token, response.userId);
         return true;
       }),
       catchError(() => of(false))
@@ -63,10 +59,9 @@ export class AuthenticationService {
   login(loginKey: string, password: string): Observable<boolean> {
     this.spinner.show('Taking you where you want to go...');
     const loginData = { loginKey: loginKey, password: password };
-    return this.http.post<{ token: string }>(BACKEND_URL, loginData).pipe(
+    return this.http.post<{ token: string, userId: number }>(BACKEND_URL, loginData).pipe(
       map(response => {
-        this._token = response.token;
-        this.sessionService.writeToken(this._token);
+        this.sessionService.writeUser(response.token, response.userId);
         return true;
       }),
       catchError(() => of(false))
