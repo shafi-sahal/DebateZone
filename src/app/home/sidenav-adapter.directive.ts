@@ -1,6 +1,7 @@
 import { AfterViewInit, ContentChild, Directive, ElementRef, HostListener, Renderer2 } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { screenSizes } from '../../assets/screen-sizes';
+import { WindowRef } from '../window-ref.service';
 
 @Directive({ selector: '[appAdaptSidenavToDevice]' })
 export class SidenavAdapter implements AfterViewInit {
@@ -8,7 +9,7 @@ export class SidenavAdapter implements AfterViewInit {
   @ContentChild('buttonMenu', { read: ElementRef }) buttonMenu!: ElementRef;
   private previousIsMobile = true;
 
-  constructor(private renderer: Renderer2) {}
+  constructor(private renderer: Renderer2, private windowRef: WindowRef) {}
 
   ngAfterViewInit(): void {
     this.adaptSidenavToedvice();
@@ -16,7 +17,7 @@ export class SidenavAdapter implements AfterViewInit {
 
   @HostListener('window:resize', ['$event'])
   private adaptSidenavToedvice(): void {
-    const isMobile = window.innerWidth < screenSizes.desktopWidth;
+    const isMobile = this.windowRef.nativeWindow.innerWidth < screenSizes.desktopWidth;
 
     if (isMobile) {
       this.sidenav.mode = 'over';
