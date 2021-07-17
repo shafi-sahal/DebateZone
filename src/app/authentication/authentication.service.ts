@@ -50,6 +50,7 @@ export class AuthenticationService {
     this.spinner.show('Setting up your account...');
     return this.http.post<{ token: string, user: User }>(USER_URL + '/signup', this._user).pipe(
       map(response => {
+        this.sessionService.destroySession();
         this.sessionService.createSession(response.token, response.user);
         return true;
       }),
@@ -62,6 +63,7 @@ export class AuthenticationService {
     const loginData = { loginKey: loginKey, password: password };
     return this.http.post<{ token: string, user: User }>(USER_URL, loginData).pipe(
       map(response => {
+        this.sessionService.destroySession();
         this.sessionService.createSession(response.token, response.user);
         return true;
       }),
