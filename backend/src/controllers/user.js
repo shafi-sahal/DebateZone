@@ -16,11 +16,10 @@ exports.isDuplicate = (req, res) => {
 }
 
 exports.createUser = (req, res) => {
-  User.create(req.body).then(user =>
-    res.status(201).json({
-      token: generateToken({ userId: user.id })
-    })
-  )
+  User.create(req.body).then(user => {
+    const token = generateToken({ userId: user.id });
+    res.status(201).json({ token: token, user: { name: user.name, username: user.username }});
+  })
   .catch(error => errorHandler(res, error)
   );
 }
@@ -40,16 +39,14 @@ exports.login = (req, res) => {
   })
   .then(user => {
     if (!user) throw(404);
-    fetchedUser = {...user.dataValues};
+    fetchedUser = user;
     const pepper = process.env.PEPPER;
     return bcrypt.compare(password + pepper, user.password)
   })
   .then(isMatching => {
     if (!isMatching) return res.sendStatus(401);
     const token = generateToken({ userId: fetchedUser.id });
-    delete fetchedUser.password;
-    delete fetchedUser.id;
-    res.json({ token: token, user: fetchedUser })
+    res.json({ token: token, user: { name: fetchedUser.name, username: fetchedUser.username } })
   })
   .catch(error => {
     /*
