@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { fromEvent, Observable } from 'rxjs';
 import { SessionService } from './session.service';
 import { Spinner } from './shared/components/spinner/spinner.service';
+import { WindowRef } from './window-ref.service';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,7 @@ export class AppComponent {
     private spinner: Spinner,
     private sessionService: SessionService,
     private router: Router,
-    private renderer: Renderer2
+    private windowRef: WindowRef
   ) {
     this.spinner.show('I am coming...');
     this.checkKeepUserLoggedIn();
@@ -29,7 +30,7 @@ export class AppComponent {
 
   private checkKeepUserLoggedIn(): void {
     if (!this.sessionService.readKeepUserLoggedIn()) {
-     const beforeUnload = fromEvent(window, 'beforeunload').subscribe(() => {
+     const beforeUnload = fromEvent(this.windowRef.nativeWindow, 'beforeunload').subscribe(() => {
       this.sessionService.destroySession();
       beforeUnload.unsubscribe();
      });
