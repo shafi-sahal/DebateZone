@@ -9,6 +9,6 @@ module.exports = (req, res, next) => {
     req.userId = payload.userId;
     next();
   } catch(error) {
-    errorHandler(res, error);
+    errorHandler(res, error, 403);
   }
 }
