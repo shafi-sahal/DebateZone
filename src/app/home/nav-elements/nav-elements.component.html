@@ -1,5 +1,5 @@
 <body>
-  <p class="name">{{(sessionService.userFetched | async)?.name}}</p>
-  <p class="username">{{(sessionService.userFetched | async)?.username}}</p>
+  <p class="name">{{sessionService.readUser()?.name}}</p>
+  <p class="username">{{sessionService.readUser()?.username}}</p>
   <button class="logout" mat-button (click)="onClickLogout()">Log out</button>
 </body>

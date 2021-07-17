@@ -1,22 +1,25 @@
 
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { User } from './shared/models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class SessionService {
-  userFetched = new BehaviorSubject<User | null>(null);
-
   authenticated(): boolean { return !!this.readToken(); }
 
   createSession(token: string, user: User): void {
     localStorage.setItem('token', token);
-    this.userFetched.next(user);
+    localStorage.setItem('user', JSON.stringify(user));
   }
 
   readToken(): string | null { return localStorage.getItem('token'); }
 
+  readUser(): User | null {
+    const stringUser = localStorage.getItem('user');
+    if (stringUser) return JSON.parse(stringUser); else return null;
+  }
+
   destroySession(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
   }
 }
