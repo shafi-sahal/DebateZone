@@ -52,6 +52,7 @@ export class AuthenticationService {
       map(response => {
         this.sessionService.destroySession();
         this.sessionService.createSession(response.token, response.user);
+        this.sessionService.writeKeepUserLoggedIn(true);
         return true;
       }),
       catchError(() => of(false))
@@ -65,6 +66,7 @@ export class AuthenticationService {
       map(response => {
         this.sessionService.destroySession();
         this.sessionService.createSession(response.token, response.user);
+        console.log(this.sessionService.readKeepUserLoggedIn());
         return true;
       }),
       catchError(() => of(false))
