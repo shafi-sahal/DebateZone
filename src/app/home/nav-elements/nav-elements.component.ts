@@ -4,10 +4,10 @@ import { SessionService } from 'src/app/session.service';
 
 @Component({
   selector: 'app-nav-buttons',
-  templateUrl: './nav-buttons.component.html',
-  styleUrls: ['./nav-buttons.component.scss']
+  templateUrl: './nav-elements.component.html',
+  styleUrls: ['./nav-elements.component.scss']
 })
-export class NavButtonsComponent {
+export class NavElementsComponent {
 
   constructor(public sessionService: SessionService, private router: Router) { }
 
