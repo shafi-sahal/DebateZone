@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import {
-  AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, ViewChild
+  AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, Renderer2, ViewChild
 } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { fromEvent, Observable, Subject, Subscription } from 'rxjs';
@@ -36,6 +37,8 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
   showLoginError = false;
   shouldAsyncValidateEmail = new Subject<boolean>();
   shouldAsyncValidateMobile = new Subject<boolean>();
+  private listenerBlur = () => {};
+  private listenerFocus = () => {};
 
   inputDetails = {
     name: {
@@ -138,7 +141,8 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
     private emailUniquenessValidator: EmailUniquenessValidator,
     private mobileUniquenessValidator: MobileUniquenessValidator,
     private changeDetector: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private renderer: Renderer2
   ) {}
 
   ngAfterViewInit(): void {
@@ -233,15 +237,13 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
   }
 
   private observeFocusChangeOfElement(element: ElementRef, canAsyncValidateElement: Subject<boolean>): void {
-    const observableBlurElement = fromEvent(element.nativeElement, 'blur') as Observable<FocusEvent>;
-    const observableFocusElement = fromEvent(element.nativeElement, 'focus') as Observable<FocusEvent>;
-
-    this.subscriptions.add(observableBlurElement.subscribe(blur => {
+    this.listenerBlur = this.renderer.listen(element.nativeElement, 'blur', blur => {
       const button = (blur.relatedTarget as HTMLButtonElement);
       const isBlurredByloginClick = button && button.textContent === 'Login';
       canAsyncValidateElement.next(!isBlurredByloginClick);
-    }));
-    this.subscriptions.add(observableFocusElement.subscribe(() => canAsyncValidateElement.next(true)));
+    });
+
+    this.listenerFocus = this.renderer.listen(element.nativeElement, 'focus', () => canAsyncValidateElement.next(true));
   }
 
   private changeMobileValidator(): void {
@@ -267,5 +269,9 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+    this.listenerBlur();
+    this.listenerFocus();
+  }
 }
