@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { SessionService } from 'src/app/session.service';
 
 @Component({
-  selector: 'app-nav-buttons',
+  selector: 'app-nav-elements',
   templateUrl: './nav-elements.component.html',
   styleUrls: ['./nav-elements.component.scss']
 })

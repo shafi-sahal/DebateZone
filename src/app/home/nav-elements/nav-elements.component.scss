@@ -5,19 +5,28 @@ body {
   flex-direction: column;
   height: auto;
 }
-p {
-  margin-left: 6%;
-  margin-right: 6%;
+.container-user-details-and-close-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.container-user-details {
+  margin-top: 3%;
+  $width-close-button: 40px;
+  $margin-left: 6%;
+  margin-left: #{$margin-left};
+  width: calc(100% - (#{$margin-left} + #{$width-close-button}));
 }
 p.name {
-  margin-top: 6%;
   font-size: 1.2em;
   margin-bottom: 0%;
+  overflow-x: hidden;
 }
 p.username {
   font-weight: lighter;
+  margin-top: 0%;
 }
-button {
+button.main {
   text-align: left;
   height: 50px;
 }
