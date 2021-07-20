@@ -1,5 +1,10 @@
 <body>
-  <p class="name">{{sessionService.readUser()?.name}}</p>
-  <p class="username">{{sessionService.readUser()?.username}}</p>
-  <button class="logout" mat-button (click)="onClickLogout()">Log out</button>
+  <div class="container-user-details-and-close-button">
+    <div class="container-user-details">
+      <p class="name">{{sessionService.readUser()?.name}}</p>
+      <p class="username">{{sessionService.readUser()?.username}}</p>
+    </div>
+    <button  mat-icon-button><mat-icon>close</mat-icon></button>
+  </div>
+  <button class="main" mat-button (click)="onClickLogout()">Log out</button>
 </body>
