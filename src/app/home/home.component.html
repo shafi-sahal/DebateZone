@@ -1,7 +1,7 @@
 <body>
   <mat-sidenav-container appAdaptSidenavToDevice>
     <mat-sidenav #sidenav [autoFocus]="false">
-      <app-nav-elements></app-nav-elements>
+      <app-nav-elements (closeButtonClicked)="closeSideNav()"></app-nav-elements>
     </mat-sidenav>
     <mat-sidenav-content>
       <button #buttonMenu mat-icon-button (click)="onMenuClick()"><mat-icon>more_vert</mat-icon></button>

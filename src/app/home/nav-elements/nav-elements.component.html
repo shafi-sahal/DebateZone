@@ -4,7 +4,7 @@
       <p class="name">{{sessionService.readUser()?.name}}</p>
       <p class="username">{{sessionService.readUser()?.username}}</p>
     </div>
-    <button  mat-icon-button><mat-icon>close</mat-icon></button>
+    <button (click)="onCloseButtonClick()" mat-icon-button><mat-icon>close</mat-icon></button>
   </div>
-  <button class="main" mat-button (click)="onClickLogout()">Log out</button>
+  <button class="main" mat-button (click)="onLogoutClick()">Log out</button>
 </body>
