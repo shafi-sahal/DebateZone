@@ -9,7 +9,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FocusInvalidInputDirective } from '../shared/directives/focus-invalid-input.directive';
 import { AngularMaterialModule } from '../angular-material.module';
 import { AuthenticationService } from './authentication.service';
-import { MatSelectSearchComponent } from '../shared/components/mat-select-search/mat-select-search.component';
 import { MatSelectSearchModule } from 'mat-select-search';
 import { MatOptionMultiLineDirective } from './credentials/mat-option-multi-line.directive';
 import { AdaptHeight } from './adapt-height.directive';
@@ -20,7 +19,6 @@ import { AdaptHeight } from './adapt-height.directive';
     AuthenticationComponent,
     HeaderComponent,
     CredentialsComponent,
-    MatSelectSearchComponent,
     FocusInvalidInputDirective,
     MatOptionMultiLineDirective,
     AdaptHeight
