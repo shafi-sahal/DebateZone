@@ -4,7 +4,7 @@
       <p class="name">{{sessionService.readUser()?.name}}</p>
       <p class="username">{{sessionService.readUser()?.username}}</p>
     </div>
-    <button (click)="onCloseButtonClick()" mat-icon-button><mat-icon>close</mat-icon></button>
+    <button *ngIf="isMobile" (click)="onCloseButtonClick()" mat-icon-button><mat-icon>close</mat-icon></button>
   </div>
   <button class="main" mat-button (click)="onLogoutClick()">Log out</button>
 </body>

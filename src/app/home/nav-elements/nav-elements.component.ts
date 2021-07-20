@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { SessionService } from 'src/app/session.service';
 
@@ -9,6 +9,7 @@ import { SessionService } from 'src/app/session.service';
 })
 export class NavElementsComponent {
   @Output() private closeButtonClicked = new EventEmitter();
+  @Input() isMobile = true;
 
   constructor(public sessionService: SessionService, private router: Router) { }
 

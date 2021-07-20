@@ -14,6 +14,4 @@ export class HomeComponent {
   constructor(private spinner: Spinner) { this.spinner.hide(); }
 
   onMenuClick():void { this.sidenav.toggle(); }
-
-  closeSideNav(): void { this.sidenav.close(); }
 }
