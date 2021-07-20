@@ -236,14 +236,14 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
     if (this.buttonText === 'Login')  this.login();  else  this.addUser();
   }
 
-  private observeFocusChangeOfElement(element: ElementRef, canAsyncValidateElement: Subject<boolean>): void {
+  private observeFocusChangeOfElement(element: ElementRef, shouldAsyncValidateElement: Subject<boolean>): void {
     this.listenerBlur = this.renderer.listen(element.nativeElement, 'blur', blur => {
       const button = (blur.relatedTarget as HTMLButtonElement);
       const isBlurredByloginClick = button && button.textContent === 'Login';
-      canAsyncValidateElement.next(!isBlurredByloginClick);
+      shouldAsyncValidateElement.next(!isBlurredByloginClick);
     });
 
-    this.listenerFocus = this.renderer.listen(element.nativeElement, 'focus', () => canAsyncValidateElement.next(true));
+    this.listenerFocus = this.renderer.listen(element.nativeElement, 'focus', () => shouldAsyncValidateElement.next(true));
   }
 
   private changeMobileValidator(): void {
