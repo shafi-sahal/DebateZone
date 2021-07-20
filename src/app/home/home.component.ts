@@ -1,7 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
-import { Router } from '@angular/router';
-import { SessionService } from '../session.service';
 import { Spinner } from '../shared/components/spinner/spinner.service';
 
 @Component({
