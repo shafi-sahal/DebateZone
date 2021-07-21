@@ -1,4 +1,4 @@
-import { AfterViewInit, ContentChild, Directive, ElementRef, EventEmitter, HostListener, Output, Renderer2 } from '@angular/core';
+import { AfterViewInit, ContentChild, Directive, EventEmitter, HostListener, Output, Renderer2 } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { screenSizes } from '../../assets/screen-sizes';
 import { WindowRef } from '../window-ref.service';
@@ -7,7 +7,6 @@ import { WindowRef } from '../window-ref.service';
 export class SidenavAdapter implements AfterViewInit {
   @Output() isMobile = new EventEmitter<boolean>();
   @ContentChild('sidenav') sidenav!: MatSidenav;
-  @ContentChild('buttonMenu', { read: ElementRef }) buttonMenu!: ElementRef;
   private previousIsMobile = true;
 
   constructor(private renderer: Renderer2, private windowRef: WindowRef) {}
@@ -23,11 +22,9 @@ export class SidenavAdapter implements AfterViewInit {
     if (isMobile) {
       this.sidenav.mode = 'over';
       if (!this.previousIsMobile) this.sidenav.close();
-      this.renderer.removeAttribute(this.buttonMenu.nativeElement, 'hidden');
     } else {
       this.sidenav.mode = 'side';
       this.sidenav.open();
-      this.renderer.setAttribute(this.buttonMenu.nativeElement, 'hidden', 'true');
     }
 
     this.previousIsMobile = isMobile;

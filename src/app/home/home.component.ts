@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Spinner } from '../shared/components/spinner/spinner.service';
 
@@ -9,6 +9,7 @@ import { Spinner } from '../shared/components/spinner/spinner.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent {
+  @Input() isMobile = true;
   @ViewChild(MatSidenav) sidenav!: MatSidenav;
 
   constructor(private spinner: Spinner) { this.spinner.hide(); }
