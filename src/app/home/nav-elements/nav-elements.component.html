@@ -6,5 +6,7 @@
     </div>
     <button *ngIf="isMobile" (click)="onCloseButtonClick()" mat-icon-button><mat-icon>close</mat-icon></button>
   </div>
-  <button class="main" mat-button (click)="onLogoutClick()">Log out</button>
+
+  <button class="navigation" mat-button>Account</button>
+  <button class="navigation" mat-button (click)="onLogoutClick()">Log out</button>
 </body>
