@@ -10,6 +10,7 @@ import { SessionService } from 'src/app/session.service';
 export class NavElementsComponent {
   @Output() private closeButtonClicked = new EventEmitter();
   @Input() isMobile = true;
+  clickedNavbutton = 'feed';
 
   constructor(public sessionService: SessionService, private router: Router) { }
 
@@ -19,4 +20,6 @@ export class NavElementsComponent {
     this.sessionService.destroySession();
     this.router.navigate(['authentication']);
   }
+
+  getNavButtonStyle(buttonName: string): string { return this.clickedNavbutton === buttonName ? 'nav-active' : 'nav'; }
 }

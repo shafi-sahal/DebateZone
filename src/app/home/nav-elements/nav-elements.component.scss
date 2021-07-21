@@ -1,4 +1,6 @@
 @use '../../../assets/styles/screen-sizes';
+@use '../../../assets/styles/border-radius';
+@use '../../../assets/styles/colors';
 
 body {
   display: flex;
@@ -24,13 +26,26 @@ p.name {
 }
 p.username {
   font-weight: lighter;
-  margin-top: 0%;
 }
-button.navigation {
+button.nav, button.logout, button.nav-active {
   text-align: left;
   height: 50px;
+  width: 100%;
 }
 
 @media only screen and (min-width: #{screen-sizes.$small-desktop-width}) {
-
+  button.nav, button.nav-active {
+    font-size: 1.3em;
+    border-radius: #{border-radius.$large};
+  }
+  button.nav-active {
+    color: #{colors.$primary-deep};
+  }
+  button.nav:hover, button.nav-active:hover {
+    background-color: #{colors.$primary-light};
+    color: #{colors.$primary-deep};
+  }
+  span.nav-label {
+    padding-left: 8%;
+  }
 }
