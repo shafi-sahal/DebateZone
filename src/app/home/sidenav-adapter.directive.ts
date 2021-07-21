@@ -1,4 +1,4 @@
-import { AfterViewInit, ContentChild, Directive, EventEmitter, HostListener, Output, Renderer2 } from '@angular/core';
+import { AfterViewInit, ContentChild, Directive, EventEmitter, HostListener, Output } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { screenSizes } from '../../assets/screen-sizes';
 import { WindowRef } from '../window-ref.service';
@@ -9,7 +9,7 @@ export class SidenavAdapter implements AfterViewInit {
   @ContentChild('sidenav') sidenav!: MatSidenav;
   private previousIsMobile = true;
 
-  constructor(private renderer: Renderer2, private windowRef: WindowRef) {}
+  constructor(private windowRef: WindowRef) {}
 
   ngAfterViewInit(): void {
     this.adaptSidenavToedvice();
