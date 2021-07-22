@@ -12,7 +12,11 @@
     [class]="i === clickedNavbuttonIndex ? 'nav-active' : 'nav'"
     mat-button
     (click)="clickedNavbuttonIndex = i">
-    <mat-icon *ngIf="!isMobile" [fontSet]="i === clickedNavbuttonIndex ? 'material-icons' : 'material-icons-outlined'">{{button.icon}}</mat-icon>
+    <mat-icon
+      *ngIf="!isMobile"
+      [fontSet]="i === clickedNavbuttonIndex ? 'material-icons' : 'material-icons-outlined'">
+      {{button.icon}}
+    </mat-icon>
     <span class="nav-label">{{button.label}}</span>
   </button>
 
