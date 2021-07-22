@@ -255,17 +255,17 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
     if (this.signUpForm.invalid || this.signUpForm.pending) return;
     this.authenticationService.countryCode = this._country.code;
     this.authenticationService.user = this.signUpForm.value;
-    this.authenticationService.addUser().subscribe(userAdded => {
-      if (userAdded) { this.router.navigate(['']); }
+    this.authenticationService.addUser().subscribe(isUserAdded => {
+      if (isUserAdded) { this.router.navigate(['']); }
     });
   }
 
   private login(): void {
     if (this.loginForm.invalid) return;
-    this.authenticationService.login(this.email?.value, this.password?.value).subscribe(authenticated => {
-      this.showLoginError = !authenticated;
+    this.authenticationService.login(this.email?.value, this.password?.value).subscribe(isAuthenticated => {
+      this.showLoginError = !isAuthenticated;
       this.changeDetector.markForCheck();
-      if (authenticated) { this.router.navigate(['']); }
+      if (isAuthenticated) { this.router.navigate(['']); }
     });
   }
 
