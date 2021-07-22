@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { Button } from 'selenium-webdriver';
 import { SessionService } from 'src/app/session.service';
 
 @Component({
@@ -10,7 +11,8 @@ import { SessionService } from 'src/app/session.service';
 export class NavElementsComponent {
   @Output() private closeButtonClicked = new EventEmitter();
   @Input() isMobile = true;
-  clickedNavbutton = 'feed';
+  navButtons: { label: string, icon: string }[] = [ { label: 'Debates', icon: 'forum' }, { label: 'Account', icon: 'person' } ]
+  clickedNavbuttonIndex = 0;
 
   constructor(public sessionService: SessionService, private router: Router) { }
 
@@ -21,5 +23,10 @@ export class NavElementsComponent {
     this.router.navigate(['authentication']);
   }
 
-  getNavButtonClass(buttonName: string): string { return this.clickedNavbutton === buttonName ? 'nav-active' : 'nav'; }
+  getNavButtonClass(buttonIndex: number): string { return this.clickedNavbuttonIndex === buttonIndex ? 'nav-active' : 'nav'; }
+
+  getIcon(buttonIndex: number): string {
+    const button = this.navButtons[buttonIndex];
+    return this.clickedNavbuttonIndex === buttonIndex ? button.icon : button.icon ;
+  }
 }
