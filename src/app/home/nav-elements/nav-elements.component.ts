@@ -11,7 +11,9 @@ import { SessionService } from 'src/app/session.service';
 export class NavElementsComponent {
   @Output() private closeButtonClicked = new EventEmitter();
   @Input() isMobile = true;
-  navButtons: { label: string, icon: string }[] = [ { label: 'Debates', icon: 'forum' }, { label: 'Account', icon: 'person' } ]
+  navButtons: { label: string, icon: string, route: string }[] = [
+    { label: 'Debates', icon: 'forum', route: '' }, { label: 'Account', icon: 'person' , route: 'account'}
+  ]
   clickedNavbuttonIndex = 0;
 
   constructor(public sessionService: SessionService, private router: Router) { }
@@ -21,9 +23,5 @@ export class NavElementsComponent {
   onLogoutClick(): void {
     this.sessionService.destroySession();
     this.router.navigate(['authentication']);
-  }
-
-  onAccountClick(): void {
-    this.router.navigate(['account']);
   }
 }
