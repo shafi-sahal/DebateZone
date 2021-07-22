@@ -23,10 +23,7 @@ export class NavElementsComponent {
     this.router.navigate(['authentication']);
   }
 
-  getNavButtonClass(buttonIndex: number): string { return this.clickedNavbuttonIndex === buttonIndex ? 'nav-active' : 'nav'; }
-
-  getIcon(buttonIndex: number): string {
-    const button = this.navButtons[buttonIndex];
-    return this.clickedNavbuttonIndex === buttonIndex ? button.icon : button.icon ;
+  onAccountClick(): void {
+    this.router.navigate(['account']);
   }
 }

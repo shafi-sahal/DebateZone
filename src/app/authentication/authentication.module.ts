@@ -32,4 +32,4 @@ import { AdaptHeight } from './adapt-height.directive';
   ],
   providers: [AuthenticationService]
 })
-export class AuthenticationModule { }
+export class AuthenticationModule {}
