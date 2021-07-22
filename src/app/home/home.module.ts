@@ -6,12 +6,14 @@ import { AngularMaterialModule } from '../angular-material.module';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { SidenavAdapter } from './sidenav-adapter.directive';
 import { NavElementsComponent } from './nav-elements/nav-elements.component';
+import { BottomNavComponent } from './bottom-nav/bottom-nav.component';
 
 @NgModule({
   declarations: [
     HomeComponent,
     SidenavAdapter,
-    NavElementsComponent
+    NavElementsComponent,
+    BottomNavComponent
   ],
   imports: [
     CommonModule,
