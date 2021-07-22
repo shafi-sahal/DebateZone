@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { Button } from 'selenium-webdriver';
 import { SessionService } from 'src/app/session.service';
 import { Spinner } from 'src/app/shared/components/spinner/spinner.service';
 
