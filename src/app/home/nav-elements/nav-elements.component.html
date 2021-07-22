@@ -7,7 +7,7 @@
     <button *ngIf="isMobile" (click)="onCloseButtonClick()" mat-icon-button><mat-icon>close</mat-icon></button>
   </div>
 
-  <button [class]="getNavButtonStyle('account')" mat-button (click)="clickedNavbutton = 'account'">
+  <button [class]="getNavButtonClass('account')" mat-button (click)="clickedNavbutton = 'account'">
     <mat-icon *ngIf="!isMobile">person_outline</mat-icon><span class="nav-label">Account</span>
   </button>
 

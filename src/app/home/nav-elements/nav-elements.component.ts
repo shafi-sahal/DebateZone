@@ -21,5 +21,5 @@ export class NavElementsComponent {
     this.router.navigate(['authentication']);
   }
 
-  getNavButtonStyle(buttonName: string): string { return this.clickedNavbutton === buttonName ? 'nav-active' : 'nav'; }
+  getNavButtonClass(buttonName: string): string { return this.clickedNavbutton === buttonName ? 'nav-active' : 'nav'; }
 }
