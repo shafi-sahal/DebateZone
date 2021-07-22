@@ -4,7 +4,7 @@ import { User } from './shared/models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class SessionService {
-  authenticated(): boolean { return !!this.readToken(); }
+  isAuthenticated(): boolean { return !!this.readToken(); }
 
   createSession(token: string, user: User): void {
     localStorage.setItem('token', token);
