@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Button } from 'selenium-webdriver';
 import { SessionService } from 'src/app/session.service';
+import { Spinner } from 'src/app/shared/components/spinner/spinner.service';
 
 @Component({
   selector: 'app-nav-elements',
@@ -16,11 +17,12 @@ export class NavElementsComponent {
   ]
   clickedNavbuttonIndex = 0;
 
-  constructor(public sessionService: SessionService, private router: Router) { }
+  constructor(public sessionService: SessionService, private router: Router, private spinner: Spinner) { }
 
   onCloseButtonClick(): void { this.closeButtonClicked.emit(); }
 
   onLogoutClick(): void {
+    this.spinner.show('Logging out, See you soon...');
     this.sessionService.destroySession();
     this.router.navigate(['authentication']);
   }
