@@ -7,19 +7,22 @@
     <button *ngIf="isMobile" (click)="onCloseButtonClick()" mat-icon-button><mat-icon>close</mat-icon></button>
   </div>
 
-  <button
-    *ngFor="let button of navService.navButtons index as i"
-    [class]="i === navService.clickedNavbuttonIndex ? 'nav-active' : 'nav'"
-    mat-button
-    [routerLink]="button.route"
-    (click)="navService.clickedNavbuttonIndex= i">
-    <mat-icon
-      *ngIf="!isMobile"
-      [fontSet]="i === navService.clickedNavbuttonIndex ? 'material-icons' : 'material-icons-outlined'">
-      {{button.icon}}
-    </mat-icon>
-    <span class="nav-label">{{button.label}}</span>
-  </button>
+  <div *ngIf="!isMobile">
+    <button
+      *ngFor="let button of navService.navButtons index as i"
+      [class]="i === navService.clickedNavbuttonIndex ? 'nav-active' : 'nav'"
+      mat-button
+      [routerLink]="button.route"
+      (click)="navService.clickedNavbuttonIndex= i">
+      <mat-icon
+        *ngIf="!isMobile"
+        [fontSet]="i === navService.clickedNavbuttonIndex ? 'material-icons' : 'material-icons-outlined'">
+        {{button.icon}}
+      </mat-icon>
+      <span class="nav-label">{{button.label}}</span>
+    </button>
+  </div>
+
 
   <button class="logout" mat-button (click)="onLogoutClick()">Log out</button>
 </body>
