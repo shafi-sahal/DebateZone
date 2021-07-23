@@ -25,6 +25,6 @@ export class NavElementsComponent {
   onLogoutClick(): void {
     this.spinner.show('Logging out, See you soon...');
     this.sessionService.destroySession();
-    this.router.navigate(['authentication']);
+    this.router.navigate(['/authentication']);
   }
 }

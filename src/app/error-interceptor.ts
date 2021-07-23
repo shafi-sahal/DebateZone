@@ -26,7 +26,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         if (error.status === 401) return throwError(error);
         if (error.status === 403) {
           this.sessionService.destroySession();
-          this.router.navigate(['authentication']);
+          this.router.navigate(['/authentication']);
           return throwError(error);
         }
         if (error.error.message) {
