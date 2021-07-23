@@ -18,7 +18,9 @@ import { Router } from '@angular/router';
   selector: 'app-credentials',
   templateUrl: './credentials.component.html',
   styleUrls: ['./credentials.component.scss'],
-  providers: [CredentialsService, UsernameAvailabilityCheck, EmailUniquenessValidator, MobileUniquenessValidator],
+  providers: [
+    CredentialsService, AuthenticationService, UsernameAvailabilityCheck, EmailUniquenessValidator, MobileUniquenessValidator
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CredentialsComponent implements AfterViewInit, OnDestroy {

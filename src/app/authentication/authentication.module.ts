@@ -8,7 +8,6 @@ import { CredentialsComponent } from './credentials/credentials.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FocusInvalidInputDirective } from '../shared/directives/focus-invalid-input.directive';
 import { AngularMaterialModule } from '../angular-material.module';
-import { AuthenticationService } from './authentication.service';
 import { MatSelectSearchModule } from 'mat-select-search';
 import { MatOptionMultiLineDirective } from './credentials/mat-option-multi-line.directive';
 import { AdaptHeight } from './adapt-height.directive';
@@ -29,7 +28,6 @@ import { AdaptHeight } from './adapt-height.directive';
     AngularMaterialModule,
     ReactiveFormsModule,
     MatSelectSearchModule
-  ],
-  providers: [AuthenticationService]
+  ]
 })
 export class AuthenticationModule {}
