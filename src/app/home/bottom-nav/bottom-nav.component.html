@@ -5,6 +5,8 @@
     [color]="i === navService.clickedNavbuttonIndex ? 'primary' : ''"
     [routerLink]="button.route"
     (click)="navService.clickedNavbuttonIndex = i">
-    <mat-icon>{{button.icon}}</mat-icon>
+    <mat-icon [fontSet]="i === navService.clickedNavbuttonIndex ? 'material-icons' : 'material-icons-outlined'">
+      {{button.icon}}
+    </mat-icon>
   </button>
 </body>
