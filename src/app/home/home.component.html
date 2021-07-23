@@ -1,6 +1,6 @@
 <body>
   <mat-sidenav-container appAdaptSidenavToDevice (isMobile)="isMobile = navElements.isMobile = $event">
-    <mat-sidenav #sidenav>
+    <mat-sidenav #sidenav [autoFocus]="false">
       <app-nav-elements #navElements (closeButtonClicked)="sidenav.close()"></app-nav-elements>
     </mat-sidenav>
     <mat-sidenav-content>
