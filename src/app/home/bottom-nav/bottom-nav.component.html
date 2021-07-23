@@ -3,8 +3,8 @@
     *ngFor="let button of navService.navButtons index as i"
     mat-icon-button
     [color]="i === navService.clickedNavbuttonIndex ? 'primary' : ''"
-    (click)="navService.clickedNavbuttonIndex = i"
-    [routerLink]="button.route">
+    [routerLink]="button.route"
+    (click)="navService.clickedNavbuttonIndex = i">
     <mat-icon>{{button.icon}}</mat-icon>
   </button>
 </body>

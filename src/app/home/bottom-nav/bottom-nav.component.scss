@@ -5,7 +5,3 @@ body {
   justify-content: space-around;
   width: 100%;
 }
-button.navigation:active {
-  background-color: #{colors.$primary-light};
-  color: #{colors.$primary-deep};
-}
