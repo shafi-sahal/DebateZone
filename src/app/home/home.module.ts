@@ -8,6 +8,8 @@ import { SidenavAdapter } from './sidenav-adapter.directive';
 import { NavElementsComponent } from './nav-elements/nav-elements.component';
 import { BottomNavComponent } from './bottom-nav/bottom-nav.component';
 import { NavService } from './nav.service';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,8 @@ import { NavService } from './nav.service';
     HomeRoutingModule,
     AngularMaterialModule,
     MatSidenavModule,
-    AngularMaterialModule
+    MatButtonModule,
+    MatIconModule
   ],
   providers: [NavService]
 })
