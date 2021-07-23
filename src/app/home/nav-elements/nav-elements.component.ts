@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { SessionService } from 'src/app/session.service';
 import { Spinner } from 'src/app/shared/components/spinner/spinner.service';
+import { NavService } from '../nav.service';
 
 @Component({
   selector: 'app-nav-elements',
@@ -11,12 +12,13 @@ import { Spinner } from 'src/app/shared/components/spinner/spinner.service';
 export class NavElementsComponent {
   @Output() private closeButtonClicked = new EventEmitter();
   @Input() isMobile = true;
-  navButtons: { label: string, icon: string, route: string }[] = [
-    { label: 'Debates', icon: 'forum', route: '' }, { label: 'Account', icon: 'person' , route: 'account'}
-  ]
-  clickedNavbuttonIndex = 0;
 
-  constructor(public sessionService: SessionService, private router: Router, private spinner: Spinner) { }
+  constructor(
+    public navService: NavService,
+    public sessionService: SessionService,
+    private router: Router,
+    private spinner: Spinner
+  ) {}
 
   onCloseButtonClick(): void { this.closeButtonClicked.emit(); }
 

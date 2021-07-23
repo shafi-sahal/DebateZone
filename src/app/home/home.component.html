@@ -6,7 +6,7 @@
     <mat-sidenav-content>
       <button *ngIf="isMobile" #buttonMenu mat-icon-button (click)="onMenuClick()"><mat-icon>more_vert</mat-icon></button>
       <router-outlet></router-outlet>
+      <app-bottom-nav></app-bottom-nav>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </body>
-

@@ -8,14 +8,14 @@
   </div>
 
   <button
-    *ngFor="let button of navButtons index as i"
-    [class]="i === clickedNavbuttonIndex ? 'nav-active' : 'nav'"
+    *ngFor="let button of navService.navButtons index as i"
+    [class]="i === navService.clickedNavbuttonIndex ? 'nav-active' : 'nav'"
     mat-button
-    (click)="clickedNavbuttonIndex = i"
+    (click)="navService.clickedNavbuttonIndex= i"
     [routerLink]="button.route">
     <mat-icon
       *ngIf="!isMobile"
-      [fontSet]="i === clickedNavbuttonIndex ? 'material-icons' : 'material-icons-outlined'">
+      [fontSet]="i === navService.clickedNavbuttonIndex ? 'material-icons' : 'material-icons-outlined'">
       {{button.icon}}
     </mat-icon>
     <span class="nav-label">{{button.label}}</span>

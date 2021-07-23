@@ -9,6 +9,14 @@ mat-sidenav {
   align-items: center;
   width: 240px;
 }
+app-bottom-nav {
+  display: flex;
+  position: absolute;
+  align-items: center;
+  bottom: 0px;
+  width: 100%;
+}
+
 @media only screen and (min-width: #{screen-sizes.$small-desktop-width}) {
   mat-sidenav {
     width: 270px;

@@ -7,6 +7,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { SidenavAdapter } from './sidenav-adapter.directive';
 import { NavElementsComponent } from './nav-elements/nav-elements.component';
 import { BottomNavComponent } from './bottom-nav/bottom-nav.component';
+import { NavService } from './nav.service';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { BottomNavComponent } from './bottom-nav/bottom-nav.component';
     AngularMaterialModule,
     MatSidenavModule,
     AngularMaterialModule
-  ]
+  ],
+  providers: [NavService]
 })
 export class HomeModule { }

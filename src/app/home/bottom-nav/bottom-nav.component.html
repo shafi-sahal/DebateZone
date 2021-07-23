@@ -1,1 +1,10 @@
-<p>bottom-nav works!</p>
+<body>
+  <button
+    *ngFor="let button of navService.navButtons index as i"
+    mat-icon-button
+    [color]="i === navService.clickedNavbuttonIndex ? 'primary' : ''"
+    (click)="navService.clickedNavbuttonIndex = i"
+    [routerLink]="button.route">
+    <mat-icon>{{button.icon}}</mat-icon>
+  </button>
+</body>
