@@ -10,25 +10,28 @@ mat-sidenav {
   align-items: center;
   width: 240px;
 }
+app-header {
+  position: fixed;
+  width: 100%;
+  z-index: 1;
+}
 app-bottom-nav {
   display: flex;
-  position: absolute;
+  position: fixed;
   align-items: center;
   bottom: 0px;
   width: 100%;
 }
-span {
-  font-size: large;
-  font-weight: 500;
-  color: #{colors.$primary-deep};
-}
-.container-header {
-  display: flex;
-  align-items: center;
+.router-outlet {
+  margin-top: 40px;
+  height: 100%;
 }
 
 @media only screen and (min-width: #{screen-sizes.$small-desktop-width}) {
   mat-sidenav {
     width: 270px;
+  }
+  .router-outlet {
+    margin-top: 0%;
   }
 }

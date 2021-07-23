@@ -14,6 +14,4 @@ export class HomeComponent {
   @ViewChild(MatSidenav) sidenav!: MatSidenav;
 
   constructor(public navService: NavService, private spinner: Spinner) { this.spinner.hide(); }
-
-  onMenuClick():void { this.sidenav.toggle(); }
 }

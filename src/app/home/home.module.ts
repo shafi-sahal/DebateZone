@@ -11,13 +11,15 @@ import { NavService } from './nav.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
+import { HeaderComponent } from './header/header.component';
 
 @NgModule({
   declarations: [
     HomeComponent,
     SidenavAdapter,
     NavElementsComponent,
-    BottomNavComponent
+    BottomNavComponent,
+    HeaderComponent
   ],
   imports: [
     CommonModule,

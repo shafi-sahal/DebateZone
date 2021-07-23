@@ -1,0 +1,8 @@
+<body>
+  <div class="container-header">
+    <button #buttonMenu mat-icon-button (click)="menuClicked.emit()"><mat-icon>more_vert</mat-icon></button>
+    <span>{{navService.navButtons[navService.clickedNavbuttonIndex].label}}</span>
+  </div>
+  <mat-divider></mat-divider>
+</body>
+

@@ -1,0 +1,14 @@
+@use '../../../assets/styles/colors';
+
+body {
+  background-color: white;
+}
+span {
+  font-size: large;
+  font-weight: 500;
+  color: #{colors.$primary-deep};
+}
+.container-header {
+  display: flex;
+  align-items: center;
+}
