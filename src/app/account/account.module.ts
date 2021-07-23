@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AccountComponent } from './account.component';
 import { AccountRoutingModule } from './account-routing.module';
+import { MatCardModule } from '@angular/material/card';
 
 
 @NgModule({
@@ -10,7 +11,8 @@ import { AccountRoutingModule } from './account-routing.module';
   ],
   imports: [
     CommonModule,
-    AccountRoutingModule
+    AccountRoutingModule,
+    MatCardModule
   ]
 })
 export class AccountModule { }
