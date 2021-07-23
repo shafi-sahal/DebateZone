@@ -10,6 +10,7 @@ import { BottomNavComponent } from './bottom-nav/bottom-nav.component';
 import { NavService } from './nav.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { MatIconModule } from '@angular/material/icon';
     AngularMaterialModule,
     MatSidenavModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatDividerModule
   ],
   providers: [NavService]
 })

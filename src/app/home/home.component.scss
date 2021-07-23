@@ -1,4 +1,5 @@
 @use '../../assets/styles/screen-sizes';
+@use '../../assets/styles/colors';
 
 mat-sidenav-container {
   width: 100%;
@@ -15,6 +16,15 @@ app-bottom-nav {
   align-items: center;
   bottom: 0px;
   width: 100%;
+}
+span {
+  font-size: large;
+  font-weight: 500;
+  color: #{colors.$primary-deep};
+}
+.container-header {
+  display: flex;
+  align-items: center;
 }
 
 @media only screen and (min-width: #{screen-sizes.$small-desktop-width}) {

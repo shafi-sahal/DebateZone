@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Spinner } from '../shared/components/spinner/spinner.service';
+import { NavService } from './nav.service';
 
 @Component({
   selector: 'app-home',
@@ -12,7 +13,7 @@ export class HomeComponent {
   @Input() isMobile = true;
   @ViewChild(MatSidenav) sidenav!: MatSidenav;
 
-  constructor(private spinner: Spinner) { this.spinner.hide(); }
+  constructor(public navService: NavService, private spinner: Spinner) { this.spinner.hide(); }
 
   onMenuClick():void { this.sidenav.toggle(); }
 }
