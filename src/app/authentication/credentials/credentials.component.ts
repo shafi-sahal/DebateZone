@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import {
   AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, Renderer2, ViewChild
 } from '@angular/core';
@@ -39,8 +38,8 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
   showLoginError = false;
   shouldAsyncValidateEmail = new Subject<boolean>();
   shouldAsyncValidateMobile = new Subject<boolean>();
-  private listenerBlur = () => {};
-  private listenerFocus = () => {};
+  private listenerBlur!: () => void;
+  private listenerFocus!: () => void;
 
   inputDetails = {
     name: {
