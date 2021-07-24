@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { DeviceTypeChecker } from 'src/app/device-type-checker.service';
 import { SessionService } from 'src/app/session.service';
 import { Spinner } from 'src/app/shared/components/spinner/spinner.service';
 import { NavService } from '../nav.service';
@@ -14,6 +15,7 @@ export class NavElementsComponent {
   @Input() isMobile = true;
 
   constructor(
+    public deviceTypeChecker: DeviceTypeChecker,
     public navService: NavService,
     public sessionService: SessionService,
     private router: Router,

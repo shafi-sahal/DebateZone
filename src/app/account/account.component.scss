@@ -1,9 +1,22 @@
+@use '../../assets/styles/screen-sizes';
+
 body {
   display: flex;
   justify-content: center;
-  align-items: center;
 }
-mat-card {
-  width: 40%;
-  height: 40%;
+app-input-fields {
+  width: 90%;
+}
+
+
+@media only screen and (min-width: #{screen-sizes.$small-desktop-width}) {
+  body {
+    align-items: center;
+  }
+  mat-card {
+    display: flex;
+    justify-content: center;
+    height: fit-content;
+    width: 60%;
+  }
 }

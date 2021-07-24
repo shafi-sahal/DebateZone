@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DeviceTypeChecker } from '../device-type-checker.service';
 import { Spinner } from '../shared/components/spinner/spinner.service';
 
 @Component({
@@ -7,5 +8,5 @@ import { Spinner } from '../shared/components/spinner/spinner.service';
   styleUrls: ['./account.component.scss']
 })
 export class AccountComponent {
-  constructor(private spinner: Spinner) { spinner.hide(); }
+  constructor(public deviceTypeChecker: DeviceTypeChecker, private spinner: Spinner) { spinner.hide(); }
 }

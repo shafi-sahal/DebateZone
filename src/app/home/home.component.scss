@@ -10,10 +10,14 @@ mat-sidenav {
   align-items: center;
   width: 240px;
 }
+mat-sidenav-content {
+  background-color: white;
+}
 app-header {
   position: fixed;
   width: 100%;
   z-index: 1;
+  margin-bottom: 50%;
 }
 app-bottom-nav {
   display: flex;
@@ -23,8 +27,10 @@ app-bottom-nav {
   width: 100%;
 }
 .router-outlet {
-  margin-top: 40px;
-  height: 100%;
+  $header-height: 60px;
+  $bottom-nav-height: 40px;
+  margin-top: #{$header-height};
+  height: calc(100% - (#{$header-height + $bottom-nav-height}));
 }
 
 @media only screen and (min-width: #{screen-sizes.$small-desktop-width}) {
@@ -32,6 +38,6 @@ app-bottom-nav {
     width: 270px;
   }
   .router-outlet {
-    margin-top: 0%;
+    margin-top: 20px;
   }
 }

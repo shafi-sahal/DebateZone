@@ -4,17 +4,17 @@
       <p class="name">{{sessionService.readUser()?.name}}</p>
       <p class="username">{{sessionService.readUser()?.username}}</p>
     </div>
-    <button *ngIf="isMobile" (click)="onCloseButtonClick()" mat-icon-button><mat-icon>close</mat-icon></button>
+    <button *ngIf="deviceTypeChecker.isMobile | async" (click)="onCloseButtonClick()" mat-icon-button><mat-icon>close</mat-icon></button>
   </div>
 
-  <div *ngIf="!isMobile">
+  <div *ngIf="!(deviceTypeChecker.isMobile | async)">
     <button
       *ngFor="let button of navService.navButtons index as i"
       [class]="i === navService.clickedNavbuttonIndex ? 'nav-active' : 'nav'"
       mat-button
       [routerLink]="button.route">
       <mat-icon
-        *ngIf="!isMobile"
+        *ngIf="!(deviceTypeChecker.isMobile | async)"
         [fontSet]="i === navService.clickedNavbuttonIndex ? 'material-icons' : 'material-icons-outlined'">
         {{button.icon}}
       </mat-icon>
