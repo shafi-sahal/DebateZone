@@ -24,6 +24,7 @@ mat-sidenav-container {
       $bottom-nav-height: 40px;
       margin-top: #{$header-height};
       height: calc(100% - (#{$header-height + $bottom-nav-height}));
+      overflow: auto;
     }
     app-bottom-nav {
       display: flex;
