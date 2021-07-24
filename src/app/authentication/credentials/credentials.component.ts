@@ -6,7 +6,7 @@ import { AbstractControl, FormBuilder, FormGroup, FormGroupDirective, Validators
 import { Observable, Subject, Subscription } from 'rxjs';
 import { CredentialsService } from 'src/app/shared/services/credentials.service';
 import { AuthenticationService } from '../authentication.service';
-import { countries } from '../datasets';
+import { countries, regexes } from '../../shared/datasets';
 import {
   validateUsername, validateMobile, UsernameAvailabilityCheck, EmailUniquenessValidator, MobileUniquenessValidator
 } from 'src/app/shared/validator';
@@ -69,15 +69,12 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  private regexName = /^[a-zA-ZàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ'`-]+[ a-zA-ZàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ'`'-]{4,}$/;
-  private regexEmail = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
-
   signUpForm = this.formBuilder.group({
     name: [
       '',
       {
         updateOn: 'blur',
-        validators: [Validators.required, Validators.pattern(this.regexName)]
+        validators: [Validators.required, Validators.pattern(regexes.name)]
       }
     ],
     username: ['', [Validators.required, validateUsername()], this.usernameAvailabilityCheck.validate.bind(this)],
@@ -85,7 +82,7 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
       '',
       {
         updateOn: 'blur',
-        validators: [Validators.required, Validators.pattern(this.regexEmail)],
+        validators: [Validators.required, Validators.pattern(regexes.email)],
         asyncValidators: this.emailUniquenessValidator.validate.bind(this)
       }
     ],
