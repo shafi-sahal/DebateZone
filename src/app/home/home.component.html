@@ -1,14 +1,14 @@
 <body>
-  <mat-sidenav-container appAdaptSidenavToDevice (isMobile)="isMobile = navElements.isMobile = $event">
+  <mat-sidenav-container appAdaptSidenavToDevice>
     <mat-sidenav #sidenav [autoFocus]="false">
       <app-nav-elements #navElements (closeButtonClicked)="sidenav.close()"></app-nav-elements>
     </mat-sidenav>
     <mat-sidenav-content>
-      <app-header *ngIf="isMobile" (menuClicked)="sidenav.toggle()"></app-header>
+      <app-header *ngIf="deviceTypeChecker.isMobile | async" (menuClicked)="sidenav.toggle()"></app-header>
       <div class="router-outlet">
         <router-outlet></router-outlet>
       </div>
-      <app-bottom-nav *ngIf="isMobile"></app-bottom-nav>
+      <app-bottom-nav *ngIf="deviceTypeChecker.isMobile | async"></app-bottom-nav>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </body>

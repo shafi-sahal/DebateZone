@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
+import { DeviceTypeChecker } from '../device-type-checker.service';
 import { Spinner } from '../shared/components/spinner/spinner.service';
 import { NavService } from './nav.service';
 
@@ -10,8 +11,9 @@ import { NavService } from './nav.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent {
-  @Input() isMobile = true;
   @ViewChild(MatSidenav) sidenav!: MatSidenav;
 
-  constructor(public navService: NavService, private spinner: Spinner) { this.spinner.hide(); }
+  constructor(public navService: NavService, private spinner: Spinner, public deviceTypeChecker: DeviceTypeChecker) {
+    this.spinner.hide();
+  }
 }

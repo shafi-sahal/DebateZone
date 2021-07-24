@@ -1,24 +1,21 @@
-import { AfterViewInit, ContentChild, Directive, EventEmitter, HostListener, Output } from '@angular/core';
+import { AfterViewInit, ContentChild, Directive, EventEmitter, Output } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
-import { screenSizes } from '../../assets/screen-sizes';
-import { WindowRef } from '../window-ref.service';
+import { Subscription } from 'rxjs';
+import { DeviceTypeChecker } from '../device-type-checker.service';
 
 @Directive({ selector: '[appAdaptSidenavToDevice]' })
 export class SidenavAdapter implements AfterViewInit {
-  @Output() isMobile = new EventEmitter<boolean>();
   @ContentChild('sidenav') sidenav!: MatSidenav;
   private previousIsMobile = true;
+  private subscriptions = new Subscription();
 
-  constructor(private windowRef: WindowRef) {}
+  constructor(private deviceTypeChecker: DeviceTypeChecker) {}
 
   ngAfterViewInit(): void {
-    this.adaptSidenavToedvice();
+    this.subscriptions.add(this.deviceTypeChecker.isMobile.subscribe(isMobile => this.adaptSidenavToedvice(isMobile)));
   }
 
-  @HostListener('window:resize', ['$event'])
-  private adaptSidenavToedvice(): void {
-    const isMobile = this.windowRef.nativeWindow.innerWidth < screenSizes.desktopWidth;
-    this.isMobile.emit(isMobile);
+  private adaptSidenavToedvice(isMobile: boolean): void {
     if (isMobile) {
       this.sidenav.mode = 'over';
       if (!this.previousIsMobile) this.sidenav.close();
