@@ -1,1 +1,1 @@
-export const screenSizes = { desktopWidth: 768 };
+export const screenSizes = { desktopWidth: 1024 };
