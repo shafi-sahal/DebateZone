@@ -1,4 +1,5 @@
 @use '../../assets/styles/screen-sizes';
+@use '../../assets/styles/dimensions';
 
 body {
   display: flex;
@@ -10,13 +11,11 @@ app-input-fields {
 
 
 @media only screen and (min-width: #{screen-sizes.$small-desktop-width}) {
-  body {
-    align-items: center;
-  }
   mat-card {
     display: flex;
     justify-content: center;
     height: fit-content;
-    width: 60%;
+    width: #{dimensions.$card-form-width};
+    margin-top: #{dimensions.$card-form-margin-top};
   }
 }

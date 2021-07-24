@@ -1,5 +1,6 @@
 @use '../../assets/styles/colors';
 @use '../../assets/styles/screen-sizes';
+@use '../../assets/styles/dimensions';
 
 body {
   display: flex;
@@ -21,6 +22,6 @@ body {
 
 @media only screen and (min-width: #{screen-sizes.$medium-screen-width}) {
   .mat-card {
-    width: 600px;
+    width: #{dimensions.$card-form-width};
   }
 }
