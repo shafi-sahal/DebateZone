@@ -6,16 +6,21 @@ body {
   justify-content: center;
 }
 app-input-fields {
-  width: 90%;
+  width: 100%;
 }
 
-
 @media only screen and (min-width: #{screen-sizes.$small-desktop-width}) {
+  body {
+    justify-content: flex-start;
+  }
   mat-card {
     display: flex;
     justify-content: center;
     height: fit-content;
     width: #{dimensions.$card-form-width};
-    margin-top: #{dimensions.$card-form-margin-top};
+
+    app-input-fields {
+      width: 90%;
+    }
   }
 }

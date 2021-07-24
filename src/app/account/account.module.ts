@@ -5,6 +5,7 @@ import { AccountRoutingModule } from './account-routing.module';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { InputFieldsComponent } from './input-fields/input-fields.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { InputFieldsComponent } from './input-fields/input-fields.component';
     CommonModule,
     AccountRoutingModule,
     MatCardModule,
-    MatInputModule
+    MatInputModule,
+    ReactiveFormsModule
   ]
 })
 export class AccountModule { }

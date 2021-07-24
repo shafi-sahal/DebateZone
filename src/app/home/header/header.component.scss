@@ -1,4 +1,5 @@
 @use '../../../assets/styles/colors';
+@use '../../../assets/styles/screen-sizes';
 
 body {
   background-color: white;
@@ -11,5 +12,14 @@ body {
     font-size: large;
     font-weight: 500;
     color: #{colors.$primary-deep};
+  }
+}
+
+@media only screen and (min-width: #{screen-sizes.$small-desktop-width}) {
+  .container-header {
+    span {
+      font-size: 2em;
+      padding-left: 20px;
+    }
   }
 }

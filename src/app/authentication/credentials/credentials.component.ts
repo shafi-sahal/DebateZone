@@ -9,7 +9,7 @@ import { AuthenticationService } from '../authentication.service';
 import { countries } from '../datasets';
 import {
   validateUsername, validateMobile, UsernameAvailabilityCheck, EmailUniquenessValidator, MobileUniquenessValidator
-} from 'src/app/authentication/validator';
+} from 'src/app/shared/validator';
 import { CountryCode } from 'libphonenumber-js';
 import { MatSelect } from '@angular/material/select';
 import { Router } from '@angular/router';

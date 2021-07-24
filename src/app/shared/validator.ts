@@ -3,7 +3,7 @@ import { AbstractControl, AsyncValidator, ValidationErrors, ValidatorFn } from '
 import { CountryCode, parsePhoneNumber} from 'libphonenumber-js';
 import { Observable, of, Subject } from 'rxjs';
 import { catchError, debounceTime, first, map, switchMap } from 'rxjs/operators';
-import { AuthenticationService } from './authentication.service';
+import { AuthenticationService } from '../authentication/authentication.service';
 
 @Injectable()
 export class UsernameAvailabilityCheck implements AsyncValidator {

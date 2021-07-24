@@ -4,7 +4,7 @@
       <app-nav-elements #navElements (closeButtonClicked)="sidenav.close()"></app-nav-elements>
     </mat-sidenav>
     <mat-sidenav-content>
-      <app-header *ngIf="deviceTypeChecker.isMobile | async" (menuClicked)="sidenav.toggle()"></app-header>
+      <app-header (menuClicked)="sidenav.toggle()"></app-header>
       <div class="router-outlet">
         <router-outlet></router-outlet>
       </div>
