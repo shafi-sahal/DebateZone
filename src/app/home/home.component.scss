@@ -4,40 +4,49 @@
 mat-sidenav-container {
   width: 100%;
   height: 100%;
-}
-mat-sidenav {
-  display: flex;
-  align-items: center;
-  width: 240px;
-}
-mat-sidenav-content {
-  background-color: white;
-}
-app-header {
-  position: fixed;
-  width: 100%;
-  z-index: 1;
-  margin-bottom: 50%;
-}
-app-bottom-nav {
-  display: flex;
-  position: fixed;
-  align-items: center;
-  bottom: 0px;
-  width: 100%;
-}
-.router-outlet {
-  $header-height: 60px;
-  $bottom-nav-height: 40px;
-  margin-top: #{$header-height};
-  height: calc(100% - (#{$header-height + $bottom-nav-height}));
+
+  mat-sidenav {
+    display: flex;
+    align-items: center;
+    width: 240px;
+  }
+  mat-sidenav-content {
+    background-color: white;
+
+    app-header {
+      position: fixed;
+      width: 100%;
+      z-index: 1;
+      margin-bottom: 50%;
+    }
+    .router-outlet {
+      $header-height: 60px;
+      $bottom-nav-height: 40px;
+      margin-top: #{$header-height};
+      height: calc(100% - (#{$header-height + $bottom-nav-height}));
+    }
+    app-bottom-nav {
+      display: flex;
+      position: fixed;
+      align-items: center;
+      bottom: 0px;
+      width: 100%;
+    }
+  }
 }
 
+
 @media only screen and (min-width: #{screen-sizes.$small-desktop-width}) {
-  mat-sidenav {
-    width: 270px;
-  }
-  .router-outlet {
-    margin-top: 20px;
+  mat-sidenav-container {
+    mat-sidenav {
+      width: 270px;
+    }
+    mat-sidenav-content {
+      .router-outlet {
+        $margin-top: 1%;
+        margin-top: #{$margin-top};
+        height: calc(100% - #{$margin-top});
+      }
+    }
   }
 }

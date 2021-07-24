@@ -8,15 +8,15 @@ body {
   background-image: linear-gradient(to top right, #{colors.$primary-deep}, #{colors.$primary-light});
 }
 .mat-card {
- padding-top: 0%;
- padding-left: 0%;
- width: 90%;
- padding-right: 0%;
- box-shadow: -20px 20px 20px #{colors.$primary-5}, 20px 20px 20px #{colors.$primary-4};
-}
-app-header {
-  display: flex;
-  height: 50px;
+  padding-top: 0%;
+  padding-left: 0%;
+  width: 90%;
+  padding-right: 0%;
+  box-shadow: -20px 20px 20px #{colors.$primary-5}, 20px 20px 20px #{colors.$primary-4};
+  app-header {
+    display: flex;
+    height: 50px;
+  }
 }
 
 @media only screen and (min-width: #{screen-sizes.$medium-screen-width}) {
