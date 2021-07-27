@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { InputFieldsComponent } from './input-fields/input-fields.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AccountService } from './account.service';
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatCardModule,
     MatInputModule,
     ReactiveFormsModule
-  ]
+  ],
+  providers: [AccountService]
 })
 export class AccountModule { }
