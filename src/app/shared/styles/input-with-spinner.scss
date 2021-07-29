@@ -1,0 +1,10 @@
+.container-input-with-spinner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  input{
+    $mat-spinner-width: 25px;
+    width: calc(100% - #{$mat-spinner-width});
+  }
+}
