@@ -10,6 +10,8 @@ import { FocusInvalidInputDirective } from '../shared/directives/focus-invalid-i
 import { AngularMaterialModule } from '../angular-material.module';
 import { MatSelectSearchModule } from 'mat-select-search';
 import { MatOptionMultiLineDirective } from './credentials/mat-option-multi-line.directive';
+import { UsernameValidationErrorsModule } from '../shared/modules/username-validation-errors/username-validation-errors.module';
+
 
 
 @NgModule({
@@ -25,7 +27,8 @@ import { MatOptionMultiLineDirective } from './credentials/mat-option-multi-line
     AuthenticationRoutingModule,
     AngularMaterialModule,
     ReactiveFormsModule,
-    MatSelectSearchModule
+    MatSelectSearchModule,
+    UsernameValidationErrorsModule
   ]
 })
 export class AuthenticationModule {}

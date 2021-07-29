@@ -10,6 +10,7 @@
       <mat-label>Username</mat-label>
       <input matInput formControlName="username">
     </mat-form-field>
+    <app-username-validation-errors [errors]="username?.errors"></app-username-validation-errors>
 
     <mat-form-field>
       <mat-label>Email</mat-label>

@@ -8,6 +8,7 @@ import { InputFieldsComponent } from './input-fields/input-fields.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AccountService } from './account.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { UsernameValidationErrorsModule } from '../shared/modules/username-validation-errors/username-validation-errors.module';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatCardModule,
     MatInputModule,
     ReactiveFormsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    UsernameValidationErrorsModule
   ],
   providers: [AccountService]
 })
