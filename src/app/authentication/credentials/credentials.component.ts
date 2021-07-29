@@ -1,5 +1,5 @@
 import {
-  AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, Renderer2, ViewChild
+  AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, ViewChild
 } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { Observable, Subject, Subscription } from 'rxjs';
@@ -7,7 +7,7 @@ import { CredentialsService } from 'src/app/shared/services/credentials.service'
 import { AuthenticationService } from '../authentication.service';
 import { countries, regexes } from '../../shared/datasets';
 import {
-  validateUsername, validateMobile, UsernameAvailabilityCheck, EmailUniquenessValidator, MobileUniquenessValidator
+  validateUsername, validateMobile, UsernameAvailabilityCheck, EmailUniquenessValidator, MobileUniquenessValidator, FocusChangeObserver
 } from 'src/app/shared/validator';
 import { CountryCode } from 'libphonenumber-js';
 import { MatSelect } from '@angular/material/select';
@@ -18,7 +18,12 @@ import { Router } from '@angular/router';
   templateUrl: './credentials.component.html',
   styleUrls: ['./credentials.component.scss'],
   providers: [
-    CredentialsService, AuthenticationService, UsernameAvailabilityCheck, EmailUniquenessValidator, MobileUniquenessValidator
+    CredentialsService,
+    AuthenticationService,
+    UsernameAvailabilityCheck,
+    EmailUniquenessValidator,
+    MobileUniquenessValidator,
+    FocusChangeObserver
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -38,8 +43,6 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
   showLoginError = false;
   shouldAsyncValidateEmail = new Subject<boolean>();
   shouldAsyncValidateMobile = new Subject<boolean>();
-  private listenerBlur!: () => void;
-  private listenerFocus!: () => void;
 
   inputDetails = {
     name: {
@@ -140,7 +143,7 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
     private mobileUniquenessValidator: MobileUniquenessValidator,
     private changeDetector: ChangeDetectorRef,
     private router: Router,
-    private renderer: Renderer2
+    private focusChangeObserver: FocusChangeObserver
   ) {}
 
   ngAfterViewInit(): void {
@@ -169,8 +172,8 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
       this.inputDetails = this.inputDetailsSignUp;
       this.buttonText = 'Sign Up';
       setTimeout(() => {
-        this.observeFocusChangeOfElement(this.inputMobile, this.shouldAsyncValidateMobile);
-        this.observeFocusChangeOfElement(this.inputEmail, this.shouldAsyncValidateEmail);
+        this.focusChangeObserver.observeFocusChangeOfElement(this.inputMobile, this.shouldAsyncValidateMobile);
+        this.focusChangeObserver.observeFocusChangeOfElement(this.inputEmail, this.shouldAsyncValidateEmail);
       });
     } else {
       this.inputDetails = this.inputDetailsLogin;
@@ -234,16 +237,6 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
     if (this.buttonText === 'Login')  this.login();  else  this.addUser();
   }
 
-  private observeFocusChangeOfElement(element: ElementRef, shouldAsyncValidateElement: Subject<boolean>): void {
-    this.listenerBlur = this.renderer.listen(element.nativeElement, 'blur', blur => {
-      const button = (blur.relatedTarget as HTMLButtonElement);
-      const isBlurredByloginClick = button && button.textContent === 'Login';
-      shouldAsyncValidateElement.next(!isBlurredByloginClick);
-    });
-
-    this.listenerFocus = this.renderer.listen(element.nativeElement, 'focus', () => shouldAsyncValidateElement.next(true));
-  }
-
   private changeMobileValidator(): void {
     this.mobile?.setValidators([Validators.required, validateMobile(this._country.code as CountryCode)]);
     this.mobile?.updateValueAndValidity();
@@ -267,9 +260,5 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
-    this.listenerBlur();
-    this.listenerFocus();
-  }
+  ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
 }

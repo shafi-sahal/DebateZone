@@ -10,8 +10,9 @@
     </mat-form-field>
     <mat-form-field>
       <mat-label>Email</mat-label>
-      <input #inputEmail matInput formControlName="email">
+      <input #inputEmail matInput type="email" formControlName="email">
     </mat-form-field>
+    <p *ngIf="(email?.statusChanges | async) === 'INVALID' && email?.hasError('isDuplicateEmail')">Duplicate</p>
     <mat-form-field>
       <mat-label>Mobile</mat-label>
       <input matInput formControlName="mobile">

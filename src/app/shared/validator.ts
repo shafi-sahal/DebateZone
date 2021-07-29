@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+/* eslint-disable @typescript-eslint/no-empty-function */
+import { ElementRef, Injectable, OnDestroy, Renderer2 } from '@angular/core';
 import { AbstractControl, AsyncValidator, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { CountryCode, parsePhoneNumber} from 'libphonenumber-js';
 import { Observable, of, Subject } from 'rxjs';
@@ -28,6 +29,7 @@ export class EmailUniquenessValidator implements AsyncValidator {
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
     const email = control.value;
+
     return this.shouldAsyncValidateEmail.pipe(
       first(),
       switchMap(canValidate => {
@@ -59,6 +61,23 @@ export class MobileUniquenessValidator implements AsyncValidator {
       catchError(() => of({ unknownError: true }))
     );
   }
+}
+
+@Injectable()
+export class FocusChangeObserver implements OnDestroy {
+  private listenerBlur = () => {};
+
+  constructor(private renderer: Renderer2) {}
+
+  observeFocusChangeOfElement(element: ElementRef, shouldAsyncValidateElement: Subject<boolean>): void {
+    this.listenerBlur = this.renderer.listen(element.nativeElement, 'blur', blur => {
+      const button = (blur.relatedTarget as HTMLButtonElement);
+      const isBlurredByloginClick = button && button.textContent === 'Login';
+      shouldAsyncValidateElement.next(!isBlurredByloginClick);
+    });
+  }
+
+  ngOnDestroy(): void { this.listenerBlur(); }
 }
 
 export function validateUsername(): ValidatorFn {
