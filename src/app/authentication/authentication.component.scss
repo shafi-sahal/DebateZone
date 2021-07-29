@@ -7,6 +7,11 @@ body {
   justify-content: center;
   align-items: center;
   background-image: linear-gradient(to top right, #{colors.$primary-deep}, #{colors.$primary-light});
+  overflow: auto;
+  min-height: 100%;
+  height: auto;
+  padding-top: 5%;
+  padding-bottom: 5%;
 }
 .mat-card {
   padding-top: 0%;

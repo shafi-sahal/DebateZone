@@ -10,7 +10,6 @@ import { FocusInvalidInputDirective } from '../shared/directives/focus-invalid-i
 import { AngularMaterialModule } from '../angular-material.module';
 import { MatSelectSearchModule } from 'mat-select-search';
 import { MatOptionMultiLineDirective } from './credentials/mat-option-multi-line.directive';
-import { AdaptHeight } from './adapt-height.directive';
 
 
 @NgModule({
@@ -20,7 +19,6 @@ import { AdaptHeight } from './adapt-height.directive';
     CredentialsComponent,
     FocusInvalidInputDirective,
     MatOptionMultiLineDirective,
-    AdaptHeight
   ],
   imports: [
     CommonModule,
