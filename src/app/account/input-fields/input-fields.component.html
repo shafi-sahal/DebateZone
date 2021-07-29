@@ -16,7 +16,9 @@
         <mat-spinner *ngIf="(email?.statusChanges | async) === 'PENDING'" [diameter]="25"></mat-spinner>
       </div>
     </mat-form-field>
-    <p *ngIf="(email?.statusChanges | async) === 'INVALID' && email?.hasError('isDuplicateEmail')">Duplicate</p>
+    <p class="invalid" *ngIf="(email?.statusChanges | async) === 'INVALID' && email?.hasError('isDuplicateEmail')">
+      An account with the same email already exists
+    </p>
     <mat-form-field>
       <mat-label>Mobile</mat-label>
       <input matInput formControlName="mobile">

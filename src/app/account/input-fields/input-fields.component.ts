@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@ang
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { AuthenticationService } from 'src/app/authentication/authentication.service';
+import { NavService } from 'src/app/home/nav.service';
 import { EmailUniquenessValidator, FocusChangeObserver, UsernameAvailabilityCheck, validateUsername } from 'src/app/shared/validator';
 import { regexes } from '../../shared/datasets';
 import { AccountService } from '../account.service';
@@ -10,7 +11,7 @@ import { AccountService } from '../account.service';
   selector: 'app-input-fields',
   templateUrl: './input-fields.component.html',
   styleUrls: ['./input-fields.component.scss'],
-  providers: [UsernameAvailabilityCheck, EmailUniquenessValidator, AuthenticationService, FocusChangeObserver]
+  providers: [UsernameAvailabilityCheck, EmailUniquenessValidator, AuthenticationService, FocusChangeObserver, NavService]
 })
 export class InputFieldsComponent implements AfterViewInit, OnDestroy {
   @ViewChild('inputEmail')  inputEmail!: ElementRef;
@@ -42,14 +43,26 @@ export class InputFieldsComponent implements AfterViewInit, OnDestroy {
     private emailUniquenessValidator: EmailUniquenessValidator,
     private authenticationService: AuthenticationService,
     private focusChangeObserver: FocusChangeObserver,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private navService: NavService
   ) { }
 
   ngAfterViewInit(): void {
-    setTimeout(() => this.focusChangeObserver.observeFocusChangeOfElement(this.inputEmail, this.shouldAsyncValidateEmail));
+    setTimeout(() =>
+      this.focusChangeObserver.observeFocusChangeOfElement(
+        this.inputEmail, this.shouldAsyncValidateEmail, this.getNavButtonsTextContent()
+      )
+    );
   }
 
   get email(): AbstractControl | null { return this.form.get('email'); }
+
+  private getNavButtonsTextContent(): string[] {
+    const textContents = this.navService.navButtons.map(button => ' ' + button.icon + ' ' + button.label);
+    textContents.splice(1, 1);
+    textContents.push('Log out');
+    return textContents;
+  }
 
   ngOnDestroy(): void { this.accountService.user = this.form.value; }
 }

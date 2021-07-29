@@ -172,8 +172,8 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
       this.inputDetails = this.inputDetailsSignUp;
       this.buttonText = 'Sign Up';
       setTimeout(() => {
-        this.focusChangeObserver.observeFocusChangeOfElement(this.inputMobile, this.shouldAsyncValidateMobile);
-        this.focusChangeObserver.observeFocusChangeOfElement(this.inputEmail, this.shouldAsyncValidateEmail);
+        this.focusChangeObserver.observeFocusChangeOfElement(this.inputMobile, this.shouldAsyncValidateMobile, ['Login']);
+        this.focusChangeObserver.observeFocusChangeOfElement(this.inputEmail, this.shouldAsyncValidateEmail, ['Login']);
       });
     } else {
       this.inputDetails = this.inputDetailsLogin;

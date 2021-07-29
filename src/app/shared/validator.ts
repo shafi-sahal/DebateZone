@@ -69,11 +69,24 @@ export class FocusChangeObserver implements OnDestroy {
 
   constructor(private renderer: Renderer2) {}
 
-  observeFocusChangeOfElement(element: ElementRef, shouldAsyncValidateElement: Subject<boolean>): void {
+  observeFocusChangeOfElement(
+    element: ElementRef,
+    shouldAsyncValidateElement: Subject<boolean>,
+    exceptValidationTextContents: string[]
+  ): void {
     this.listenerBlur = this.renderer.listen(element.nativeElement, 'blur', blur => {
       const button = (blur.relatedTarget as HTMLButtonElement);
-      const isBlurredByloginClick = button && button.textContent === 'Login';
-      shouldAsyncValidateElement.next(!isBlurredByloginClick);
+      if (!button) {
+        shouldAsyncValidateElement.next(true);
+        return;
+      }
+      exceptValidationTextContents.forEach(textContent => {
+        if (textContent === button.textContent) {
+          shouldAsyncValidateElement.next(false);
+          return;
+        }
+      });
+      shouldAsyncValidateElement.next(true);
     });
   }
 
