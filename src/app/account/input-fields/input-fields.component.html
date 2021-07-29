@@ -8,9 +8,15 @@
 
     <mat-form-field>
       <mat-label>Username</mat-label>
-      <input matInput formControlName="username">
+      <div class="container-input-with-spinner">
+        <input matInput formControlName="username">
+        <mat-spinner *ngIf="(username?.statusChanges | async) === 'PENDING'" [diameter]="25"></mat-spinner>
+      </div>
     </mat-form-field>
     <app-username-validation-errors [errors]="username?.errors"></app-username-validation-errors>
+    <p *ngIf="(username?.statusChanges | async) === 'VALID'" class="valid">
+      Username is available!!!
+    </p>
 
     <mat-form-field>
       <mat-label>Email</mat-label>
