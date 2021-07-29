@@ -2,6 +2,7 @@
 @use './app/shared/styles/colors';
 @use './app/shared/styles/border-radius';
 
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mat-card.mat-card, button.diagonal-rounded-large, .custom-dialog > mat-dialog-container {
