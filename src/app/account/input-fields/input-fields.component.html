@@ -8,9 +8,13 @@
       <mat-label>Username</mat-label>
       <input matInput formControlName="username">
     </mat-form-field>
+
     <mat-form-field>
       <mat-label>Email</mat-label>
-      <input #inputEmail matInput type="email" formControlName="email">
+      <div class="container-input-with-spinner">
+        <input #inputEmail matInput type="email" formControlName="email">
+        <mat-spinner *ngIf="(email?.statusChanges | async) === 'PENDING'" [diameter]="25"></mat-spinner>
+      </div>
     </mat-form-field>
     <p *ngIf="(email?.statusChanges | async) === 'INVALID' && email?.hasError('isDuplicateEmail')">Duplicate</p>
     <mat-form-field>
