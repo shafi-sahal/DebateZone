@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { InputFieldsComponent } from './input-fields/input-fields.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AccountService } from './account.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { AccountService } from './account.service';
     AccountRoutingModule,
     MatCardModule,
     MatInputModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatProgressSpinnerModule
   ],
   providers: [AccountService]
 })
