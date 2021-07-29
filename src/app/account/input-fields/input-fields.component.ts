@@ -55,6 +55,8 @@ export class InputFieldsComponent implements AfterViewInit, OnDestroy {
     );
   }
 
+  get name(): AbstractControl | null { return this.form.get('name'); }
+  get username(): AbstractControl | null { return this.form.get('username'); }
   get email(): AbstractControl | null { return this.form.get('email'); }
 
   private getNavButtonsTextContent(): string[] {

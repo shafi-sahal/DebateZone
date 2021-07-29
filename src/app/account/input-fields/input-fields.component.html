@@ -4,6 +4,8 @@
       <mat-label>Full name</mat-label>
       <input matInput formControlName="name">
     </mat-form-field>
+    <p class="invalid"*ngIf="name?.hasError('pattern')">Give a valid name, buddy</p>
+
     <mat-form-field>
       <mat-label>Username</mat-label>
       <input matInput formControlName="username">
@@ -16,9 +18,12 @@
         <mat-spinner *ngIf="(email?.statusChanges | async) === 'PENDING'" [diameter]="25"></mat-spinner>
       </div>
     </mat-form-field>
-    <p class="invalid" *ngIf="(email?.statusChanges | async) === 'INVALID' && email?.hasError('isDuplicateEmail')">
-      An account with the same email already exists
-    </p>
+    <div class="invalid">
+      <p *ngIf="email?.hasError('pattern')">Give a valid email, buddy</p>
+      <p *ngIf="(email?.statusChanges | async) === 'INVALID' && email?.hasError('isDuplicateEmail')">
+        An account with the same email already exists
+      </p>
+    </div>
     <mat-form-field>
       <mat-label>Mobile</mat-label>
       <input matInput formControlName="mobile">
