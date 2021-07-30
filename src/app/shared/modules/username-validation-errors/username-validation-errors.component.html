@@ -1,20 +1,22 @@
-<div *ngIf="errors" class="invalid">
-  <p *ngIf="errors['isTooSmall']">
-    Username must be atleast 5 characters long
-  </p>
-  <p *ngIf="errors['isTooBig']">
-    Username must only have a maximum of 30 characters
-  </p>
-  <p *ngIf="errors['disallowedStartingCharacter']">
-    Username should not start with a period
-  </p>
-  <p *ngIf="errors['disallowedCharacter']">
-    Username should only contain letters, numbers, periods, underscores, hyphens and '@'
-  </p>
-  <p *ngIf="errors['disallowedEndingCharacter']">
-    Username should not end with a period
-  </p>
-  <p *ngIf="errors['isDuplicateUsername']">
-    Username already taken. Try a different one
-  </p>
-</div>
+<body>
+  <div *ngIf="errors" class="invalid">
+    <p *ngIf="errors['isTooSmall']">
+      Username must be atleast 5 characters long
+    </p>
+    <p *ngIf="errors['isTooBig']">
+      Username must only have a maximum of 30 characters
+    </p>
+    <p *ngIf="errors['disallowedStartingCharacter']">
+      Username should not start with a period
+    </p>
+    <p *ngIf="errors['disallowedCharacter']">
+      Username should only contain letters, numbers, periods, underscores, hyphens and '@'
+    </p>
+    <p *ngIf="errors['disallowedEndingCharacter']">
+      Username should not end with a period
+    </p>
+    <p *ngIf="errors['isDuplicateUsername']">
+      Username already taken. Try a different one
+    </p>
+  </div>
+</body>
