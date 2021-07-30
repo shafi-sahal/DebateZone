@@ -61,7 +61,7 @@ export class InputFieldsComponent implements AfterViewInit, OnDestroy {
 
   private getNavButtonsTextContent(): string[] {
     const textContents = this.navService.navButtons.map(button => ' ' + button.icon + ' ' + button.label);
-    textContents.splice(1, 1);
+    textContents.splice(1);
     textContents.push('Log out');
     return textContents;
   }
