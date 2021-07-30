@@ -29,11 +29,11 @@ import { Router } from '@angular/router';
 })
 export class CredentialsComponent implements AfterViewInit, OnDestroy {
   @Input() isSignUp = new Observable<boolean>();
-  @ViewChild('formDirective') formDirective!: FormGroupDirective;
-  @ViewChild('dialCodeInput') dialCodeInput!: ElementRef;
   @ViewChild('countrySelect') countrySelect!: MatSelect;
-  @ViewChild('inputMobile') inputMobile!: ElementRef;
-  @ViewChild('inputEmail') inputEmail!: ElementRef;
+  @ViewChild('formDirective') private formDirective!: FormGroupDirective;
+  @ViewChild('dialCodeInput') private dialCodeInput!: ElementRef;
+  @ViewChild('inputMobile') private inputMobile!: ElementRef;
+  @ViewChild('inputEmail') private inputEmail!: ElementRef;
   buttonText = 'Login';
   countries = countries;
   _country = { name: 'India', dialCode: '+91', code: 'IN' };
