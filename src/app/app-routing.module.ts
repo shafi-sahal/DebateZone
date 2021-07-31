@@ -6,7 +6,7 @@ import { AuthenticationModuleGuard } from './authentication-module-guard';
 const routes: Routes = [
   {
     path: 'authentication', loadChildren: () => import('./authentication/authentication.module').then(m => m.AuthenticationModule),
-    canActivate: [AuthenticationModuleGuard]
+    canLoad: [AuthenticationModuleGuard]
   },
   { path: '', loadChildren: () => import('./home/home.module').then(m => m.HomeModule), canLoad: [AuthGuard]}
 ];
