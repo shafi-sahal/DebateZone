@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, CanLoad, Router } from '@angular/router';
+import { CanLoad, Router } from '@angular/router';
 import { SessionService } from './session.service';
 
 @Injectable()
