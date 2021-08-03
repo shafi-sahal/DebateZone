@@ -8,6 +8,7 @@ import { InputFieldsComponent } from './input-fields/input-fields.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AccountService } from './account.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import { UsernameValidationErrorsModule } from '../shared/modules/username-validation-errors/username-validation-errors.module';
 
 
@@ -23,6 +24,7 @@ import { UsernameValidationErrorsModule } from '../shared/modules/username-valid
     MatInputModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
+    MatCheckboxModule,
     UsernameValidationErrorsModule
   ],
   providers: [AccountService]
