@@ -4,6 +4,7 @@
     [form]="form"
     [isDuplicateUsername]="isDuplicateUsername"
     [isDuplicateEmail]="isDuplicateEmail"
+    [usernameStatus]="usernameStatus"
     (inputFields)="inputFields.next($event)">
   </app-input-fields>
 
@@ -13,6 +14,7 @@
         [form]="form"
         [isDuplicateUsername]="isDuplicateUsername"
         [isDuplicateEmail]="isDuplicateEmail"
+        [usernameStatus]="usernameStatus"
         (inputFields)="inputFields.next($event)">
       </app-input-fields>
     </mat-card>

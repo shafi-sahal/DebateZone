@@ -11,6 +11,7 @@ export class InputFieldsComponent implements AfterViewInit {
   @Input() form!: FormGroup;
   @Input() isDuplicateUsername = false;
   @Input() isDuplicateEmail = false;
+  @Input() usernameStatus = 'INVALID';
   @Output() inputFields = new EventEmitter<this>();
   @ViewChild('inputEmail')  inputEmail!: ElementRef;
 

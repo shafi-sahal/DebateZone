@@ -22,6 +22,8 @@ export class AccountComponent implements AfterViewInit, OnDestroy {
   private isMobile = true;
   isDuplicateUsername = false;
   isDuplicateEmail = false;
+  cachedEmail = '';
+  usernameStatus = 'VALID';
 
   form = this.formBuilder.group({
     name: [
@@ -56,6 +58,7 @@ export class AccountComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.inputFields.subscribe(inputFields => {
+      this.cachedEmail = this.form.get('email')?.value;
       if(!inputFields) return;
       setTimeout(() =>
         this.focusChangeObserver
@@ -63,7 +66,10 @@ export class AccountComponent implements AfterViewInit, OnDestroy {
       );
     });
 
-    this.subscriptions.add(this.deviceTypeChecker.isMobile.subscribe(isMobile => this.isMobile = isMobile));
+    this.subscriptions
+      .add(this.deviceTypeChecker.isMobile.subscribe(isMobile => this.isMobile = isMobile))
+      .add(this.form.get('username')?.statusChanges.subscribe(status => this.usernameStatus = status)
+    );
   }
 
   private getNavButtonsTextContent(): string[] {

@@ -30,21 +30,21 @@ export class UsernameAvailabilityCheck implements AsyncValidator {
 export class EmailUniquenessValidator implements AsyncValidator {
   private shouldAsyncValidateEmail = new Subject<boolean>();
   private isDuplicateEmail = false;
+  private cachedEmail!: string;
 
   constructor(private authenticationService: AuthenticationService) {}
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
     const email = control.value;
-    /*return this.authenticationService.isDuplicateEmail(email).pipe(
-      map(isDuplicateEmail => isDuplicateEmail ? { isDuplicateEmail: true } : null),
-      first(),
-      catchError(() => of(null))
-    );*/
 
     return this.shouldAsyncValidateEmail.pipe(
       first(),
       switchMap(canValidate => {
         if (!canValidate) return of(false);
+        if (this.cachedEmail === email) {
+          this.cachedEmail = '';
+          return of(this.isDuplicateEmail);
+        }
         return this.authenticationService.isDuplicateEmail(email);
       }),
       map(isDuplicateEmail => {
