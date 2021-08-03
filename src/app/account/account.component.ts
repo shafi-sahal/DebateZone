@@ -42,7 +42,7 @@ export class AccountComponent implements AfterViewInit, OnDestroy {
         asyncValidators: this.emailUniquenessValidator.validate.bind(this)
       }
     ],
-    mobile: ['']
+    mobile: [{ value: '', disabled: true }]
   })
 
   constructor(
