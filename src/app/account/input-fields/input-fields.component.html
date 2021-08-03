@@ -14,7 +14,9 @@
       </div>
     </mat-form-field>
     <app-username-validation-errors [errors]="username?.errors"></app-username-validation-errors>
-    <p *ngIf="(username?.statusChanges | async) === 'VALID'" class="valid">
+    <p
+      *ngIf="(username?.statusChanges | async) === 'VALID'"
+      class="valid">
       Username is available!!!
     </p>
 
@@ -27,7 +29,7 @@
     </mat-form-field>
     <div class="invalid">
       <p *ngIf="email?.hasError('pattern')">Give a valid email, buddy</p>
-      <p *ngIf="(email?.statusChanges | async) === 'INVALID' && email?.hasError('isDuplicateEmail')">
+      <p *ngIf="email?.hasError('isDuplicateEmail')">
         An account with the same email already exists
       </p>
     </div>
@@ -36,5 +38,6 @@
       <input matInput formControlName="mobile">
     </mat-form-field>
   </form>
+  <button (click)="print()"></button>
 </body>
 
