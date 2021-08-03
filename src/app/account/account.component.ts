@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, Input, OnDestroy, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
+import { AfterViewInit, Component, OnDestroy } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { DeviceTypeChecker } from '../device-type-checker.service';
 import { NavService } from '../home/nav.service';
@@ -78,7 +78,6 @@ export class AccountComponent implements AfterViewInit, OnDestroy {
       : this.navService.navButtons.map(button => ' ' + button.icon + ' ' + button.label);
     textContents.splice(1);
     textContents.push('Log out');
-    console.log(textContents);
     return textContents;
   }
 

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { ElementRef, Injectable, OnDestroy, Renderer2 } from '@angular/core';
-import { AbstractControl, AsyncValidator, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, AsyncValidator, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { CountryCode, parsePhoneNumber} from 'libphonenumber-js';
 import { Observable, of, Subject } from 'rxjs';
 import { catchError, debounceTime, first, map, switchMap } from 'rxjs/operators';
@@ -12,7 +12,6 @@ export class UsernameAvailabilityCheck implements AsyncValidator {
   constructor(private authenticationService: AuthenticationService) {}
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
-    console.log('ignited');
     return control.valueChanges.pipe(
       debounceTime(1000),
       switchMap(username => this.authenticationService.isDuplicateUsername(username)),
@@ -48,7 +47,6 @@ export class EmailUniquenessValidator implements AsyncValidator {
         return this.authenticationService.isDuplicateEmail(email);
       }),
       map(isDuplicateEmail => {
-        console.log('ignited');
         this.isDuplicateEmail = isDuplicateEmail;
         return isDuplicateEmail ? { isDuplicateEmail: true } : null;
       }),
