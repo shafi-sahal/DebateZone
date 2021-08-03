@@ -75,6 +75,6 @@ export class AccountComponent implements AfterViewInit, OnDestroy {
     console.log(textContents);
     return textContents;
   }
-  print() {console.log(this.isDuplicateUsername);}
+
   ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
 }

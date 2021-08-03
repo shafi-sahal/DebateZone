@@ -23,5 +23,4 @@ export class InputFieldsComponent implements AfterViewInit {
     if(this.isDuplicateUsername) this.username?.setErrors({ isDuplicateUsername: true });
     if(this.isDuplicateEmail) this.email?.setErrors({ isDuplicateEmail: true });
   }
-  print(){console.log(this.isDuplicateUsername);}
 }
