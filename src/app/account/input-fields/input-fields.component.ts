@@ -18,9 +18,10 @@ export class InputFieldsComponent implements AfterViewInit {
   get username(): AbstractControl | null { return this.form.get('username'); }
   get email(): AbstractControl | null { return this.form.get('email'); }
 
-  ngAfterViewInit(): void {this.inputFields.emit(this); console.log(this.username?.errors);
-    this.username?.setErrors({ isDuplicateUsername: this.isDuplicateUsername });
-    if(this.isDuplicateEmail) this.email?.setErrors({ isDuplicateEmail: this.isDuplicateEmail });
+  ngAfterViewInit(): void {
+    this.inputFields.emit(this);
+    if(this.isDuplicateUsername) this.username?.setErrors({ isDuplicateUsername: true });
+    if(this.isDuplicateEmail) this.email?.setErrors({ isDuplicateEmail: true });
   }
   print(){console.log(this.isDuplicateUsername);}
 }
