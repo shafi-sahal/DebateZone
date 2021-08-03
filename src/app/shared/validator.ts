@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { ElementRef, Injectable, OnDestroy, Renderer2 } from '@angular/core';
-import { AbstractControl, AsyncValidator, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, AsyncValidator, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { CountryCode, parsePhoneNumber} from 'libphonenumber-js';
 import { Observable, of, Subject } from 'rxjs';
 import { catchError, debounceTime, first, map, switchMap } from 'rxjs/operators';
@@ -8,13 +8,18 @@ import { AuthenticationService } from '../authentication/authentication.service'
 
 @Injectable()
 export class UsernameAvailabilityCheck implements AsyncValidator {
+  private isDuplicateUsername = false;
   constructor(private authenticationService: AuthenticationService) {}
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
+    console.log('ignited');
     return control.valueChanges.pipe(
       debounceTime(1000),
       switchMap(username => this.authenticationService.isDuplicateUsername(username)),
-      map(isDuplicateUsername => isDuplicateUsername ? { isDuplicateUsername: true } : null),
+      map(isDuplicateUsername => {
+        this.isDuplicateUsername = isDuplicateUsername;
+        return isDuplicateUsername ? { isDuplicateUsername: true } : null;
+      } ),
       first(),
       catchError(() => of({ unknownError: true }))
     );
@@ -24,11 +29,17 @@ export class UsernameAvailabilityCheck implements AsyncValidator {
 @Injectable()
 export class EmailUniquenessValidator implements AsyncValidator {
   private shouldAsyncValidateEmail = new Subject<boolean>();
+  private isDuplicateEmail = false;
 
   constructor(private authenticationService: AuthenticationService) {}
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
     const email = control.value;
+    /*return this.authenticationService.isDuplicateEmail(email).pipe(
+      map(isDuplicateEmail => isDuplicateEmail ? { isDuplicateEmail: true } : null),
+      first(),
+      catchError(() => of(null))
+    );*/
 
     return this.shouldAsyncValidateEmail.pipe(
       first(),
@@ -36,7 +47,11 @@ export class EmailUniquenessValidator implements AsyncValidator {
         if (!canValidate) return of(false);
         return this.authenticationService.isDuplicateEmail(email);
       }),
-      map(isDuplicateEmail => isDuplicateEmail ? { isDuplicateEmail: true } : null),
+      map(isDuplicateEmail => {
+        console.log('ignited');
+        this.isDuplicateEmail = isDuplicateEmail;
+        return isDuplicateEmail ? { isDuplicateEmail: true } : null;
+      }),
       catchError(() => of({ unknownError: true }))
     );
   }

@@ -1,7 +1,20 @@
 <body>
-  <app-input-fields *ngIf="deviceTypeChecker.isMobile | async; else inputFieldsWithCard"></app-input-fields>
-  <ng-template #inputFieldsWithCard>
-    <mat-card [class.mat-elevation-z5]="true"><app-input-fields></app-input-fields></mat-card>
-  </ng-template>
+  <app-input-fields
+    *ngIf="deviceTypeChecker.isMobile | async; else inputFieldsWithCard"
+    [form]="form"
+    [isDuplicateUsername]="isDuplicateUsername"
+    [isDuplicateEmail]="isDuplicateEmail"
+    (inputFields)="inputFields.next($event)">
+  </app-input-fields>
 
+  <ng-template #inputFieldsWithCard>
+    <mat-card [class.mat-elevation-z5]="true">
+      <app-input-fields
+        [form]="form"
+        [isDuplicateUsername]="isDuplicateUsername"
+        [isDuplicateEmail]="isDuplicateEmail"
+        (inputFields)="inputFields.next($event)">
+      </app-input-fields>
+    </mat-card>
+  </ng-template>
 </body>

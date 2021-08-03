@@ -33,7 +33,6 @@ export class ErrorInterceptor implements HttpInterceptor {
           errorMessage = error.error.message;
         }
         this.dialog.open(ErrorComponent, { data: { message: errorMessage }, panelClass: 'custom-dialog' });
-        if (error.status === 0) return of(error.error);
         return throwError(error);
       })
     );
