@@ -28,6 +28,6 @@ export class NavElementsComponent {
     this.spinner.show('Logging out, See you soon...');
     this.sessionService.destroySession();
 
-    this.router.navigate(['/authentication']).then(() => location.reload());
+    this.router.navigate(['/authentication']);
   }
 }
