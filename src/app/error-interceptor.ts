@@ -29,6 +29,9 @@ export class ErrorInterceptor implements HttpInterceptor {
           this.router.navigate(['/authentication']);
           return throwError(error);
         }
+        if (error.status === 0) {
+          errorMessage = 'Please check your internet connection';
+        }
         if (error.error.message) {
           errorMessage = error.error.message;
         }
