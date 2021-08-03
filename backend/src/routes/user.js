@@ -7,6 +7,7 @@ const checkAuth = require('../middleware/check-auth');
 
 router.post('', UserController.login);
 router.post('/signup', userDataValidation, encryptPassword, UserController.createUser);
+router.get('', checkAuth, UserController.fetchUser);
 router.get('/check-duplicate', UserController.isDuplicate);
 
 module.exports = router;

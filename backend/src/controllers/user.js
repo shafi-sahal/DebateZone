@@ -71,6 +71,12 @@ exports.login = (req, res) => {
   });
 }
 
+exports.fetchUser = (req, res) => {
+  User.findOne(({ attributes: ['name', 'username', 'email', 'mobile'], where: { id: req.userId } }))
+    .then(user => res.status(200).json({ user: user })).catch(error => errorHandler(res, error)
+  );
+}
+
 const checkUserExistence = query => {
   const conditionKey = Object.keys(query)[0];
   return new Promise(resolve => {
