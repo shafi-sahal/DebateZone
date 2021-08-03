@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { AuthenticationService } from '../authentication/authentication.service';
@@ -7,6 +7,7 @@ import { NavService } from '../home/nav.service';
 import { Spinner } from '../shared/components/spinner/spinner.service';
 import { regexes } from '../shared/datasets';
 import { EmailUniquenessValidator, FocusChangeObserver, UsernameAvailabilityCheck, validateUsername } from '../shared/validator';
+import { AccountService } from './account.service';
 import { InputFieldsComponent } from './input-fields/input-fields.component';
 
 @Component({
@@ -15,7 +16,7 @@ import { InputFieldsComponent } from './input-fields/input-fields.component';
   styleUrls: ['./account.component.scss'],
   providers: [UsernameAvailabilityCheck, EmailUniquenessValidator, FocusChangeObserver, AuthenticationService, NavService]
 })
-export class AccountComponent implements AfterViewInit, OnDestroy {
+export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   inputFields = new BehaviorSubject<InputFieldsComponent | null>(null);
   private shouldAsyncValidateEmail = new Subject<boolean>();
   private subscriptions = new Subscription();
@@ -23,7 +24,7 @@ export class AccountComponent implements AfterViewInit, OnDestroy {
   isDuplicateUsername = false;
   isDuplicateEmail = false;
   cachedEmail = '';
-  usernameStatus = 'VALID';
+  usernameStatus = 'INVALID';
 
   form = this.formBuilder.group({
     name: [
@@ -33,7 +34,7 @@ export class AccountComponent implements AfterViewInit, OnDestroy {
         validators: Validators.pattern(regexes.name)
       }
     ],
-    username: ['', [Validators.required, validateUsername()], this.usernameAvailabilityCheck.validate.bind(this)],
+    username: ['', [Validators.required, validateUsername()]],
     email: [
       '',
       {
@@ -53,8 +54,16 @@ export class AccountComponent implements AfterViewInit, OnDestroy {
     private emailUniquenessValidator: EmailUniquenessValidator,
     private focusChangeObserver: FocusChangeObserver,
     private authenticationService: AuthenticationService,
-    private navService: NavService
+    private navService: NavService,
+    private accountService: AccountService
   ) { this.spinner.hide(); }
+
+  ngOnInit(): void {
+    this.subscriptions
+      .add(this.deviceTypeChecker.isMobile.subscribe(isMobile => this.isMobile = isMobile))
+      .add(this.accountService.fetchUser().subscribe(user => this.form.setValue(user))
+    );
+  }
 
   ngAfterViewInit(): void {
     this.inputFields.subscribe(inputFields => {
@@ -66,10 +75,7 @@ export class AccountComponent implements AfterViewInit, OnDestroy {
       );
     });
 
-    this.subscriptions
-      .add(this.deviceTypeChecker.isMobile.subscribe(isMobile => this.isMobile = isMobile))
-      .add(this.form.get('username')?.statusChanges.subscribe(status => this.usernameStatus = status)
-    );
+    this.subscriptions.add(this.form.get('username')?.statusChanges.subscribe(status => this.usernameStatus = status));
   }
 
   private getNavButtonsTextContent(): string[] {
