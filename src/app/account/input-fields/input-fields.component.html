@@ -14,11 +14,7 @@
       </div>
     </mat-form-field>
     <app-username-validation-errors [errors]="username?.errors"></app-username-validation-errors>
-    <p
-      *ngIf="(username?.statusChanges | async) === 'VALID'"
-      class="valid">
-      Username is available!!!
-    </p>
+    <p *ngIf="(username?.statusChanges | async) === 'VALID'" class="valid"> Username is available!!!</p>
 
     <mat-form-field>
       <mat-label>Email</mat-label>
