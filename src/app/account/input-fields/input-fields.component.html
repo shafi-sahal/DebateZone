@@ -23,7 +23,7 @@
     <mat-form-field>
       <mat-label>Email</mat-label>
       <div class="container-input-with-spinner">
-        <input #inputEmail matInput type="email" formControlName="email">
+        <input #inputEmail matInput type="email" formControlName="email" (input)="email?.setErrors(null)">
         <mat-spinner *ngIf="(email?.statusChanges | async) === 'PENDING'" [diameter]="19"></mat-spinner>
       </div>
     </mat-form-field>
