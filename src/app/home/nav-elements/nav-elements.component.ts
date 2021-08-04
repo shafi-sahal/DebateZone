@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { DeviceTypeChecker } from 'src/app/device-type-checker.service';
 import { SessionService } from 'src/app/session.service';
 import { Spinner } from 'src/app/shared/components/spinner/spinner.service';
@@ -8,19 +9,31 @@ import { NavService } from '../nav.service';
 @Component({
   selector: 'app-nav-elements',
   templateUrl: './nav-elements.component.html',
-  styleUrls: ['./nav-elements.component.scss']
+  styleUrls: ['./nav-elements.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavElementsComponent {
+export class NavElementsComponent implements OnInit, OnDestroy {
   @Output() private closeButtonClicked = new EventEmitter();
   @Input() isMobile = true;
+  private subscriptions = new Subscription();
 
   constructor(
     public deviceTypeChecker: DeviceTypeChecker,
     public navService: NavService,
     public sessionService: SessionService,
     private router: Router,
-    private spinner: Spinner
+    private spinner: Spinner,
+    private changeDetector: ChangeDetectorRef
   ) {}
+
+  ngOnInit(): void {
+    this.navService.clickedNavbuttonIndex = this.navService.navButtons.findIndex(button => button.route === this.router.url);
+    this.subscriptions.add(this.router.events.subscribe(event => {
+      if (!(event instanceof NavigationEnd)) return;
+      this.navService.clickedNavbuttonIndex = this.navService.navButtons.findIndex(button => button.route === this.router.url);
+      this.changeDetector.markForCheck();
+    }));
+  }
 
   onCloseButtonClick(): void { this.closeButtonClicked.emit(); }
 
@@ -30,4 +43,6 @@ export class NavElementsComponent {
 
     this.router.navigate(['/authentication']);
   }
+
+  ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
 }

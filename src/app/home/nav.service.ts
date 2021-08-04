@@ -11,10 +11,10 @@ export class NavService implements OnDestroy {
   private subscriptions = new Subscription();
 
   constructor(private router: Router) {
-    this.subscriptions.add(this.router.events.subscribe(event => {
+    /*this.subscriptions.add(this.router.events.subscribe(event => {
       if (!(event instanceof NavigationEnd)) return;
       this.clickedNavbuttonIndex = this.navButtons.findIndex(button => button.route === router.url);
-    }));
+    }));*/
   }
 
   ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
