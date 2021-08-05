@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { AuthenticationService } from '../authentication/authentication.service';
@@ -14,17 +14,19 @@ import { InputFieldsComponent } from './input-fields/input-fields.component';
   selector: 'app-account',
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [UsernameAvailabilityCheck, EmailUniquenessValidator, FocusChangeObserver, AuthenticationService, NavService]
 })
 export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   inputFields = new BehaviorSubject<InputFieldsComponent | null>(null);
-  private shouldAsyncValidateEmail = new Subject<boolean>();
+  shouldAsyncValidateEmail = new Subject<boolean>();
   private subscriptions = new Subscription();
   private isMobile = true;
   isDuplicateUsername = false;
   isDuplicateEmail = false;
   cachedEmail = '';
-  usernameStatus = 'INVALID';
+  usernameStatus: 'INVALID' | 'PENDING' | 'VALID' = 'INVALID';
+  isLoading = true;
 
   form = this.formBuilder.group({
     name: [
@@ -39,11 +41,10 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
       '',
       {
         updateOn: 'blur',
-        validators: [Validators.required, Validators.pattern(regexes.email)],
-        asyncValidators: this.emailUniquenessValidator.validate.bind(this)
+        validators: [Validators.required, Validators.pattern(regexes.email)]
       }
     ],
-    mobile: [{ value: '', disabled: true }]
+    mobile: [{ value: ''}]
   })
 
   constructor(
@@ -55,27 +56,33 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     private focusChangeObserver: FocusChangeObserver,
     private authenticationService: AuthenticationService,
     private navService: NavService,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private changeDetector: ChangeDetectorRef
   ) { this.spinner.hide(); }
 
   ngOnInit(): void {
     this.subscriptions
       .add(this.deviceTypeChecker.isMobile.subscribe(isMobile => this.isMobile = isMobile))
-      .add(this.accountService.fetchUser().subscribe(user => this.form.setValue(user))
+      .add(this.accountService.fetchUser().subscribe(user => {
+        this.form.setValue(user);
+        this.form.get('username')?.setAsyncValidators(this.usernameAvailabilityCheck.validate.bind(this));
+        this.form.get('email')?.setAsyncValidators(this.emailUniquenessValidator.validate.bind(this));
+      })
     );
   }
 
   ngAfterViewInit(): void {
     this.inputFields.subscribe(inputFields => {
+      this.shouldAsyncValidateEmail.next(false);
       this.cachedEmail = this.form.get('email')?.value;
       if(!inputFields) return;
-      setTimeout(() =>
+      setTimeout(() => {
+        this.focusChangeObserver.removeObserver();
         this.focusChangeObserver
-          .observeFocusChangeOfElement(inputFields.inputEmail, this.shouldAsyncValidateEmail, this.getNavButtonsTextContent())
-      );
+          .observeFocusChangeOfElement(inputFields.inputEmail, this.shouldAsyncValidateEmail, this.getNavButtonsTextContent()
+        );
+      });
     });
-
-    this.subscriptions.add(this.form.get('username')?.statusChanges.subscribe(status => this.usernameStatus = status));
   }
 
   private getNavButtonsTextContent(): string[] {

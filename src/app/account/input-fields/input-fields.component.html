@@ -15,7 +15,7 @@
     </mat-form-field>
     <app-username-validation-errors [errors]="username?.errors"></app-username-validation-errors>
     <p
-      *ngIf="(username?.statusChanges | async) === 'VALID' || (usernameStatus === 'VALID' && username?.value)"
+      *ngIf="usernameStatus === 'VALID'"
       class="valid">
       Username is available!!!
     </p>
@@ -33,6 +33,7 @@
         An account with the same email already exists
       </p>
     </div>
+
     <mat-form-field>
       <mat-label>Mobile</mat-label>
       <input matInput formControlName="mobile">
