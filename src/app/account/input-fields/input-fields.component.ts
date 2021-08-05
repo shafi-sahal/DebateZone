@@ -1,14 +1,6 @@
-import { 
-  AfterViewInit, 
-  ChangeDetectionStrategy, 
-  ChangeDetectorRef, 
-  Component, 
-  ElementRef, 
-  EventEmitter, 
-  Input, 
-  Output,
-  ViewChild } 
-from '@angular/core';
+import {
+  AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild
+} from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 
 
