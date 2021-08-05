@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { ChangeDetectorRef, ElementRef, Injectable, OnDestroy, Renderer2 } from '@angular/core';
+import { ElementRef, Injectable, OnDestroy, Renderer2 } from '@angular/core';
 import { AbstractControl, AsyncValidator, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { CountryCode, parsePhoneNumber} from 'libphonenumber-js';
 import { Observable, of, Subject } from 'rxjs';
@@ -11,10 +11,12 @@ export class UsernameAvailabilityCheck implements AsyncValidator {
   private isDuplicateUsername = false;
   private usernameStatus: 'INVALID' | 'PENDING' | 'VALID' = 'INVALID';
   private cachedUsername = '';
+
   constructor(private authenticationService: AuthenticationService) {}
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
     if (this.cachedUsername !== control.value) this.usernameStatus = 'PENDING';
+
     return control.valueChanges.pipe(
       debounceTime(1000),
       switchMap(username => {
@@ -37,15 +39,16 @@ export class EmailUniquenessValidator implements AsyncValidator {
   private shouldAsyncValidateEmail = new Subject<boolean>();
   private isDuplicateEmail = false;
   private cachedEmail!: string;
+  private isLoading = true;
 
-  constructor(private authenticationService: AuthenticationService, private chnageDetector: ChangeDetectorRef) {}
+  constructor(private authenticationService: AuthenticationService) {}
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
     const email = control.value;
-
     return this.shouldAsyncValidateEmail.pipe(
       first(),
       switchMap(canValidate => {
+        console.log(canValidate);
         if (!canValidate) return of(false);
         if (this.cachedEmail === email) {
           this.cachedEmail = '';
@@ -55,7 +58,6 @@ export class EmailUniquenessValidator implements AsyncValidator {
       }),
       map(isDuplicateEmail => {
         this.isDuplicateEmail = isDuplicateEmail;
-        //this.chnageDetector.markForCheck();
         return isDuplicateEmail ? { isDuplicateEmail: true } : null;
       }),
       catchError(() => of({ unknownError: true }))
@@ -111,7 +113,9 @@ export class FocusChangeObserver implements OnDestroy {
     });
   }
 
-  ngOnDestroy(): void { this.listenerBlur(); }
+  removeObserver(): void { this.listenerBlur(); }
+
+  ngOnDestroy(): void { this.removeObserver(); }
 }
 
 export function validateUsername(): ValidatorFn {
