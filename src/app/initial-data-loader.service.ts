@@ -1,3 +1,5 @@
+// This service is used to load the initial data for modules from the server.
+// So, that the request for data can be sent paralelly with the request for the module and so reduce http delays
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
