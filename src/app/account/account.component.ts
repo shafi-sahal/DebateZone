@@ -72,7 +72,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.inputFields.subscribe(inputFields => {
+    this.subscriptions.add(this.inputFields.subscribe(inputFields => {
       this.shouldAsyncValidateEmail.next(false);
       this.cachedEmail = this.form.get('email')?.value;
       if(!inputFields) return;
@@ -82,7 +82,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
           .observeFocusChangeOfElement(inputFields.inputEmail, this.shouldAsyncValidateEmail, this.getNavButtonsTextContent()
         );
       });
-    });
+    }));
   }
 
   private getNavButtonsTextContent(): string[] {
