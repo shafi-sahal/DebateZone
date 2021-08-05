@@ -69,6 +69,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
       .add(this.initialDataLoader.user.subscribe(user => {
         if(!user) return;
         this.isLoading = false;
+        this.accountService.user = user;
         this.changeDetector.markForCheck();
         this.form.setValue(user);
         this.form.get('username')?.setAsyncValidators(this.usernameAvailabilityCheck.validate.bind(this));
