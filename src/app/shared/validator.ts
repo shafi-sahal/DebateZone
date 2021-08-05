@@ -25,6 +25,8 @@ export class UsernameAvailabilityCheck implements AsyncValidator {
       }),
       map(isDuplicateUsername => {
         this.isDuplicateUsername = isDuplicateUsername;
+        // Username validation status is handled manually since new status changes listeners are called on device change,
+        // Manually setting the validation status solves the ptoblem
         this.usernameStatus = this.isDuplicateUsername ? 'INVALID' : 'VALID';
         return isDuplicateUsername ? { isDuplicateUsername: true } : null;
       } ),
@@ -49,6 +51,8 @@ export class EmailUniquenessValidator implements AsyncValidator {
       first(),
       switchMap(canValidate => {
         if (!canValidate) return of(false);
+        // To prevent unnecessary requests to server even if the value is not changed and request happens only because of
+        // device change
         if (this.cachedEmail === email) {
           this.cachedEmail = '';
           return of(this.isDuplicateEmail);

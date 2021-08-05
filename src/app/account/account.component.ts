@@ -25,6 +25,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   cachedEmail = '';
   usernameStatus: 'INVALID' | 'PENDING' | 'VALID' = 'INVALID';
   isLoading = true;
+  keepUserLoggedIn = false;
   private subscriptions = new Subscription();
   private isMobile = true;
 
@@ -57,13 +58,15 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     private authenticationService: AuthenticationService,
     private navService: NavService,
     private accountService: AccountService,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
   ) { this.spinner.hide(); }
 
   ngOnInit(): void {
     this.subscriptions
       .add(this.deviceTypeChecker.isMobile.subscribe(isMobile => this.isMobile = isMobile))
       .add(this.accountService.fetchUser().subscribe(user => {
+        this.isLoading = false;
+        this.changeDetector.markForCheck();
         this.form.setValue(user);
         this.form.get('username')?.setAsyncValidators(this.usernameAvailabilityCheck.validate.bind(this));
         this.form.get('email')?.setAsyncValidators(this.emailUniquenessValidator.validate.bind(this));
@@ -72,10 +75,13 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    // Used to preserve the state and functions of the form on device changes
     this.subscriptions.add(this.inputFields.subscribe(inputFields => {
       this.shouldAsyncValidateEmail.next(false);
       this.cachedEmail = this.form.get('email')?.value;
       if(!inputFields) return;
+      // Since the changed InputFieldsComponent has new input for email,
+      // it is needed to listen to the blur event of the new input.
       setTimeout(() => {
         this.focusChangeObserver.removeObserver();
         this.focusChangeObserver

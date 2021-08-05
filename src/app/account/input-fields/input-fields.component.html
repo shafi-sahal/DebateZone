@@ -39,7 +39,7 @@
       <input matInput formControlName="mobile" readonly>
     </mat-form-field>
 
-    <mat-checkbox color="primary">Keep me logged in</mat-checkbox>
+    <mat-checkbox color="primary" [checked]="!!sessionService.readKeepUserLoggedIn()">Keep me logged in</mat-checkbox>
     <p class="keep-me-logged-in">Unchecking this will force you to enter your login details whenever you open DebateZone</p>
   </form>
 </body>

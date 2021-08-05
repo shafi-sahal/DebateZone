@@ -2,6 +2,7 @@ import {
   AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild
 } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
+import { SessionService } from 'src/app/session.service';
 
 
 @Component({
@@ -20,7 +21,7 @@ export class InputFieldsComponent implements AfterViewInit {
 
   @ViewChild('inputEmail')  inputEmail!: ElementRef;
 
-  constructor(public changeDetector: ChangeDetectorRef) {}
+  constructor(public changeDetector: ChangeDetectorRef, public sessionService: SessionService) {}
 
   get name(): AbstractControl | null { return this.form.get('name'); }
   get username(): AbstractControl | null { return this.form.get('username'); }
@@ -28,6 +29,7 @@ export class InputFieldsComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.inputFields.emit(this);
+    // Preserve the valifation errors on device change
     if(this.isDuplicateUsername) this.username?.setErrors({ isDuplicateUsername: true });
     if(this.isDuplicateEmail) this.email?.setErrors({ isDuplicateEmail: true });
     setTimeout(() => this.changeDetector.markForCheck());
