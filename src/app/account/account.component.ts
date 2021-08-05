@@ -44,7 +44,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
         validators: [Validators.required, Validators.pattern(regexes.email)]
       }
     ],
-    mobile: [{ value: ''}]
+    mobile: ['']
   })
 
   constructor(
