@@ -48,7 +48,6 @@ export class EmailUniquenessValidator implements AsyncValidator {
     return this.shouldAsyncValidateEmail.pipe(
       first(),
       switchMap(canValidate => {
-        console.log(canValidate);
         if (!canValidate) return of(false);
         if (this.cachedEmail === email) {
           this.cachedEmail = '';
