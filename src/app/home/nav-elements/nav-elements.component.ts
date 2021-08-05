@@ -2,9 +2,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { DeviceTypeChecker } from 'src/app/device-type-checker.service';
+import { InitialDataLoader } from 'src/app/initial-data-loader.service';
 import { SessionService } from 'src/app/session.service';
 import { Spinner } from 'src/app/shared/components/spinner/spinner.service';
-import { NavService } from '../nav.service';
+import { NavService } from './nav.service';
 
 @Component({
   selector: 'app-nav-elements',
@@ -21,6 +22,7 @@ export class NavElementsComponent implements OnInit, OnDestroy {
     public deviceTypeChecker: DeviceTypeChecker,
     public navService: NavService,
     public sessionService: SessionService,
+    public initialDataLoader: InitialDataLoader,
     private router: Router,
     private spinner: Spinner,
     private changeDetector: ChangeDetectorRef
@@ -28,6 +30,7 @@ export class NavElementsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.navService.clickedNavbuttonIndex = this.navService.navButtons.findIndex(button => button.route === this.router.url);
+    this.initialDataLoader.load(this.navService.clickedNavbuttonIndex);
     this.subscriptions.add(this.router.events.subscribe(event => {
       if (!(event instanceof NavigationEnd)) return;
       this.navService.clickedNavbuttonIndex = this.navService.navButtons.findIndex(button => button.route === this.router.url);

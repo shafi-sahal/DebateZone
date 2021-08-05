@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NavService } from '../nav.service';
+import { NavService } from '../nav-elements/nav.service';
 
 @Component({
   selector: 'app-bottom-nav',

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { DeviceTypeChecker } from 'src/app/device-type-checker.service';
-import { NavService } from '../nav.service';
+import { NavService } from '../nav-elements/nav.service';
 
 @Component({
   selector: 'app-header',

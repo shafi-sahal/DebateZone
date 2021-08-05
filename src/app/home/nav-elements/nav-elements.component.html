@@ -12,7 +12,8 @@
       *ngFor="let button of navService.navButtons index as i"
       [class]="i === navService.clickedNavbuttonIndex ? 'nav-active' : 'nav'"
       mat-button
-      [routerLink]="button.route">
+      [routerLink]="button.route"
+      (click)="initialDataLoader.load(i)">
       <mat-icon
         *ngIf="!(deviceTypeChecker.isMobile | async)"
         [fontSet]="i === navService.clickedNavbuttonIndex ? 'material-icons' : 'material-icons-outlined'">

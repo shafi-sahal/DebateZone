@@ -7,11 +7,12 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { SidenavAdapter } from './sidenav-adapter.directive';
 import { NavElementsComponent } from './nav-elements/nav-elements.component';
 import { BottomNavComponent } from './bottom-nav/bottom-nav.component';
-import { NavService } from './nav.service';
+import { NavService } from './nav-elements/nav.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { HeaderComponent } from './header/header.component';
+
 
 @NgModule({
   declarations: [

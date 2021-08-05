@@ -3,7 +3,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { DeviceTypeChecker } from '../device-type-checker.service';
-import { NavService } from '../home/nav.service';
+import { NavService } from '../home/nav-elements/nav.service';
+import { InitialDataLoader } from '../initial-data-loader.service';
 import { Spinner } from '../shared/components/spinner/spinner.service';
 import { regexes } from '../shared/datasets';
 import { EmailUniquenessValidator, FocusChangeObserver, UsernameAvailabilityCheck, validateUsername } from '../shared/validator';
@@ -15,7 +16,7 @@ import { InputFieldsComponent } from './input-fields/input-fields.component';
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [UsernameAvailabilityCheck, EmailUniquenessValidator, FocusChangeObserver, AuthenticationService, NavService]
+  providers: [ UsernameAvailabilityCheck, EmailUniquenessValidator, FocusChangeObserver, AuthenticationService, NavService]
 })
 export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   inputFields = new BehaviorSubject<InputFieldsComponent | null>(null);
@@ -59,12 +60,14 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     private navService: NavService,
     private accountService: AccountService,
     private changeDetector: ChangeDetectorRef,
+    private initialDataLoader: InitialDataLoader
   ) { this.spinner.hide(); }
 
   ngOnInit(): void {
     this.subscriptions
       .add(this.deviceTypeChecker.isMobile.subscribe(isMobile => this.isMobile = isMobile))
-      .add(this.accountService.fetchUser().subscribe(user => {
+      .add(this.initialDataLoader.user.subscribe(user => {
+        if(!user) return;
         this.isLoading = false;
         this.changeDetector.markForCheck();
         this.form.setValue(user);
@@ -100,5 +103,8 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     return textContents;
   }
 
-  ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+    this.initialDataLoader.user.next(null);
+  }
 }

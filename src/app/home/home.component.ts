@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/c
 import { MatSidenav } from '@angular/material/sidenav';
 import { DeviceTypeChecker } from '../device-type-checker.service';
 import { Spinner } from '../shared/components/spinner/spinner.service';
-import { NavService } from './nav.service';
+import { NavService } from './nav-elements/nav.service';
 
 @Component({
   selector: 'app-home',
