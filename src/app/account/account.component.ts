@@ -20,13 +20,13 @@ import { InputFieldsComponent } from './input-fields/input-fields.component';
 export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   inputFields = new BehaviorSubject<InputFieldsComponent | null>(null);
   shouldAsyncValidateEmail = new Subject<boolean>();
-  private subscriptions = new Subscription();
-  private isMobile = true;
   isDuplicateUsername = false;
   isDuplicateEmail = false;
   cachedEmail = '';
   usernameStatus: 'INVALID' | 'PENDING' | 'VALID' = 'INVALID';
   isLoading = true;
+  private subscriptions = new Subscription();
+  private isMobile = true;
 
   form = this.formBuilder.group({
     name: [
