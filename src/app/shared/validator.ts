@@ -19,7 +19,7 @@ export class UsernameAvailabilityCheck implements AsyncValidator {
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
     const username = control.value;
     if (this.cachedUsername !== username) this.usernameStatus = 'PENDING';
-    if (this.user.username === username) return of(null);
+    if (this.user && this.user.username === username) return of(null);
 
     return control.valueChanges.pipe(
       debounceTime(1000),
@@ -46,13 +46,13 @@ export class EmailUniquenessValidator implements AsyncValidator {
   private isDuplicateEmail = false;
   private cachedEmail!: string;
   private isLoading = true;
-  private user: User = { name: '', username: '' };
+  private user: User = { name: '', username: '', email: '' };
 
   constructor(private authenticationService: AuthenticationService) {}
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
     const email = control.value;
-    if (this.user.email === email) return of(null);
+    if (this.user && this.user.email === email) return of(null);
 
     return this.shouldAsyncValidateEmail.pipe(
       first(),
