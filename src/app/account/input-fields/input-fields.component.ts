@@ -60,6 +60,6 @@ export class InputFieldsComponent implements AfterViewInit {
     const field  = (inputElement).attributes[2].nodeValue;
     if (field) this.clonedUser[field as keyof User] = inputElement.value;
     this.isUserDataChanged = !this.utilsService.isEqualObjects(this.clonedUser, this.user);
-    this.shouldDisableButton = !this.isUserDataChanged || this.form.invalid;
+    this.shouldDisableButton = !this.isUserDataChanged || this.form.invalid || this.form.pending;
   }
 }
