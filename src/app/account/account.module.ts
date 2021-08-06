@@ -10,6 +10,7 @@ import { AccountService } from './account.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { UsernameValidationErrorsModule } from '../shared/modules/username-validation-errors/username-validation-errors.module';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { UsernameValidationErrorsModule } from '../shared/modules/username-valid
     ReactiveFormsModule,
     MatProgressSpinnerModule,
     MatCheckboxModule,
+    MatButtonModule,
     UsernameValidationErrorsModule
   ],
   providers: [AccountService]
