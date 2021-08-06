@@ -46,11 +46,14 @@ export class EmailUniquenessValidator implements AsyncValidator {
   private isDuplicateEmail = false;
   private cachedEmail!: string;
   private isLoading = true;
+  private user: User = { name: '', username: '' };
 
   constructor(private authenticationService: AuthenticationService) {}
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
     const email = control.value;
+    if (this.user.email === email) return of(null);
+
     return this.shouldAsyncValidateEmail.pipe(
       first(),
       switchMap(canValidate => {
