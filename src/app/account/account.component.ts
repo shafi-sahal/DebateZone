@@ -7,6 +7,7 @@ import { NavService } from '../home/nav-elements/nav.service';
 import { InitialDataLoader } from '../initial-data-loader.service';
 import { Spinner } from '../shared/components/spinner/spinner.service';
 import { regexes } from '../shared/datasets';
+import { User } from '../shared/models/user.model';
 import { EmailUniquenessValidator, FocusChangeObserver, UsernameAvailabilityCheck, validateUsername } from '../shared/validator';
 import { AccountService } from './account.service';
 import { InputFieldsComponent } from './input-fields/input-fields.component';
@@ -29,6 +30,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   keepUserLoggedIn = false;
   private subscriptions = new Subscription();
   private isMobile = true;
+  private user: User = { name: '', username: '' };
 
   form = this.formBuilder.group({
     name: [
@@ -70,10 +72,13 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
         if(!user) return;
         this.isLoading = false;
         this.accountService.user = user;
+        this.user = user;
         this.changeDetector.markForCheck();
         this.form.setValue(user);
-        this.form.get('username')?.setAsyncValidators(this.usernameAvailabilityCheck.validate.bind(this));
-        this.form.get('email')?.setAsyncValidators(this.emailUniquenessValidator.validate.bind(this));
+        setTimeout(() => {
+          this.form.get('username')?.setAsyncValidators(this.usernameAvailabilityCheck.validate.bind(this));
+          this.form.get('email')?.setAsyncValidators(this.emailUniquenessValidator.validate.bind(this));
+        });
       })
     );
   }

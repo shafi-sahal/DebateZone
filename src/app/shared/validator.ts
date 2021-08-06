@@ -5,17 +5,21 @@ import { CountryCode, parsePhoneNumber} from 'libphonenumber-js';
 import { Observable, of, Subject } from 'rxjs';
 import { catchError, debounceTime, first, map, switchMap } from 'rxjs/operators';
 import { AuthenticationService } from '../authentication/authentication.service';
+import { User } from './models/user.model';
 
 @Injectable()
 export class UsernameAvailabilityCheck implements AsyncValidator {
   private isDuplicateUsername = false;
   private usernameStatus: 'INVALID' | 'PENDING' | 'VALID' = 'INVALID';
   private cachedUsername = '';
+  private user: User = { name: '', username: '' };
 
   constructor(private authenticationService: AuthenticationService) {}
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
-    if (this.cachedUsername !== control.value) this.usernameStatus = 'PENDING';
+    const username = control.value;
+    if (this.cachedUsername !== username) this.usernameStatus = 'PENDING';
+    if (this.user.username === username) return of(null);
 
     return control.valueChanges.pipe(
       debounceTime(1000),
