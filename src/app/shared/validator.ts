@@ -46,7 +46,7 @@ export class EmailUniquenessValidator implements AsyncValidator {
   private isDuplicateEmail = false;
   private cachedEmail!: string;
   private isLoading = true;
-  private user: User = { name: '', username: '', email: '' };
+  private user: User = { name: '', username: ''};
 
   constructor(private authenticationService: AuthenticationService) {}
 
