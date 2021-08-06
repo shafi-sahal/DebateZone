@@ -1,8 +1,8 @@
 <body>
-  <form [formGroup]="form">
+  <form [formGroup]="form" (input)="setDisableButton($event)">
     <mat-form-field>
       <mat-label>Full name</mat-label>
-      <input matInput formControlName="name">
+      <input matInput formControlName="name" (input)="name?.setErrors(null)">
     </mat-form-field>
     <p class="invalid"*ngIf="name?.hasError('pattern')">Give a valid name, buddy</p>
 
@@ -42,7 +42,7 @@
     <mat-checkbox color="primary" [checked]="!!sessionService.readKeepUserLoggedIn()">Keep me logged in</mat-checkbox>
     <p class="keep-me-logged-in">Unchecking this will force you to enter your login details whenever you open DebateZone</p>
 
-    <button class="diagonal-rounded-large" mat-raised-button color="primary">Update</button>
+    <button class="diagonal-rounded-large" mat-raised-button color="primary" [disabled]="shouldDisableButton">Update</button>
   </form>
 </body>
 

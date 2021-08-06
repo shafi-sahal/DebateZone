@@ -28,9 +28,9 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   usernameStatus: 'INVALID' | 'PENDING' | 'VALID' = 'INVALID';
   isLoading = true;
   keepUserLoggedIn = false;
+  user: User = { name: '', username: '' };
   private subscriptions = new Subscription();
   private isMobile = true;
-  private user: User = { name: '', username: '' };
 
   form = this.formBuilder.group({
     name: [
