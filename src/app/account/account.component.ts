@@ -29,14 +29,13 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   cachedEmail = '';
   usernameStatus: 'INVALID' | 'PENDING' | 'VALID' = 'INVALID';
   isLoading = true;
-  keepUserLoggedIn = false;
   user: User = { name: '', username: '' };
-  isUserDataChanged = false;
   shouldDisableButton = true;
   keepMeLoggedIn = true;
-  keepUserLoggedInChanged = false;
+
   private subscriptions = new Subscription();
   private isMobile = true;
+  private keepUserLoggedInChanged = false;
   private clonedUser: User = { name: '', username: '' };
   private userDataChangeSnapshot: Record<string, true> = {};
 
@@ -110,7 +109,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
         );
       });
     }));
-    this.form.statusChanges.subscribe(status => this.shouldDisableButton = !(this.isUserDataChanged && status === 'VALID'));
+    this.form.statusChanges.subscribe(() => this.setDisableButton());
   }
 
   private getNavButtonsTextContent(): string[] {
@@ -122,26 +121,38 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     return textContents;
   }
 
-  setDisableButton(event: Event): void {
+  onDataChange(event: Event): void {
     const inputEvent = event as InputEvent;
     const inputElement = inputEvent.target as HTMLInputElement;
     const inputFromKeepMeLoggedIn = inputElement.getAttribute('aria-checked');
 
     if (inputFromKeepMeLoggedIn) {
-      const keepUserLoggedIn = inputFromKeepMeLoggedIn === 'true';
-      this.keepMeLoggedIn = keepUserLoggedIn;
-      this.keepUserLoggedInChanged = keepUserLoggedIn !== this.accountService.keepUserLoggedIn;
+      this.setKeepUserLoggedInChanged(inputFromKeepMeLoggedIn);
     } else {
-      // Gets the formControlName of the input element
-      // To work correctly place formControlName as the third attribute of the input element
-      const field  = (inputElement).attributes[2].nodeValue;
-      if (!field) return;
-      if (inputElement.value !== this.user[field as keyof User]) {
-        this.userDataChangeSnapshot[field] = true;
-      } else {
-        delete this.userDataChangeSnapshot[field];
-      }
+      this.setUserDataChanged(inputElement);
     }
+    this.setDisableButton();
+  }
+
+  private setKeepUserLoggedInChanged(inputFromKeepMeLoggedIn: string): void {
+    const keepUserLoggedIn = inputFromKeepMeLoggedIn === 'true';
+    this.keepMeLoggedIn = keepUserLoggedIn;
+    this.keepUserLoggedInChanged = keepUserLoggedIn !== this.accountService.keepUserLoggedIn;
+  }
+
+  private setUserDataChanged(inputElement: HTMLInputElement): void {
+    // Gets the formControlName of the input element
+    // To work correctly place formControlName as the third attribute of the input element
+    const field  = (inputElement).attributes[2].nodeValue;
+    if (!field) return;
+    if (inputElement.value !== this.user[field as keyof User]) {
+      this.userDataChangeSnapshot[field] = true;
+    } else {
+      delete this.userDataChangeSnapshot[field];
+    }
+  }
+
+  private setDisableButton(): void {
     const isUserDataChanged = Object.keys(this.userDataChangeSnapshot).length > 0;
     const isFormValueChanged = isUserDataChanged || this.keepUserLoggedInChanged;
     this.shouldDisableButton = !isFormValueChanged || !this.form.valid;
