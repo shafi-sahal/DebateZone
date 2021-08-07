@@ -36,7 +36,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   private isMobile = true;
   private keepUserLoggedInChanged = false;
   private clonedUser: User = { name: '', username: '' };
-  private userDataChangeSnapshot: Record<string, true> = {};
+  private userDataChangeSnapshot: Record<string, string> = {};
 
   form = this.formBuilder.group({
     name: [
@@ -144,10 +144,11 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     const field  = (inputElement).attributes[2].nodeValue;
     if (!field) return;
     if (inputElement.value !== this.user[field as keyof User]) {
-      this.userDataChangeSnapshot[field] = true;
+      this.userDataChangeSnapshot[field] = inputElement.value;
     } else {
       delete this.userDataChangeSnapshot[field];
     }
+    console.log(this.userDataChangeSnapshot);
   }
 
   private setDisableButton(): void {
