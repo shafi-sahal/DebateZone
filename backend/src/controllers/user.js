@@ -12,7 +12,7 @@ const user = require('../models/user');
 exports.isDuplicate = (req, res) => {
   const query = req.query;
   if (!(query.username || query.email || query.mobile)) return errorHandler(res);
-  checkUserExistence(query).then(hasUser => res.status(200).json(hasUser));
+  checkUserExistence(query).then(hasUser => res.send(hasUser));
 }
 
 exports.createUser = (req, res) => {
@@ -73,7 +73,7 @@ exports.login = (req, res) => {
 
 exports.fetchUser = (req, res) => {
   User.findOne(({ attributes: ['name', 'username', 'email', 'mobile'], where: { id: req.userId } }))
-    .then(user => res.status(200).json({ user: user })).catch(error => errorHandler(res, error)
+    .then(user => res.send(user)).catch(error => errorHandler(res, error)
   );
 }
 
@@ -81,8 +81,7 @@ const checkUserExistence = query => {
   const conditionKey = Object.keys(query)[0];
   return new Promise(resolve => {
     User.findOne({ attributes: ['id'], where: { [conditionKey]: query[conditionKey] } }).then(user => {
-      const resKey = 'isDuplicate' + capitalizeFirstLetter(conditionKey);
-      resolve({ [resKey]: !!user });
+      resolve(!!user);
     });
   });
 }

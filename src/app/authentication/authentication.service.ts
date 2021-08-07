@@ -9,7 +9,7 @@ import { catchError, map } from 'rxjs/operators';
 import { SessionService } from '../session.service';
 
 const USER_URL = environment.apiUrl + '/user';
-const DUPLICATE_CHECK_USER_URL = USER_URL + '/check-duplicate';
+const IS_DUPLICATE_URL = USER_URL + '/is-duplicate';
 
 @Injectable()
 export class AuthenticationService {
@@ -28,22 +28,16 @@ export class AuthenticationService {
   }
 
   isDuplicateUsername(username: string): Observable<boolean> {
-    return this.http.get<{ isDuplicateUsername: boolean }>(DUPLICATE_CHECK_USER_URL + '?username=' + username).pipe(
-      map(response => response.isDuplicateUsername)
-    );
+    return this.http.get<boolean>(IS_DUPLICATE_URL + '?username=' + username);
   }
 
   isDuplicateEmail(email: string): Observable<boolean> {
-    return this.http.get<{ isDuplicateEmail: boolean }>(DUPLICATE_CHECK_USER_URL + '?email=' + email).pipe(
-      map(response => response.isDuplicateEmail)
-    );
+    return this.http.get<boolean>(IS_DUPLICATE_URL + '?email=' + email);
   }
 
   isDuplicateMobile(mobile: string, countryCode: string): Observable<boolean> {
     const mobileParsed = this.parseMobile(mobile, countryCode).replace('+', '%2B');
-    return this.http.get<{ isDuplicateMobile: boolean }>(DUPLICATE_CHECK_USER_URL + '?mobile=' + mobileParsed).pipe(
-      map(response => response.isDuplicateMobile)
-    );
+    return this.http.get<boolean>(IS_DUPLICATE_URL + '?mobile=' + mobileParsed);
   }
 
   addUser(): Observable<boolean> {
