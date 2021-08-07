@@ -4,7 +4,6 @@
       <mat-label>Full name</mat-label>
       <input matInput formControlName="name" (input)="name?.setErrors(null)" (blur)="blur.emit($event)">
     </mat-form-field>
-    <p class="invalid"*ngIf="name?.hasError('pattern')">Give a valid name, buddy</p>
 
     <mat-form-field>
       <mat-label>Username</mat-label>
@@ -28,7 +27,6 @@
       </div>
     </mat-form-field>
     <div class="invalid">
-      <p *ngIf="email?.hasError('pattern')">Give a valid email, buddy</p>
       <p *ngIf="email?.hasError('isDuplicateEmail')">
         An account with the same email already exists
       </p>
