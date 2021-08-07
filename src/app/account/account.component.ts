@@ -148,7 +148,6 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       delete this.userDataChangeSnapshot[field];
     }
-    console.log(this.userDataChangeSnapshot);
   }
 
   private setDisableButton(): void {
