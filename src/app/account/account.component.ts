@@ -38,6 +38,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   private subscriptions = new Subscription();
   private isMobile = true;
   private clonedUser: User = { name: '', username: '' };
+  private userDataChangeSnapshot: Record<string, true> = {};
 
   form = this.formBuilder.group({
     name: [
@@ -134,11 +135,15 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
       // Gets the formControlName of the input element
       // To work correctly place formControlName as the third attribute of the input element
       const field  = (inputElement).attributes[2].nodeValue;
-      if (field) this.clonedUser[field as keyof User] = inputElement.value;
-      this.isUserDataChanged = !this.utilsService.isEqualObjects(this.clonedUser, this.user);
+      if (!field) return;
+      if (inputElement.value !== this.user[field as keyof User]) {
+        this.userDataChangeSnapshot[field] = true;
+      } else {
+        delete this.userDataChangeSnapshot[field];
+      }
     }
-
-    const isFormValueChanged = this.isUserDataChanged || this.keepUserLoggedInChanged;
+    const isUserDataChanged = Object.keys(this.userDataChangeSnapshot).length > 0;
+    const isFormValueChanged = isUserDataChanged || this.keepUserLoggedInChanged;
     this.shouldDisableButton = !isFormValueChanged || !this.form.valid;
   }
 
