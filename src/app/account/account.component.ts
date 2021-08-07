@@ -9,7 +9,6 @@ import { SessionService } from '../session.service';
 import { Spinner } from '../shared/components/spinner/spinner.service';
 import { regexes } from '../shared/datasets';
 import { User } from '../shared/models/user.model';
-import { UtilsService } from '../shared/services/utils.service';
 import { EmailUniquenessValidator, FocusChangeObserver, UsernameAvailabilityCheck, validateUsername } from '../shared/validator';
 import { AccountService } from './account.service';
 import { InputFieldsComponent } from './input-fields/input-fields.component';
@@ -19,7 +18,7 @@ import { InputFieldsComponent } from './input-fields/input-fields.component';
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ UsernameAvailabilityCheck, EmailUniquenessValidator, FocusChangeObserver, AuthenticationService, NavService, UtilsService]
+  providers: [ UsernameAvailabilityCheck, EmailUniquenessValidator, FocusChangeObserver, AuthenticationService, NavService]
 })
 export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   inputFields = new BehaviorSubject<InputFieldsComponent | null>(null);
@@ -70,7 +69,6 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     private accountService: AccountService,
     private changeDetector: ChangeDetectorRef,
     private initialDataLoader: InitialDataLoader,
-    private utilsService: UtilsService,
     private sessionService: SessionService
   ) { this.spinner.hide(); }
 

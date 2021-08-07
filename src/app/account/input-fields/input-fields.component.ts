@@ -3,15 +3,12 @@ import {
 } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { SessionService } from 'src/app/session.service';
-import { UtilsService } from 'src/app/shared/services/utils.service';
-
 
 @Component({
   selector: 'app-input-fields',
   templateUrl: './input-fields.component.html',
   styleUrls: ['./input-fields.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [UtilsService]
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputFieldsComponent implements AfterViewInit {
   @Input() form!: FormGroup;
@@ -43,5 +40,4 @@ export class InputFieldsComponent implements AfterViewInit {
     if(this.isDuplicateEmail) this.email?.setErrors({ isDuplicateEmail: true });
     setTimeout(() => this.changeDetector.markForCheck());
   }
-  print(event:any){console.log(event);}
 }
