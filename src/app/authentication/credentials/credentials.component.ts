@@ -243,7 +243,7 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
   }
 
   private addUser(): void {
-    if (this.signUpForm.invalid || this.signUpForm.pending) return;
+    if (!this.signUpForm.valid) return;
     this.authenticationService.countryCode = this._country.code;
     this.authenticationService.user = this.signUpForm.value;
     this.authenticationService.addUser().subscribe(isUserAdded => {

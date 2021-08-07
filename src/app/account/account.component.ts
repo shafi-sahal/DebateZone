@@ -139,7 +139,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     const isFormValueChanged = this.isUserDataChanged || this.keepUserLoggedInChanged;
-    this.shouldDisableButton = !isFormValueChanged || this.form.invalid || this.form.pending;
+    this.shouldDisableButton = !isFormValueChanged || !this.form.valid;
   }
 
   ngOnDestroy(): void {
