@@ -7,5 +7,5 @@ import { Component, Output, EventEmitter, ChangeDetectionStrategy } from '@angul
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent {
-  @Output() isSignup = new EventEmitter<boolean>();
+  @Output() isSignUp = new EventEmitter<boolean>();
 }
