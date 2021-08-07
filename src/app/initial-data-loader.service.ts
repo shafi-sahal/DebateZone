@@ -16,6 +16,6 @@ export class InitialDataLoader {
   constructor(private http: HttpClient) {}
 
   load(buttonIndex: number): void {
-    if (buttonIndex === 1) this.http.get<{ user: User }>(BACKEND_URL).subscribe(response => this.user.next(response.user));
+    if (buttonIndex === 1) this.http.get<User>(BACKEND_URL).subscribe(user => this.user.next(user));
   }
 }

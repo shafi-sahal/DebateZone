@@ -1,5 +1,5 @@
 <body>
-  <form [formGroup]="form" (input)="setDisableButton($event)">
+  <form [formGroup]="form" (input)="dataChanged.emit($event)">
     <mat-form-field>
       <mat-label>Full name</mat-label>
       <input matInput formControlName="name" (input)="name?.setErrors(null)">
@@ -39,10 +39,11 @@
       <input matInput formControlName="mobile" readonly>
     </mat-form-field>
 
-    <mat-checkbox color="primary" [checked]="!!sessionService.readKeepUserLoggedIn()">Keep me logged in</mat-checkbox>
+    <mat-checkbox color="primary" [checked]="keepMeLoggedIn">
+      Keep me logged in
+    </mat-checkbox>
     <p class="keep-me-logged-in">Unchecking this will force you to enter your login details whenever you open DebateZone</p>
 
     <button class="diagonal-rounded-large" mat-raised-button color="primary" [disabled]="shouldDisableButton">Update</button>
   </form>
 </body>
-

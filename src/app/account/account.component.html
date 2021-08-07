@@ -5,8 +5,10 @@
     [isDuplicateUsername]="isDuplicateUsername"
     [isDuplicateEmail]="isDuplicateEmail"
     [usernameStatus]="usernameStatus"
-    [user]="user"
-    (inputFields)="inputFields.next($event)">
+    [shouldDisableButton]="shouldDisableButton"
+    [keepMeLoggedIn]="keepMeLoggedIn"
+    (inputFields)="inputFields.next($event)"
+    (dataChanged)="setDisableButton($event)">
   </app-input-fields>
 
   <ng-template #inputFieldsWithCard>
@@ -16,8 +18,10 @@
         [isDuplicateUsername]="isDuplicateUsername"
         [isDuplicateEmail]="isDuplicateEmail"
         [usernameStatus]="usernameStatus"
-        [user]="user"
-        (inputFields)="inputFields.next($event)">
+        [shouldDisableButton]="shouldDisableButton"
+        (inputFields)="inputFields.next($event)"
+        [keepMeLoggedIn]="keepMeLoggedIn"
+        (dataChanged)="setDisableButton($event)">
       </app-input-fields>
     </mat-card>
   </ng-template>

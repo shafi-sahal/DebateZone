@@ -5,9 +5,11 @@ import { AuthenticationService } from '../authentication/authentication.service'
 import { DeviceTypeChecker } from '../device-type-checker.service';
 import { NavService } from '../home/nav-elements/nav.service';
 import { InitialDataLoader } from '../initial-data-loader.service';
+import { SessionService } from '../session.service';
 import { Spinner } from '../shared/components/spinner/spinner.service';
 import { regexes } from '../shared/datasets';
 import { User } from '../shared/models/user.model';
+import { UtilsService } from '../shared/services/utils.service';
 import { EmailUniquenessValidator, FocusChangeObserver, UsernameAvailabilityCheck, validateUsername } from '../shared/validator';
 import { AccountService } from './account.service';
 import { InputFieldsComponent } from './input-fields/input-fields.component';
@@ -17,7 +19,7 @@ import { InputFieldsComponent } from './input-fields/input-fields.component';
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ UsernameAvailabilityCheck, EmailUniquenessValidator, FocusChangeObserver, AuthenticationService, NavService]
+  providers: [ UsernameAvailabilityCheck, EmailUniquenessValidator, FocusChangeObserver, AuthenticationService, NavService, UtilsService]
 })
 export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   inputFields = new BehaviorSubject<InputFieldsComponent | null>(null);
@@ -29,8 +31,13 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = true;
   keepUserLoggedIn = false;
   user: User = { name: '', username: '' };
+  isUserDataChanged = false;
+  shouldDisableButton = true;
+  keepMeLoggedIn = true;
+  keepUserLoggedInChanged = false;
   private subscriptions = new Subscription();
   private isMobile = true;
+  private clonedUser: User = { name: '', username: '' };
 
   form = this.formBuilder.group({
     name: [
@@ -62,17 +69,21 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     private navService: NavService,
     private accountService: AccountService,
     private changeDetector: ChangeDetectorRef,
-    private initialDataLoader: InitialDataLoader
+    private initialDataLoader: InitialDataLoader,
+    private utilsService: UtilsService,
+    private sessionService: SessionService
   ) { this.spinner.hide(); }
 
   ngOnInit(): void {
+    this.accountService.keepUserLoggedIn = !!this.sessionService.readKeepUserLoggedIn();
     this.subscriptions
       .add(this.deviceTypeChecker.isMobile.subscribe(isMobile => this.isMobile = isMobile))
       .add(this.initialDataLoader.user.subscribe(user => {
         if(!user) return;
         this.isLoading = false;
-        this.accountService.user = user;
         this.user = user;
+        this.accountService.user = this.user;
+        this.clonedUser = {...this.user};
         this.changeDetector.markForCheck();
         this.form.setValue(user);
         setTimeout(() => {
@@ -98,6 +109,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
         );
       });
     }));
+    this.form.statusChanges.subscribe(status => this.shouldDisableButton = !(this.isUserDataChanged && status === 'VALID'));
   }
 
   private getNavButtonsTextContent(): string[] {
@@ -107,6 +119,27 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     textContents.splice(1);
     textContents.push('Log out');
     return textContents;
+  }
+
+  setDisableButton(event: Event): void {
+    const inputEvent = event as InputEvent;
+    const inputElement = inputEvent.target as HTMLInputElement;
+    const inputFromKeepMeLoggedIn = inputElement.getAttribute('aria-checked');
+
+    if (inputFromKeepMeLoggedIn) {
+      const keepUserLoggedIn = inputFromKeepMeLoggedIn === 'true';
+      this.keepMeLoggedIn = keepUserLoggedIn;
+      this.keepUserLoggedInChanged = keepUserLoggedIn !== this.accountService.keepUserLoggedIn;
+    } else {
+      // Gets the formControlName of the input element
+      // To work correctly place formControlName as the third attribute of the input element
+      const field  = (inputElement).attributes[2].nodeValue;
+      if (field) this.clonedUser[field as keyof User] = inputElement.value;
+      this.isUserDataChanged = !this.utilsService.isEqualObjects(this.clonedUser, this.user);
+    }
+
+    const isFormValueChanged = this.isUserDataChanged || this.keepUserLoggedInChanged;
+    this.shouldDisableButton = !isFormValueChanged || this.form.invalid || this.form.pending;
   }
 
   ngOnDestroy(): void {
