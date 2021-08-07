@@ -18,7 +18,7 @@ import { InputFieldsComponent } from './input-fields/input-fields.component';
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ UsernameAvailabilityCheck, EmailUniquenessValidator, FocusChangeObserver, AuthenticationService, NavService]
+  providers: [UsernameAvailabilityCheck, EmailUniquenessValidator, FocusChangeObserver, AuthenticationService, NavService]
 })
 export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   inputFields = new BehaviorSubject<InputFieldsComponent | null>(null);
@@ -77,37 +77,30 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscriptions
       .add(this.deviceTypeChecker.isMobile.subscribe(isMobile => this.isMobile = isMobile))
       .add(this.initialDataLoader.user.subscribe(user => {
-        if(!user) return;
-        this.isLoading = false;
-        this.user = user;
-        this.accountService.user = this.user;
-        this.clonedUser = {...this.user};
-        this.changeDetector.markForCheck();
-        this.form.setValue(user);
-        setTimeout(() => {
-          this.form.get('username')?.setAsyncValidators(this.usernameAvailabilityCheck.validate.bind(this));
-          this.form.get('email')?.setAsyncValidators(this.emailUniquenessValidator.validate.bind(this));
-        });
+        if (!user) return;
+        this.prepareForm(user);
       })
     );
   }
 
   ngAfterViewInit(): void {
     // Used to preserve the state and functions of the form on device changes
-    this.subscriptions.add(this.inputFields.subscribe(inputFields => {
-      this.shouldAsyncValidateEmail.next(false);
-      this.cachedEmail = this.form.get('email')?.value;
-      if(!inputFields) return;
-      // Since the changed InputFieldsComponent has new input for email,
-      // it is needed to listen to the blur event of the new input.
-      setTimeout(() => {
-        this.focusChangeObserver.removeObserver();
-        this.focusChangeObserver
-          .observeFocusChangeOfElement(inputFields.inputEmail, this.shouldAsyncValidateEmail, this.getNavButtonsTextContent()
-        );
-      });
-    }));
-    this.form.statusChanges.subscribe(() => this.setDisableButton());
+    this.subscriptions.
+      add(this.inputFields.subscribe(inputFields => {
+        this.shouldAsyncValidateEmail.next(false);
+        this.cachedEmail = this.form.get('email')?.value;
+        if (!inputFields) return;
+        // Since the changed InputFieldsComponent has new input for email,
+        // it is needed to listen to the blur event of the new input.
+        setTimeout(() => {
+          this.focusChangeObserver.removeObserver();
+          this.focusChangeObserver
+            .observeFocusChangeOfElement(inputFields.inputEmail, this.shouldAsyncValidateEmail, this.getNavButtonsTextContent()
+            );
+        });
+      })
+      .add(this.form.statusChanges.subscribe(() => this.setDisableButton()))
+    );
   }
 
   onBlur(event: FocusEvent): void {
@@ -134,6 +127,19 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     this.setDisableButton();
   }
 
+  private prepareForm(user: User): void {
+    this.isLoading = false;
+    this.user = user;
+    this.accountService.user = this.user;
+    this.clonedUser = { ...this.user };
+    this.changeDetector.markForCheck();
+    this.form.setValue(user);
+    setTimeout(() => {
+      this.form.get('username')?.setAsyncValidators(this.usernameAvailabilityCheck.validate.bind(this));
+      this.form.get('email')?.setAsyncValidators(this.emailUniquenessValidator.validate.bind(this));
+    });
+  }
+
   private getNavButtonsTextContent(): string[] {
     const textContents = this.isMobile
       ? this.navService.navButtons.map(button => ' ' + button.icon + ' ')
@@ -152,7 +158,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   private setUserDataChanged(inputElement: HTMLInputElement): void {
     // Gets the formControlName of the input element
     // To work correctly place formControlName as the second attribute of the input element
-    const controlName  = inputElement.attributes[2].nodeValue;
+    const controlName = inputElement.attributes[2].nodeValue;
     if (!controlName) return;
     if (inputElement.value !== this.user[controlName as keyof User]) {
       this.userDataChangeSnapshot[controlName] = inputElement.value;
