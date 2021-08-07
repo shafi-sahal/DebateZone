@@ -8,7 +8,8 @@
     [shouldDisableButton]="shouldDisableButton"
     [keepMeLoggedIn]="keepMeLoggedIn"
     (inputFields)="inputFields.next($event)"
-    (dataChanged)="onDataChange($event)">
+    (input)="onInput($event)"
+    (blur)="onBlur($event)">
   </app-input-fields>
 
   <ng-template #inputFieldsWithCard>
@@ -21,7 +22,8 @@
         [shouldDisableButton]="shouldDisableButton"
         (inputFields)="inputFields.next($event)"
         [keepMeLoggedIn]="keepMeLoggedIn"
-        (dataChanged)="onDataChange($event)">
+        (input)="onInput($event)"
+        (blur)="onBlur($event)">
       </app-input-fields>
     </mat-card>
   </ng-template>
