@@ -43,7 +43,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
       '',
       {
         updateOn: 'blur',
-        validators: Validators.pattern(regexes.name)
+        validators: [Validators.required, Validators.pattern(regexes.name)]
       }
     ],
     username: ['', [Validators.required, validateUsername()]],
