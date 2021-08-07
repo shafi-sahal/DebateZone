@@ -1,11 +1,7 @@
 const Sequelize = require('sequelize');
 const errorHandler = require('../shared/error-handler');
 const User = require('../models/user');
-const messages = require('../messages');
-const querystring = require('querystring');
-const url = require('url');
 const bcrypt = require('bcrypt');
-const { throwError } = require('rxjs');
 const { createSigner } = require('fast-jwt');
 const user = require('../models/user');
 
@@ -21,17 +17,8 @@ exports.createUser = (req, res) => {
     res.status(201).json({ token: token, user: { name: user.name, username: user.username }});
   })
   .catch(error => {
-    if (!error.name === 'SequelizeUniqueConstraintError') return errorHandler(res, error)
-    console.log(error);
-    const duplicateField = error.errors[0].path.split('.')[1];
-    let message = ''
-    if (duplicateField === 'username'){
-      message = 'Username already exists. Try again';
-    } else if (duplicateField === 'email') {
-      message = 'An account with the same email already exists';
-    } else if (duplicateField === 'mobile') {
-      message = 'An account with same mobile number already exists'
-    }
+    if (error.name !== 'SequelizeUniqueConstraintError') return errorHandler(res, error)
+    message = handleDuplicateUserErrors(error);
     res.status(400).json({ message: message });
   });
 }
@@ -78,7 +65,22 @@ exports.fetchUser = (req, res) => {
 }
 
 exports.updateUser = (req, res) => {
-  User.update(req.body, { where: { id: req.userId } }).then(response => console.log(response));
+  User.update(req.body, { where: { id: req.userId } }).then(response => res.send(response)).catch(error => errorHandler(res, error));
+}
+
+const handleDuplicateUserErrors = error => {
+  console.log(error);
+  const duplicateField = error.errors[0].path.split('.')[1];
+  let message = ''
+  if (duplicateField === 'username'){
+    message = 'Username already exists. Try again';
+  } else if (duplicateField === 'email') {
+    message = 'An account with the same email already exists';
+  } else if (duplicateField === 'mobile') {
+    message = 'An account with same mobile number already exists'
+  }
+
+  return message;
 }
 
 const checkUserExistence = query => {
