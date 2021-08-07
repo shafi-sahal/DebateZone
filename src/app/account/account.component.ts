@@ -110,16 +110,18 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     this.form.statusChanges.subscribe(() => this.setDisableButton());
   }
 
-  private getNavButtonsTextContent(): string[] {
-    const textContents = this.isMobile
-      ? this.navService.navButtons.map(button => ' ' + button.icon + ' ')
-      : this.navService.navButtons.map(button => ' ' + button.icon + ' ' + button.label);
-    textContents.splice(1);
-    textContents.push('Log out');
-    return textContents;
+  onBlur(event: FocusEvent): void {
+    const inputElement = event.target as HTMLInputElement;
+    const controlName = inputElement.attributes[2].nodeValue;
+    if (!controlName) return;
+    const control = this.form.get(controlName);
+    if (inputElement.value === '' || control?.invalid) {
+      control?.setValue(this.user[controlName as keyof User]);
+      this.onInput(event);
+    }
   }
 
-  onDataChange(event: Event): void {
+  onInput(event: Event): void {
     const inputEvent = event as InputEvent;
     const inputElement = inputEvent.target as HTMLInputElement;
     const inputFromKeepMeLoggedIn = inputElement.getAttribute('aria-checked');
@@ -132,6 +134,15 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     this.setDisableButton();
   }
 
+  private getNavButtonsTextContent(): string[] {
+    const textContents = this.isMobile
+      ? this.navService.navButtons.map(button => ' ' + button.icon + ' ')
+      : this.navService.navButtons.map(button => ' ' + button.icon + ' ' + button.label);
+    textContents.splice(1);
+    textContents.push('Log out');
+    return textContents;
+  }
+
   private setKeepUserLoggedInChanged(inputFromKeepMeLoggedIn: string): void {
     const keepUserLoggedIn = inputFromKeepMeLoggedIn === 'true';
     this.keepMeLoggedIn = keepUserLoggedIn;
@@ -140,13 +151,13 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private setUserDataChanged(inputElement: HTMLInputElement): void {
     // Gets the formControlName of the input element
-    // To work correctly place formControlName as the third attribute of the input element
-    const field  = (inputElement).attributes[2].nodeValue;
-    if (!field) return;
-    if (inputElement.value !== this.user[field as keyof User]) {
-      this.userDataChangeSnapshot[field] = inputElement.value;
+    // To work correctly place formControlName as the second attribute of the input element
+    const controlName  = inputElement.attributes[2].nodeValue;
+    if (!controlName) return;
+    if (inputElement.value !== this.user[controlName as keyof User]) {
+      this.userDataChangeSnapshot[controlName] = inputElement.value;
     } else {
-      delete this.userDataChangeSnapshot[field];
+      delete this.userDataChangeSnapshot[controlName];
     }
   }
 
