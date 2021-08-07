@@ -137,7 +137,6 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private prepareForm(user: User): void {
-    console.log(user);
     this.isLoading = false;
     this.user = user;
     this.accountService.user = this.user;
