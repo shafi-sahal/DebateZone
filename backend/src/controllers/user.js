@@ -77,6 +77,10 @@ exports.fetchUser = (req, res) => {
   );
 }
 
+exports.updateUser = (req, res) => {
+  User.update(req.body, { where: { id: req.userId } }).then(response => console.log(response));
+}
+
 const checkUserExistence = query => {
   const conditionKey = Object.keys(query)[0];
   return new Promise(resolve => {

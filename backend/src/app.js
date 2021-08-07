@@ -13,7 +13,7 @@ app.use((req, res, next) => {
     'Access-Control-Allow-Headers',
     'Content-Type, Authorization'
   );
-  res.setHeader('Acess-Control-Allow-Methods', 'GET, POST');
+  res.setHeader('Acess-Control-Allow-Methods', 'GET, POST, PUT');
   next();
 });
 
