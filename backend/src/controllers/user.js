@@ -65,7 +65,14 @@ exports.fetchUser = (req, res) => {
 }
 
 exports.updateUser = (req, res) => {
-  User.update(req.body, { where: { id: req.userId } }).then(response => res.send(response)).catch(error => errorHandler(res, error));
+  User.update(req.body, { where: { id: req.userId } })
+    .then(() => res.sendStatus(204))
+    .catch(error => {
+      if (error.name !== 'SequelizeUniqueConstraintError') return errorHandler(res, error)
+      message = handleDuplicateUserErrors(error);
+      res.status(400).json({ message: message });
+    }
+  );
 }
 
 const handleDuplicateUserErrors = error => {

@@ -103,18 +103,18 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  onBlur(event: FocusEvent): void {
+  onControlBlur(event: FocusEvent): void {
     const inputElement = event.target as HTMLInputElement;
     const controlName = inputElement.attributes[2].nodeValue;
     if (!controlName) return;
     const control = this.form.get(controlName);
     if (inputElement.value === '' || control?.invalid) {
       control?.setValue(this.user[controlName as keyof User]);
-      this.onInput(event);
+      this.onDataChange(event);
     }
   }
 
-  onInput(event: Event): void {
+  onDataChange(event: Event): void {
     const inputEvent = event as InputEvent;
     const inputElement = inputEvent.target as HTMLInputElement;
     const inputFromKeepMeLoggedIn = inputElement.getAttribute('aria-checked');
@@ -127,7 +127,17 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     this.setDisableButton();
   }
 
+  onFormSubmit(): void {
+    if (!this.form.valid) return;
+    this.accountService.updateUser(this.userDataChangeSnapshot).subscribe(() => {
+      this.initialDataLoader.user.next({...this.user, ...this.userDataChangeSnapshot});
+      this.userDataChangeSnapshot = {};
+      this.shouldDisableButton = true;
+    });
+  }
+
   private prepareForm(user: User): void {
+    console.log(user);
     this.isLoading = false;
     this.user = user;
     this.accountService.user = this.user;

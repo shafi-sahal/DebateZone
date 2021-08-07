@@ -19,9 +19,10 @@ export class InputFieldsComponent implements AfterViewInit {
   @Input() shouldDisableButton = true;
   @Input() keepMeLoggedIn = true;
   @Output() inputFields = new EventEmitter<this>();
-  @Output() input = new EventEmitter<Event>();
+  @Output() dataChange = new EventEmitter<Event>();
   @Output() keepMeLoogedIn = new EventEmitter<boolean>();
-  @Output() blur = new EventEmitter<FocusEvent>();
+  @Output() controlBlur = new EventEmitter<FocusEvent>();
+  @Output() formSubmit = new EventEmitter();
   @ViewChild('inputEmail')  inputEmail!: ElementRef;
 
   constructor(

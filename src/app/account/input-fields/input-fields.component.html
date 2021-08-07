@@ -1,14 +1,14 @@
 <body>
-  <form [formGroup]="form" (input)="input.emit($event)">
+  <form [formGroup]="form" (input)="dataChange.emit($event)" (ngSubmit)="formSubmit.emit()">
     <mat-form-field>
       <mat-label>Full name</mat-label>
-      <input matInput formControlName="name" (input)="name?.setErrors(null)" (blur)="blur.emit($event)">
+      <input matInput formControlName="name" (input)="name?.setErrors(null)" (blur)="controlBlur.emit($event)">
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Username</mat-label>
       <div class="container-input-with-spinner">
-        <input matInput formControlName="username" (blur)="blur.emit($event)">
+        <input matInput formControlName="username" (blur)="controlBlur.emit($event)">
         <mat-spinner *ngIf="(username?.statusChanges | async) === 'PENDING'" [diameter]="19"></mat-spinner>
       </div>
     </mat-form-field>
@@ -22,7 +22,7 @@
     <mat-form-field>
       <mat-label>Email</mat-label>
       <div class="container-input-with-spinner">
-        <input #inputEmail matInput type="email" formControlName="email" (input)="email?.setErrors(null)" (blur)="blur.emit($event)">
+        <input #inputEmail matInput type="email" formControlName="email" (input)="email?.setErrors(null)" (blur)="controlBlur.emit($event)">
         <mat-spinner *ngIf="(email?.statusChanges | async) === 'PENDING'" [diameter]="19"></mat-spinner>
       </div>
     </mat-form-field>
