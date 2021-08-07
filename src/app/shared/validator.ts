@@ -63,7 +63,7 @@ export class EmailUniquenessValidator implements AsyncValidator {
     return this.shouldAsyncValidateEmail.pipe(
       first(),
       switchMap(canValidate => {
-        if (!canValidate) return of(false);
+        if (!canValidate) return of(this.isDuplicateEmail);
         // To prevent unnecessary requests to server even if the value is not changed and request happens only because of
         // device change
         if (this.cachedEmail === email) {
