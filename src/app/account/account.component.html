@@ -8,7 +8,7 @@
     [shouldDisableButton]="shouldDisableButton"
     [keepMeLoggedIn]="keepMeLoggedIn"
     (inputFields)="inputFields.next($event)"
-    (dataChange)="onDataChange($event)"
+    (input)="onInput($event)"
     (controlBlur)="onControlBlur($event)"
     (formSubmit)="onFormSubmit()">
   </app-input-fields>
@@ -23,7 +23,7 @@
         [shouldDisableButton]="shouldDisableButton"
         (inputFields)="inputFields.next($event)"
         [keepMeLoggedIn]="keepMeLoggedIn"
-        (dataChange)="onDataChange($event)"
+        (input)="onInput($event)"
         (controlBlur)="onControlBlur($event)"
         (formSubmit)="onFormSubmit()">
       </app-input-fields>

@@ -110,11 +110,11 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     const control = this.form.get(controlName);
     if (inputElement.value === '' || control?.invalid) {
       control?.setValue(this.user[controlName as keyof User]);
-      this.onDataChange(event);
+      this.onInput(event);
     }
   }
 
-  onDataChange(event: Event): void {
+  onInput(event: Event): void {
     const inputEvent = event as InputEvent;
     const inputElement = inputEvent.target as HTMLInputElement;
     const inputFromKeepMeLoggedIn = inputElement.getAttribute('aria-checked');
@@ -186,4 +186,5 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscriptions.unsubscribe();
     this.initialDataLoader.user.next(null);
   }
+  print(event:any){console.log(event);}
 }

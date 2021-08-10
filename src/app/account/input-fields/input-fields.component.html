@@ -1,5 +1,5 @@
 <body>
-  <form [formGroup]="form" (input)="dataChange.emit($event)" (ngSubmit)="formSubmit.emit()">
+  <form [formGroup]="form" (ngSubmit)="formSubmit.emit()">
     <mat-form-field>
       <mat-label>Full name</mat-label>
       <input matInput formControlName="name" (input)="name?.setErrors(null)" (blur)="controlBlur.emit($event)">
