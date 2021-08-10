@@ -1,8 +1,8 @@
 <body>
   <div class="container-user-details-and-close-button">
     <div class="container-user-details">
-      <p class="name">{{sessionService.readUser()?.name}}</p>
-      <p class="username">{{sessionService.readUser()?.username}}</p>
+      <p class="name">{{sessionService.user?.name}}</p>
+      <p class="username">{{sessionService.user?.username}}</p>
     </div>
     <button *ngIf="deviceTypeChecker.isMobile | async" (click)="onCloseButtonClick()" mat-icon-button><mat-icon>close</mat-icon></button>
   </div>

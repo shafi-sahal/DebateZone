@@ -7,7 +7,7 @@ import { SessionService } from './session.service';
 export class AuthInterceptor implements HttpInterceptor {
   constructor(private sessionService: SessionService) {}
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = this.sessionService.readToken();
+    const token = this.sessionService.token;
     const request = req.clone({ headers: req.headers.set('Authorization', 'Bearer ' + token) });
     return next.handle(request);
   }

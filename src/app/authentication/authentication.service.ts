@@ -4,7 +4,6 @@ import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from '../shared/models/user.model';
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
-import { Spinner } from '../shared/components/spinner/spinner.service';
 import { catchError, map } from 'rxjs/operators';
 import { SessionService } from '../session.service';
 
@@ -41,7 +40,7 @@ export class AuthenticationService {
       map(response => {
         this.sessionService.destroySession();
         this.sessionService.createSession(response.token, response.user);
-        this.sessionService.writeKeepUserLoggedIn(true);
+        this.sessionService.KeepUserLoggedIn = true;
         return true;
       }),
       catchError(() => of(false))

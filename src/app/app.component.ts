@@ -29,7 +29,7 @@ export class AppComponent {
 
   @HostListener('window:storage', ['$event'])
   private checkAuthentication(): void {
-    if (!this.sessionService.readToken()) this.router.navigate(['authentication']);
+    if (!this.sessionService.token) this.router.navigate(['authentication']);
   }
 
   @HostListener('window:resize', ['$event'])
@@ -39,7 +39,7 @@ export class AppComponent {
   }
 
   private checkKeepUserLoggedIn(): void {
-    if (!this.sessionService.readKeepUserLoggedIn()) {
+    if (!this.sessionService.KeepUserLoggedIn) {
       const beforeUnload = this.renderer.listen(this.windowRef.nativeWindow, 'beforeUnload', () => {
         this.sessionService.destroySession();
         beforeUnload();
