@@ -35,7 +35,6 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   private subscriptions = new Subscription();
   private isMobile = true;
   private keepUserLoggedInChanged = false;
-  private clonedUser: User = { name: '', username: '' };
   private userDataChangeSnapshot: Record<string, string> = {};
 
   form = this.formBuilder.group({
@@ -130,17 +129,16 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   onFormSubmit(): void {
     if (!this.form.valid) return;
     this.accountService.updateUser(this.userDataChangeSnapshot).subscribe(() => {
-      this.initialDataLoader.user.next({...this.user, ...this.userDataChangeSnapshot});
+      this.user = {...this.user, ...this.userDataChangeSnapshot};
       this.userDataChangeSnapshot = {};
       this.shouldDisableButton = true;
+      this.changeDetector.markForCheck();
     });
   }
 
   private prepareForm(user: User): void {
     this.isLoading = false;
     this.user = user;
-    this.accountService.user = this.user;
-    this.clonedUser = { ...this.user };
     this.changeDetector.markForCheck();
     this.form.setValue(user);
     setTimeout(() => {
