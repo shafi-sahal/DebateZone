@@ -4,7 +4,7 @@ import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { DeviceTypeChecker } from '../device-type-checker.service';
 import { NavService } from '../home/nav-elements/nav.service';
-import { InitialDataLoader } from '../initial-data-loader.service';
+import { HomeService } from '../home/home.service';
 import { SessionService } from '../session.service';
 import { Spinner } from '../shared/components/spinner/spinner.service';
 import { regexes } from '../shared/datasets';
@@ -67,7 +67,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     private navService: NavService,
     private accountService: AccountService,
     private changeDetector: ChangeDetectorRef,
-    private initialDataLoader: InitialDataLoader,
+    private homeService: HomeService,
     private sessionService: SessionService
   ) { this.spinner.hide(); }
 
@@ -76,7 +76,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     this.keepMeLoggedIn = this.accountService.keepUserLoggedIn;
     this.subscriptions
       .add(this.deviceTypeChecker.isMobile.subscribe(isMobile => this.isMobile = isMobile))
-      .add(this.initialDataLoader.user.subscribe(user => {
+      .add(this.homeService.user.subscribe(user => {
         if (!user) return;
         this.prepareForm(user);
       })
@@ -132,10 +132,12 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     this.spinner.show('Updating...');
     this.accountService.updateUser(this.userDataChangeSnapshot).subscribe(() => {
       this.user = {...this.user, ...this.userDataChangeSnapshot};
+      this.sessionService.user = this.user;
       this.userDataChangeSnapshot = {};
       this.usernameStatus = 'PENDING';
       this.shouldDisableButton = true;
       this.changeDetector.markForCheck();
+      this.homeService.changes.next();
       this.spinner.hide();
     });
   }
@@ -186,6 +188,6 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
-    this.initialDataLoader.user.next(null);
+    this.homeService.user.next(null);
   }
 }

@@ -8,6 +8,12 @@ export class SessionService {
   private _user: User | null = this.readUser();
   private _keepUserLoggedIn = this.readKeepUserLoggedIn();
 
+  set user(user: User | null) {
+    localStorage.setItem('user', JSON.stringify(user));
+    this._user = user;
+  }
+  get user(): User | null { return this._user; }
+
   set keepUserLoggedIn(keepUserLoggedIn: boolean) {
     localStorage.setItem('keepUserLoggedIn', keepUserLoggedIn.toString());
     this._keepUserLoggedIn = keepUserLoggedIn;
@@ -16,7 +22,6 @@ export class SessionService {
   get keepUserLoggedIn(): boolean { return this._keepUserLoggedIn; }
   get token(): string | null { return this._token; }
   get isAuthenticated(): boolean { return this._isAuthenticated; }
-  get user(): User | null { return this._user; }
 
   createSession(token: string, user: User): void {
     localStorage.setItem('token', token);

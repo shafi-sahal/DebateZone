@@ -4,7 +4,7 @@
     mat-icon-button
     [color]="i === navService.clickedNavbuttonIndex ? 'primary' : ''"
     [routerLink]="button.route"
-    (click)="initialDataLoader.load(i)">
+    (click)="homeService.load(i)">
     <mat-icon [fontSet]="i === navService.clickedNavbuttonIndex ? 'material-icons' : 'material-icons-outlined'">
       {{button.icon}}
     </mat-icon>

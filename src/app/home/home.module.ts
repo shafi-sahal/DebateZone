@@ -12,6 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { HeaderComponent } from './header/header.component';
+import { HomeService } from './home.service';
 
 
 @NgModule({
@@ -31,6 +32,6 @@ import { HeaderComponent } from './header/header.component';
     MatIconModule,
     MatDividerModule
   ],
-  providers: [NavService]
+  providers: [NavService, HomeService]
 })
 export class HomeModule { }
