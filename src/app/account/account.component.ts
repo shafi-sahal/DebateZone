@@ -72,7 +72,8 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   ) { this.spinner.hide(); }
 
   ngOnInit(): void {
-    this.accountService.keepUserLoggedIn = !!this.sessionService.readKeepUserLoggedIn();
+    this.accountService.keepUserLoggedIn = this.sessionService.KeepUserLoggedIn;
+    this.keepMeLoggedIn = this.accountService.keepUserLoggedIn;
     this.subscriptions
       .add(this.deviceTypeChecker.isMobile.subscribe(isMobile => this.isMobile = isMobile))
       .add(this.initialDataLoader.user.subscribe(user => {
