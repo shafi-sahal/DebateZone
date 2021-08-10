@@ -13,6 +13,7 @@ import { screenSizes } from '../assets/screen-sizes';
 })
 export class AppComponent {
   title = 'DebateZone';
+  private username: string | undefined;
 
   constructor(
     private spinner: Spinner,
@@ -25,11 +26,14 @@ export class AppComponent {
     this.spinner.show('I am coming...');
     this.checkKeepUserLoggedIn();
     this.checkDeviceType();
+    this.username = sessionService.user?.username;
   }
 
   @HostListener('window:storage', ['$event'])
   private checkAuthentication(): void {
-    if (!this.sessionService.token) this.router.navigate(['authentication']);
+    this.sessionService.onStorageChange();
+    const isSameUser = this.username === this.sessionService.user?.username;
+    if (!this.sessionService.isAuthenticated || !isSameUser) this.router.navigate(['authentication']);
   }
 
   @HostListener('window:resize', ['$event'])
@@ -39,7 +43,7 @@ export class AppComponent {
   }
 
   private checkKeepUserLoggedIn(): void {
-    if (!this.sessionService.KeepUserLoggedIn) {
+    if (!this.sessionService.keepUserLoggedIn) {
       const beforeUnload = this.renderer.listen(this.windowRef.nativeWindow, 'beforeUnload', () => {
         this.sessionService.destroySession();
         beforeUnload();

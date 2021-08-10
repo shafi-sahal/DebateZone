@@ -38,9 +38,8 @@ export class AuthenticationService {
   addUser(): Observable<boolean> {
     return this.http.post<{ token: string, user: User }>(USER_URL + '/signup', this._user).pipe(
       map(response => {
-        this.sessionService.destroySession();
         this.sessionService.createSession(response.token, response.user);
-        this.sessionService.KeepUserLoggedIn = true;
+        this.sessionService.keepUserLoggedIn = true;
         return true;
       }),
       catchError(() => of(false))
@@ -51,7 +50,6 @@ export class AuthenticationService {
     const loginData = { loginKey: loginKey, password: password };
     return this.http.post<{ token: string, user: User }>(USER_URL, loginData).pipe(
       map(response => {
-        this.sessionService.destroySession();
         this.sessionService.createSession(response.token, response.user);
         return true;
       }),
