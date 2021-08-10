@@ -184,5 +184,4 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscriptions.unsubscribe();
     this.initialDataLoader.user.next(null);
   }
-  print(event:any){console.log(event);}
 }
