@@ -130,9 +130,21 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   onFormSubmit(): void {
     if (!this.form.valid) return;
     this.spinner.show('Updating...');
+
+    if (this.keepUserLoggedInChanged) {
+      this.sessionService.keepUserLoggedIn = this.accountService.keepUserLoggedIn = this.keepMeLoggedIn;
+    }
+
+    const isUserDataChanged = Object.keys(this.userDataChangeSnapshot).length > 0;
+    if (!isUserDataChanged) {
+      this.shouldDisableButton = true;
+      this.changeDetector.markForCheck();
+      this.spinner.hide();
+      return;
+    }
+
     this.accountService.updateUser(this.userDataChangeSnapshot).subscribe(() => {
-      this.user = {...this.user, ...this.userDataChangeSnapshot};
-      this.sessionService.user = this.user;
+      this.user = this.sessionService.user = {...this.user, ...this.userDataChangeSnapshot};
       this.userDataChangeSnapshot = {};
       this.usernameStatus = 'PENDING';
       this.shouldDisableButton = true;
