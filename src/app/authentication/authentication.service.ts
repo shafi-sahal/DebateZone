@@ -16,11 +16,7 @@ export class AuthenticationService {
   countryCode = '';
   private _user!: User;
 
-  constructor(
-    private http: HttpClient,
-    private spinner: Spinner,
-    private sessionService: SessionService
-  ) {}
+  constructor(private http: HttpClient,private sessionService: SessionService) {}
 
   set user(user: User) {
     this._user = user;
@@ -41,7 +37,6 @@ export class AuthenticationService {
   }
 
   addUser(): Observable<boolean> {
-    this.spinner.show('Setting up your account...');
     return this.http.post<{ token: string, user: User }>(USER_URL + '/signup', this._user).pipe(
       map(response => {
         this.sessionService.destroySession();
@@ -54,7 +49,6 @@ export class AuthenticationService {
   }
 
   login(loginKey: string, password: string): Observable<boolean> {
-    this.spinner.show('Taking you where you want to go...');
     const loginData = { loginKey: loginKey, password: password };
     return this.http.post<{ token: string, user: User }>(USER_URL, loginData).pipe(
       map(response => {

@@ -12,6 +12,7 @@ import {
 import { CountryCode } from 'libphonenumber-js';
 import { MatSelect } from '@angular/material/select';
 import { Router } from '@angular/router';
+import { Spinner } from 'src/app/shared/components/spinner/spinner.service';
 
 @Component({
   selector: 'app-credentials',
@@ -143,7 +144,8 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
     private mobileUniquenessValidator: MobileUniquenessValidator,
     private changeDetector: ChangeDetectorRef,
     private router: Router,
-    private focusChangeObserver: FocusChangeObserver
+    private focusChangeObserver: FocusChangeObserver,
+    private spinner: Spinner
   ) {}
 
   ngAfterViewInit(): void {
@@ -244,6 +246,7 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
 
   private addUser(): void {
     if (!this.signUpForm.valid) return;
+    this.spinner.show('I am working on it...');
     this.authenticationService.countryCode = this._country.code;
     this.authenticationService.user = this.signUpForm.value;
     this.authenticationService.addUser().subscribe(isUserAdded => {
@@ -253,6 +256,7 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
 
   private login(): void {
     if (this.loginForm.invalid) return;
+    this.spinner.show('Taking you with me...');
     this.authenticationService.login(this.email?.value, this.password?.value).subscribe(isAuthenticated => {
       this.showLoginError = !isAuthenticated;
       this.changeDetector.markForCheck();
