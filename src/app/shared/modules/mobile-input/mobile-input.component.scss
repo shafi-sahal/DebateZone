@@ -1,0 +1,34 @@
+
+mat-form-field {
+  width: 100%;
+}
+mat-option {
+  height: unset;
+
+  .container-country {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+.container-mobile {
+  display: flex;
+  justify-content: space-between;
+}
+
+$form-field-dial-code-width: 60px;
+$space: 5%;
+mat-form-field.dial-code {
+  width: #{$form-field-dial-code-width};
+}
+.dial-code-normal {
+  font-weight: normal;
+}
+.dial-code-lighter {
+  font-weight: lighter;
+}
+input.dial-code {
+  width: 78%;
+}
+mat-form-field.mobile {
+  width: calc(100% - (#{$form-field-dial-code-width} + #{$space}));
+}

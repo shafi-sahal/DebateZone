@@ -9,8 +9,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FocusInvalidInputDirective } from '../shared/directives/focus-invalid-input.directive';
 import { AngularMaterialModule } from '../angular-material.module';
 import { MatSelectSearchModule } from 'mat-select-search';
-import { MatOptionMultiLineDirective } from './credentials/mat-option-multi-line.directive';
 import { UsernameValidationErrorsModule } from '../shared/modules/username-validation-errors/username-validation-errors.module';
+import { MobileInputModule } from '../shared/modules/mobile-input/mobile-input.module';
 
 
 
@@ -19,8 +19,7 @@ import { UsernameValidationErrorsModule } from '../shared/modules/username-valid
     AuthenticationComponent,
     HeaderComponent,
     CredentialsComponent,
-    FocusInvalidInputDirective,
-    MatOptionMultiLineDirective,
+    FocusInvalidInputDirective
   ],
   imports: [
     CommonModule,
@@ -28,7 +27,8 @@ import { UsernameValidationErrorsModule } from '../shared/modules/username-valid
     AngularMaterialModule,
     ReactiveFormsModule,
     MatSelectSearchModule,
-    UsernameValidationErrorsModule
+    UsernameValidationErrorsModule,
+    MobileInputModule
   ]
 })
 export class AuthenticationModule {}
