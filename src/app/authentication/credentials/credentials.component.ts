@@ -207,5 +207,4 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
-  print(){console.log(this.mobile?.value);}
 }

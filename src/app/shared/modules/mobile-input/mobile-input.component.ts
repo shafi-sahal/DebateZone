@@ -14,9 +14,9 @@ import { FocusChangeObserver, validateMobile } from '../../validator';
   providers: [AuthenticationService, FocusChangeObserver]
 })
 export class MobileInputComponent implements AfterViewInit {
-  @Input() mobile!: AbstractControl | null;
+  @Input() form!: FormGroup;
   @Output() countryChanged = new EventEmitter<{ name: string, dialCode: string, code: string}>()
-  @Output() validate = new EventEmitter<Subject<boolean>>();
+  @Output() emitterShouldAsyncValidateMobile = new EventEmitter<Subject<boolean>>();
   @ViewChild('countrySelect') countrySelect!: MatSelect;
   @ViewChild('dialCodeInput') private dialCodeInput!: ElementRef;
   @ViewChild('inputMobile') private inputMobile!: ElementRef;
@@ -35,10 +35,10 @@ export class MobileInputComponent implements AfterViewInit {
     this.countryChanged.emit(this._country);
   }
 
-  //get mobile(): AbstractControl | null { return this.form.get('mobile'); }
+  get mobile(): AbstractControl | null { return this.form.get('mobile'); }
 
   ngAfterViewInit(): void {
-    this.validate.emit(this.shouldAsyncValidateMobile);
+    this.emitterShouldAsyncValidateMobile.emit(this.shouldAsyncValidateMobile);
     setTimeout(() =>
       this.focusChangeObserver.observeFocusChangeOfElement(this.inputMobile, this.shouldAsyncValidateMobile, ['Login'])
     );

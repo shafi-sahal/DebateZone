@@ -89,7 +89,6 @@ export class MobileUniquenessValidator implements AsyncValidator {
   constructor(private authenticationService: AuthenticationService) {}
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
-    console.log('hella');
     const mobile = control.value;
     return this.shouldAsyncValidateMobile.pipe(
       first(),
