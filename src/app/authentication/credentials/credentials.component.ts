@@ -17,7 +17,7 @@ import { Spinner } from 'src/app/shared/components/spinner/spinner.service';
 @Component({
   selector: 'app-credentials',
   templateUrl: './credentials.component.html',
-  styleUrls: ['./credentials.component.scss', '../../shared/styles/messages.scss'],
+  styleUrls: ['./credentials.component.scss', '../../shared/styles/messages.scss', '../../shared/styles/input-with-spinner.scss'],
   providers: [
     CredentialsService,
     AuthenticationService,
