@@ -10,7 +10,7 @@ import { validateMobile } from '../../validator';
 @Component({
   selector: 'app-mobile-input',
   templateUrl: './mobile-input.component.html',
-  styleUrls: ['./mobile-input.component.scss'],
+  styleUrls: ['./mobile-input.component.scss', '../../styles/messages.scss'],
   providers: [AuthenticationService]
 })
 export class MobileInputComponent {

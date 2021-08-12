@@ -7,7 +7,7 @@ import { SessionService } from 'src/app/session.service';
 @Component({
   selector: 'app-input-fields',
   templateUrl: './input-fields.component.html',
-  styleUrls: ['./input-fields.component.scss'],
+  styleUrls: ['./input-fields.component.scss', '../../shared/styles/messages.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputFieldsComponent implements AfterViewInit {
