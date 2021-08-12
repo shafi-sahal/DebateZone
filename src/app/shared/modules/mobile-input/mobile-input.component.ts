@@ -10,7 +10,7 @@ import { FocusChangeObserver, validateMobile } from '../../validator';
 @Component({
   selector: 'app-mobile-input',
   templateUrl: './mobile-input.component.html',
-  styleUrls: ['./mobile-input.component.scss', '../../styles/messages.scss'],
+  styleUrls: ['./mobile-input.component.scss', '../../styles/messages.scss', '../../styles/input-with-spinner.scss'],
   providers: [AuthenticationService, FocusChangeObserver]
 })
 export class MobileInputComponent implements AfterViewInit {
