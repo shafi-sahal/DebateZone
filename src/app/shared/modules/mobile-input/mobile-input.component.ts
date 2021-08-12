@@ -1,20 +1,22 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { AbstractControl, Validators } from '@angular/forms';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { AbstractControl, FormGroup, Validators } from '@angular/forms';
 import { MatSelect } from '@angular/material/select';
 import { CountryCode } from 'libphonenumber-js';
 import { Subject } from 'rxjs';
 import { AuthenticationService } from 'src/app/authentication/authentication.service';
 import { countries } from '../../datasets';
-import { validateMobile } from '../../validator';
+import { FocusChangeObserver, validateMobile } from '../../validator';
 
 @Component({
   selector: 'app-mobile-input',
   templateUrl: './mobile-input.component.html',
   styleUrls: ['./mobile-input.component.scss', '../../styles/messages.scss'],
-  providers: [AuthenticationService]
+  providers: [AuthenticationService, FocusChangeObserver]
 })
-export class MobileInputComponent {
+export class MobileInputComponent implements AfterViewInit {
   @Input() mobile!: AbstractControl | null;
+  @Output() countryChanged = new EventEmitter<{ name: string, dialCode: string, code: string}>()
+  @Output() validate = new EventEmitter<Subject<boolean>>();
   @ViewChild('countrySelect') countrySelect!: MatSelect;
   @ViewChild('dialCodeInput') private dialCodeInput!: ElementRef;
   @ViewChild('inputMobile') private inputMobile!: ElementRef;
@@ -25,12 +27,21 @@ export class MobileInputComponent {
   classDialCode = 'dial-code-normal';
   shouldAsyncValidateMobile = new Subject<boolean>();
 
-  constructor(private authenticationService: AuthenticationService) {}
+  constructor(private authenticationService: AuthenticationService, private focusChangeObserver: FocusChangeObserver) {}
 
   set country(country: { name: string, dialCode: string, code: string }) {
     this._country = country;
     this.countrySelect.value = this._country.name;
-    this.changeMobileValidator();
+    this.countryChanged.emit(this._country);
+  }
+
+  //get mobile(): AbstractControl | null { return this.form.get('mobile'); }
+
+  ngAfterViewInit(): void {
+    this.validate.emit(this.shouldAsyncValidateMobile);
+    setTimeout(() =>
+      this.focusChangeObserver.observeFocusChangeOfElement(this.inputMobile, this.shouldAsyncValidateMobile, ['Login'])
+    );
   }
 
   trackFunction(index: number, country: Record<string, string>): string {
@@ -41,7 +52,7 @@ export class MobileInputComponent {
     const country = this.countries.find(country => country.name === countryName);
     if (country) {
       this._country = country;
-      this.changeMobileValidator();
+      this.countryChanged.emit(this._country);
     }
     this.classDialCode = 'dial-code-normal';
   }
@@ -70,6 +81,7 @@ export class MobileInputComponent {
   }
 
   onMobileInput(number: string): void {
+    this.mobile?.setValue(number);
     const countryCode = this.authenticationService.getCountryFromMobile(number);
     if (!countryCode) { return; }
     const country = this.countries.find(country => country.code === countryCode);
@@ -82,10 +94,5 @@ export class MobileInputComponent {
   clearErrors(control: AbstractControl | null, canAsyncValidate?: Subject<boolean>): void {
     canAsyncValidate?.next(false);
     control?.setErrors(null);
-  }
-
-  private changeMobileValidator(): void {
-    this.mobile?.setValidators([Validators.required, validateMobile(this._country.code as CountryCode)]);
-    this.mobile?.updateValueAndValidity();
   }
 }
