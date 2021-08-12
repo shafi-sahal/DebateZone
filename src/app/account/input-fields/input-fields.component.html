@@ -9,7 +9,7 @@
       <mat-label>Username</mat-label>
       <div class="container-input-with-spinner">
         <input matInput formControlName="username" (blur)="controlBlur.emit($event)">
-        <mat-spinner *ngIf="(username?.statusChanges | async) === 'PENDING'" [diameter]="19"></mat-spinner>
+        <mat-spinner *ngIf="(username?.statusChanges | async) === 'PENDING'" [diameter]="17"></mat-spinner>
       </div>
     </mat-form-field>
     <app-username-validation-errors [errors]="username?.errors"></app-username-validation-errors>
@@ -23,7 +23,7 @@
       <mat-label>Email</mat-label>
       <div class="container-input-with-spinner">
         <input #inputEmail matInput type="email" formControlName="email" (input)="email?.setErrors(null)" (blur)="controlBlur.emit($event)">
-        <mat-spinner *ngIf="(email?.statusChanges | async) === 'PENDING'" [diameter]="19"></mat-spinner>
+        <mat-spinner *ngIf="(email?.statusChanges | async) === 'PENDING'" [diameter]="17"></mat-spinner>
       </div>
     </mat-form-field>
     <div class="invalid">

@@ -64,7 +64,7 @@
         formControlName="mobile"
         placeholder="Ex: 7012154608"
         (input)="onMobileInput(inputMobile.value); clearErrors(mobile, shouldAsyncValidateMobile)">
-        <mat-spinner *ngIf="(mobile?.statusChanges | async) === 'PENDING'" [diameter]="19"></mat-spinner>
+        <mat-spinner *ngIf="!((mobile?.statusChanges | async) === 'PENDING')" [diameter]="17"></mat-spinner>
     </div>
   </mat-form-field>
 </div>
