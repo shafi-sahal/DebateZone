@@ -9,22 +9,25 @@ import { SessionService } from '../session.service';
 import { Spinner } from '../shared/components/spinner/spinner.service';
 import { regexes } from '../shared/datasets';
 import { User } from '../shared/models/user.model';
-import { EmailUniquenessValidator, FocusChangeObserver, UsernameAvailabilityCheck, validateUsername } from '../shared/validator';
+import { EmailUniquenessValidator, FocusChangeObserver, MobileUniquenessValidator, UsernameAvailabilityCheck, validateMobile, validateUsername } from '../shared/validator';
 import { AccountService } from './account.service';
 import { InputFieldsComponent } from './input-fields/input-fields.component';
 import { takeWhile } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
+import { CountryCode } from 'libphonenumber-js';
+import { MobileInputComponent } from '../shared/modules/mobile-input/mobile-input.component';
 
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [UsernameAvailabilityCheck, EmailUniquenessValidator, FocusChangeObserver, AuthenticationService, NavService]
+  providers: [UsernameAvailabilityCheck, EmailUniquenessValidator, FocusChangeObserver, AuthenticationService, NavService, MobileUniquenessValidator]
 })
 export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   inputFields = new BehaviorSubject<InputFieldsComponent | null>(null);
   shouldAsyncValidateEmail = new Subject<boolean>();
+  shouldAsyncValidateMobile = new Subject<boolean>();
   isDuplicateUsername = false;
   isDuplicateEmail = false;
   cachedEmail = '';
@@ -38,6 +41,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   private isMobile = true;
   private keepUserLoggedInChanged = false;
   private userDataChangeSnapshot: Record<string, string> = {};
+  private country = { name: 'India', dialCode: '+91', code: 'IN' };
 
   form = this.formBuilder.group({
     name: [
@@ -55,7 +59,14 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
         validators: [Validators.required, Validators.pattern(regexes.email)]
       }
     ],
-    mobile: ['']
+    mobile: [
+      '',
+      {
+        updateOn: 'blur',
+        validators: validateMobile(this.country.code as CountryCode),
+        asyncValidators: this.mobileUniquenessValidator.validate.bind(this)
+      }
+    ]
   })
 
   constructor(
@@ -64,6 +75,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     private formBuilder: FormBuilder,
     private usernameAvailabilityCheck: UsernameAvailabilityCheck,
     private emailUniquenessValidator: EmailUniquenessValidator,
+    private mobileUniquenessValidator: MobileUniquenessValidator,
     private focusChangeObserver: FocusChangeObserver,
     private authenticationService: AuthenticationService,
     private navService: NavService,
@@ -130,6 +142,21 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
       this.setUserDataChanged(inputElement);
     }
     this.setDisableButton();
+  }
+
+  onEditMobileClicked(): void {
+    const dialogRef = this.dialog.open(
+      MobileInputComponent,
+      { data: { form: this.form, shouldAsyncValidateMobile: this.shouldAsyncValidateMobile }, panelClass: 'dialog-rounded' }
+    );
+
+    this.subscriptions
+      .add(dialogRef.componentInstance.countryChanged.subscribe(country => {
+        this.country = country;
+        this.changeMobileValidator();
+        this.changeDetector.detectChanges();
+      }))
+      .add(dialogRef.afterClosed().subscribe(() => this.form.get('mobile')?.setValue(this.user.mobile)));
   }
 
   onFormSubmit(): void {
@@ -202,6 +229,11 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     const isUserDataChanged = Object.keys(this.userDataChangeSnapshot).length > 0;
     const isFormValueChanged = isUserDataChanged || this.keepUserLoggedInChanged;
     this.shouldDisableButton = !isFormValueChanged || !this.form.valid;
+  }
+
+  private changeMobileValidator(): void {
+    this.form.get('mobile')?.setValidators(validateMobile(this.country.code as CountryCode));
+    this.form.get('mobile')?.updateValueAndValidity();
   }
 
   ngOnDestroy(): void { this.subscriptions.unsubscribe(); }

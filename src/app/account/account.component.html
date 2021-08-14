@@ -10,6 +10,7 @@
     (inputFields)="inputFields.next($event)"
     (input)="onInput($event)"
     (controlBlur)="onControlBlur($event)"
+    (editMobileClicked)="onEditMobileClicked()"
     (formSubmit)="onFormSubmit()">
   </app-input-fields>
 
@@ -25,6 +26,7 @@
         [keepMeLoggedIn]="keepMeLoggedIn"
         (input)="onInput($event)"
         (controlBlur)="onControlBlur($event)"
+        (editMobileClicked)="onEditMobileClicked()"
         (formSubmit)="onFormSubmit()">
       </app-input-fields>
     </mat-card>

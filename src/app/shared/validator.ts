@@ -83,18 +83,21 @@ export class EmailUniquenessValidator implements AsyncValidator {
 
 @Injectable()
 export class MobileUniquenessValidator implements AsyncValidator {
-  private _country = { name: 'India', dialCode: '+91', code: 'IN' };
+  private country = { name: 'India', dialCode: '+91', code: 'IN' };
   private shouldAsyncValidateMobile = new Subject<boolean>();
+  private user: User = { name: '', username: ''};
 
   constructor(private authenticationService: AuthenticationService) {}
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
     const mobile = control.value;
+    if (this.user && this.user.mobile === mobile) return of(null);
+
     return this.shouldAsyncValidateMobile.pipe(
       first(),
       switchMap(canValidate => {
         if (!canValidate) return of(false);
-        return this.authenticationService.isDuplicateMobile(mobile, this._country.code);
+        return this.authenticationService.isDuplicateMobile(mobile, this.country.code);
       }),
       map(isDuplicateMobile => isDuplicateMobile ? { isDuplicateMobile: true } : null),
       catchError(() => of({ unknownError: true }))
@@ -111,14 +114,21 @@ export class FocusChangeObserver implements OnDestroy {
   observeFocusChangeOfElement(
     element: ElementRef,
     shouldAsyncValidateElement: Subject<boolean>,
-    exceptValidationTextContents: string[]
+    exceptValidationTextContents: string[],
+    validateForNullRelatedTargetBlur = true
   ): void {
     this.listenerBlur = this.renderer.listen(element.nativeElement, 'blur', blur => {
+      if(!validateForNullRelatedTargetBlur && !blur.relatedTarget) {
+        shouldAsyncValidateElement.next(false);
+        return;
+      }
+
       const button = (blur.relatedTarget as HTMLButtonElement);
       if (!button) {
         shouldAsyncValidateElement.next(true);
         return;
       }
+
       exceptValidationTextContents.forEach(textContent => {
         if (textContent === button.textContent) {
           shouldAsyncValidateElement.next(false);
@@ -129,7 +139,7 @@ export class FocusChangeObserver implements OnDestroy {
     });
   }
 
-  removeObserver(): void { this.listenerBlur(); }
+  removeObserver(): void { this.listenerBlur();}
 
   ngOnDestroy(): void { this.removeObserver(); }
 }

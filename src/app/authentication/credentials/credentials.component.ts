@@ -36,7 +36,7 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
   @ViewChild('inputMobile') private inputMobile!: ElementRef;
   @ViewChild('inputEmail') private inputEmail!: ElementRef;
   buttonText = 'Login';
-  _country = { name: 'India', dialCode: '+91', code: 'IN' };
+  country = { name: 'India', dialCode: '+91', code: 'IN' };
   labelUnknownDialCode = 'Unknown Dial Code';
   classDialCode = 'dial-code-normal';
   showLoginError = false;
@@ -91,7 +91,7 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
       '',
       {
         updateOn: 'blur',
-        validators: [Validators.required, validateMobile(this._country.code as CountryCode)],
+        validators: [Validators.required, validateMobile(this.country.code as CountryCode)],
         asyncValidators: this.mobileUniquenessValidator.validate.bind(this)
       }
     ],
@@ -173,7 +173,7 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
   }
 
   changeMobileValidator(): void {
-    this.mobile?.setValidators([Validators.required, validateMobile(this._country.code as CountryCode)]);
+    this.mobile?.setValidators([Validators.required, validateMobile(this.country.code as CountryCode)]);
     this.mobile?.updateValueAndValidity();
   }
 
@@ -189,7 +189,7 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
   private addUser(): void {
     if (!this.signUpForm.valid) return;
     this.spinner.show('I am working on it...');
-    this.authenticationService.countryCode = this._country.code;
+    this.authenticationService.countryCode = this.country.code;
     this.authenticationService.user = this.signUpForm.value;
     this.authenticationService.addUser().subscribe(isUserAdded => {
       if (isUserAdded) { this.router.navigate(['/']); }

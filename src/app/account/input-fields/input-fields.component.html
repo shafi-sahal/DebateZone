@@ -37,7 +37,7 @@
         <mat-label>Mobile</mat-label>
           <input matInput formControlName="mobile" readonly>
       </mat-form-field>
-      <button mat-icon-button (click)="onMobileEditClick()"><mat-icon>edit</mat-icon></button>
+      <button mat-icon-button (click)="editMobileClicked.emit()"><mat-icon>edit</mat-icon></button>
     </div>
 
     <mat-checkbox color="primary" [checked]="keepMeLoggedIn">

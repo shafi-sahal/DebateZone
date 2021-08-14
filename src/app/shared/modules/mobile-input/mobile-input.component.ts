@@ -16,6 +16,7 @@ import { FocusChangeObserver } from '../../validator';
 })
 export class MobileInputComponent implements OnInit, AfterViewInit {
   @Input() form!: FormGroup;
+  @Input() shouldAsyncValidateMobile!: Subject<boolean>;
   @Output() countryChanged = new EventEmitter<{ name: string, dialCode: string, code: string}>()
   @ViewChild('countrySelect') countrySelect!: MatSelect;
   @ViewChild('dialCodeInput') private dialCodeInput!: ElementRef;
@@ -25,15 +26,16 @@ export class MobileInputComponent implements OnInit, AfterViewInit {
   filteredCountries: Record<string, string>[] = countries;
   labelUnknownDialCode = 'Unknown Dial Code';
   classDialCode = 'dial-code-normal';
-  @Input()shouldAsyncValidateMobile = new Subject<boolean>();
   formGroup!: FormGroup;
+
+  private validateForNullRelatedTargetBlur = true;
 
   constructor(
     private authenticationService: AuthenticationService,
     private focusChangeObserver: FocusChangeObserver,
     private chnageDetector: ChangeDetectorRef,
-    @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: { form: FormGroup }
-  ) {  }
+    @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: { form: FormGroup, shouldAsyncValidateMobile: Subject<boolean> }
+  ) {}
 
   set country(country: { name: string, dialCode: string, code: string }) {
     this._country = country;
@@ -43,11 +45,20 @@ export class MobileInputComponent implements OnInit, AfterViewInit {
 
   get mobile(): AbstractControl | null { return this.formGroup.get('mobile'); }
 
-  ngOnInit(): void { this.formGroup = this.form ? this.form : this.dialogData.form; }
+  ngOnInit(): void {
+    this.formGroup = this.form ? this.form : this.dialogData.form;
+    this.shouldAsyncValidateMobile = this.shouldAsyncValidateMobile
+      ? this.shouldAsyncValidateMobile
+      : this.dialogData.shouldAsyncValidateMobile;
 
-  ngAfterViewInit(): void {console.log('reach');
+    this.validateForNullRelatedTargetBlur = !!this.form;
+  }
+
+  ngAfterViewInit(): void {
     setTimeout(() =>
-      this.focusChangeObserver.observeFocusChangeOfElement(this.inputMobile, this.shouldAsyncValidateMobile, ['Login'])
+      this.focusChangeObserver.observeFocusChangeOfElement(
+        this.inputMobile, this.shouldAsyncValidateMobile, ['Login'], this.validateForNullRelatedTargetBlur
+      )
     );
     this.matchCountryWithMobile();
   }

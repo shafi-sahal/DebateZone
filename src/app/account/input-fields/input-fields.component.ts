@@ -3,6 +3,7 @@ import {
 } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 import { SessionService } from 'src/app/session.service';
 import { MobileInputComponent } from 'src/app/shared/modules/mobile-input/mobile-input.component';
 
@@ -24,13 +25,10 @@ export class InputFieldsComponent implements AfterViewInit {
   @Output() keepMeLoogedIn = new EventEmitter<boolean>();
   @Output() controlBlur = new EventEmitter<FocusEvent>();
   @Output() formSubmit = new EventEmitter();
+  @Output() editMobileClicked = new EventEmitter<void>();
   @ViewChild('inputEmail')  inputEmail!: ElementRef;
 
-  constructor(
-    public changeDetector: ChangeDetectorRef,
-    public sessionService: SessionService,
-    private dialog: MatDialog
-  ) {}
+  constructor(public changeDetector: ChangeDetectorRef, public sessionService: SessionService) {}
 
   get name(): AbstractControl | null { return this.form.get('name'); }
   get username(): AbstractControl | null { return this.form.get('username'); }
@@ -43,9 +41,5 @@ export class InputFieldsComponent implements AfterViewInit {
     if(this.isDuplicateUsername) this.username?.setErrors({ isDuplicateUsername: true });
     if(this.isDuplicateEmail) this.email?.setErrors({ isDuplicateEmail: true });
     setTimeout(() => this.changeDetector.markForCheck());
-  }
-
-  onMobileEditClick(): void {
-    this.dialog.open(MobileInputComponent, { data: { form: this.form }, panelClass: 'dialog-rounded' });
   }
 }
