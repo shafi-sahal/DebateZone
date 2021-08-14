@@ -5,7 +5,7 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-.mat-card.mat-card, button.diagonal-rounded-large, .custom-dialog > mat-dialog-container {
+.mat-card.mat-card, button.diagonal-rounded-large, .dialog-rounded > mat-dialog-container {
   border-radius: #{border-radius.$large};
 }
 button.diagonal-rounded-small {

@@ -46,6 +46,6 @@ export class InputFieldsComponent implements AfterViewInit {
   }
 
   onMobileEditClick(): void {
-    this.dialog.open(MobileInputComponent, { data: { form: this.form } });
+    this.dialog.open(MobileInputComponent, { data: { form: this.form }, panelClass: 'dialog-rounded' });
   }
 }
