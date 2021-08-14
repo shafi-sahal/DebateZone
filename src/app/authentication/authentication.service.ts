@@ -57,7 +57,7 @@ export class AuthenticationService {
     );
   }
 
-  getCountryFromMobile(mobile: string): string | undefined {
+  getCountryCodeFromMobile(mobile: string): string | undefined {
     try { return parsePhoneNumber(mobile).country; } catch { return undefined; }
   }
 
