@@ -49,5 +49,8 @@ export class NavElementsComponent implements OnInit, OnDestroy {
     this.router.navigate(['/authentication']);
   }
 
-  ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+    this.homeService.user.next(null);
+  }
 }
