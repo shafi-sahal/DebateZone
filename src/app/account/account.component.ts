@@ -13,6 +13,8 @@ import { EmailUniquenessValidator, FocusChangeObserver, UsernameAvailabilityChec
 import { AccountService } from './account.service';
 import { InputFieldsComponent } from './input-fields/input-fields.component';
 import { takeWhile } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { MobileInputComponent } from '../shared/modules/mobile-input/mobile-input.component';
 
 @Component({
   selector: 'app-account',
@@ -70,6 +72,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     private changeDetector: ChangeDetectorRef,
     private homeService: HomeService,
     private sessionService: SessionService,
+    private dialog: MatDialog
   ) { this.spinner.hide(); }
 
   ngOnInit(): void {

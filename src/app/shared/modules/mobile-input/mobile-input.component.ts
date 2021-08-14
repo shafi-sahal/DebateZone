@@ -1,19 +1,20 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { AbstractControl, FormGroup, Validators } from '@angular/forms';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Inject, Input, OnInit, Optional, Output, ViewChild } from '@angular/core';
+import { AbstractControl, FormGroup } from '@angular/forms';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelect } from '@angular/material/select';
-import { CountryCode } from 'libphonenumber-js';
 import { Subject } from 'rxjs';
 import { AuthenticationService } from 'src/app/authentication/authentication.service';
 import { countries } from '../../datasets';
-import { FocusChangeObserver, validateMobile } from '../../validator';
+import { FocusChangeObserver } from '../../validator';
 
 @Component({
   selector: 'app-mobile-input',
   templateUrl: './mobile-input.component.html',
   styleUrls: ['./mobile-input.component.scss', '../../styles/messages.scss', '../../styles/input-with-spinner.scss'],
-  providers: [AuthenticationService, FocusChangeObserver]
+  providers: [AuthenticationService, FocusChangeObserver],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MobileInputComponent implements AfterViewInit {
+export class MobileInputComponent implements OnInit, AfterViewInit {
   @Input() form!: FormGroup;
   @Output() countryChanged = new EventEmitter<{ name: string, dialCode: string, code: string}>()
   @Output() emitterShouldAsyncValidateMobile = new EventEmitter<Subject<boolean>>();
@@ -26,8 +27,13 @@ export class MobileInputComponent implements AfterViewInit {
   labelUnknownDialCode = 'Unknown Dial Code';
   classDialCode = 'dial-code-normal';
   shouldAsyncValidateMobile = new Subject<boolean>();
+  formGroup!: FormGroup;
 
-  constructor(private authenticationService: AuthenticationService, private focusChangeObserver: FocusChangeObserver) {}
+  constructor(
+    private authenticationService: AuthenticationService,
+    private focusChangeObserver: FocusChangeObserver,
+    @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: { form: FormGroup }
+  ) {  }
 
   set country(country: { name: string, dialCode: string, code: string }) {
     this._country = country;
@@ -35,7 +41,9 @@ export class MobileInputComponent implements AfterViewInit {
     this.countryChanged.emit(this._country);
   }
 
-  get mobile(): AbstractControl | null { return this.form.get('mobile'); }
+  get mobile(): AbstractControl | null { return this.formGroup.get('mobile'); }
+
+  ngOnInit(): void { this.formGroup = this.form ? this.form : this.dialogData.form; }
 
   ngAfterViewInit(): void {
     this.emitterShouldAsyncValidateMobile.emit(this.shouldAsyncValidateMobile);
