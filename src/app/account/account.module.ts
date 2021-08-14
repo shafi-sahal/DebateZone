@@ -11,6 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { UsernameValidationErrorsModule } from '../shared/modules/username-validation-errors/username-validation-errors.module';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatProgressSpinnerModule,
     MatCheckboxModule,
     MatButtonModule,
+    MatIconModule,
     UsernameValidationErrorsModule
   ],
   providers: [AccountService]

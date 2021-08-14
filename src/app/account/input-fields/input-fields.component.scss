@@ -13,3 +13,15 @@ button.diagonal-rounded-large {
   margin-left: auto;
   margin-right: auto;
 }
+.container-mobile {
+  display: flex;
+  justify-content: space-between;
+
+  mat-form-field.mobile {
+    width: 100%
+  }
+  mat-icon {
+    cursor: pointer;
+    font-size: 1.2em;
+  }
+}

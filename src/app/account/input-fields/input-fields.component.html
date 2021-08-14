@@ -32,10 +32,13 @@
       </p>
     </div>
 
-    <mat-form-field>
-      <mat-label>Mobile</mat-label>
-      <input matInput formControlName="mobile" readonly>
-    </mat-form-field>
+    <div class="container-mobile">
+      <mat-form-field class="mobile">
+        <mat-label>Mobile</mat-label>
+          <input matInput formControlName="mobile" readonly>
+      </mat-form-field>
+      <button mat-icon-button><mat-icon>edit</mat-icon></button>
+    </div>
 
     <mat-checkbox color="primary" [checked]="keepMeLoggedIn">
       Keep me logged in
