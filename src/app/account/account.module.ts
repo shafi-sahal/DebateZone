@@ -12,7 +12,6 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import { UsernameValidationErrorsModule } from '../shared/modules/username-validation-errors/username-validation-errors.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MobileInputModule } from '../shared/modules/mobile-input/mobile-input.module';
 import { MatDialogModule } from '@angular/material/dialog';
 
 
@@ -32,8 +31,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatButtonModule,
     MatIconModule,
     UsernameValidationErrorsModule,
-    MatDialogModule,
-    MobileInputModule
+    MatDialogModule
   ],
   providers: [AccountService]
 })

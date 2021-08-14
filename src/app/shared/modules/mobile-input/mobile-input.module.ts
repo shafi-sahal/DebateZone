@@ -7,6 +7,8 @@ import { MatSelectSearchModule } from 'mat-select-search';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatOptionMultiLineDirective } from './mat-option-multi-line.directive';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 
@@ -21,7 +23,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatSelectModule,
     MatSelectSearchModule,
     MatProgressSpinnerModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatDialogModule
   ],
   exports: [MobileInputComponent]
 })
