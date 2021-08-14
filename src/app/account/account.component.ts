@@ -13,7 +13,7 @@ import { EmailUniquenessValidator, FocusChangeObserver, UsernameAvailabilityChec
 import { AccountService } from './account.service';
 import { InputFieldsComponent } from './input-fields/input-fields.component';
 import { HttpClient } from '@angular/common/http';
-import { filter, map, takeWhile } from 'rxjs/operators';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-account',
