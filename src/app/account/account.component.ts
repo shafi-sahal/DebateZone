@@ -12,7 +12,6 @@ import { User } from '../shared/models/user.model';
 import { EmailUniquenessValidator, FocusChangeObserver, UsernameAvailabilityCheck, validateUsername } from '../shared/validator';
 import { AccountService } from './account.service';
 import { InputFieldsComponent } from './input-fields/input-fields.component';
-import { HttpClient } from '@angular/common/http';
 import { takeWhile } from 'rxjs/operators';
 
 @Component({
@@ -71,7 +70,6 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     private changeDetector: ChangeDetectorRef,
     private homeService: HomeService,
     private sessionService: SessionService,
-    private http: HttpClient
   ) { this.spinner.hide(); }
 
   ngOnInit(): void {
