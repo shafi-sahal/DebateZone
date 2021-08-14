@@ -13,6 +13,7 @@ import { EmailUniquenessValidator, FocusChangeObserver, UsernameAvailabilityChec
 import { AccountService } from './account.service';
 import { InputFieldsComponent } from './input-fields/input-fields.component';
 import { HttpClient } from '@angular/common/http';
+import { filter, map, takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-account',
@@ -78,8 +79,10 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     this.keepMeLoggedIn = this.accountService.keepUserLoggedIn;
     this.subscriptions
       .add(this.deviceTypeChecker.isMobile.subscribe(isMobile => this.isMobile = isMobile))
-      .add(this.homeService.user.subscribe(user => {
-        if (!user) return;
+      .add(this.homeService.user.pipe(
+        takeWhile(() => this.isLoading === true),
+      ).subscribe(user => {
+        if(!user) return;
         this.prepareForm(user);
       })
     );
@@ -147,6 +150,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.accountService.updateUser(this.userDataChangeSnapshot).subscribe(() => {
       this.user = this.sessionService.user = {...this.user, ...this.userDataChangeSnapshot};
+      this.homeService.user.next(this.user);
       this.userDataChangeSnapshot = {};
       this.usernameStatus = 'PENDING';
       this.shouldDisableButton = true;
@@ -200,7 +204,5 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     this.shouldDisableButton = !isFormValueChanged || !this.form.valid;
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
-  }
+  ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
 }
