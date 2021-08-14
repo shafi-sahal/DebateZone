@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Inject, Input, OnInit, Optional, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Inject, Input, OnInit, Optional, Output, Renderer2, ViewChild } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelect } from '@angular/material/select';
@@ -34,6 +34,7 @@ export class MobileInputComponent implements OnInit, AfterViewInit {
     private authenticationService: AuthenticationService,
     private focusChangeObserver: FocusChangeObserver,
     private chnageDetector: ChangeDetectorRef,
+    private renderer: Renderer2,
     @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: { form: FormGroup, shouldAsyncValidateMobile: Subject<boolean> }
   ) {}
 
@@ -78,7 +79,7 @@ export class MobileInputComponent implements OnInit, AfterViewInit {
 
   onCountryOpenedChanged(): void {
     if (this.countrySelect.value === this.labelUnknownDialCode) {
-      this.dialCodeInput.nativeElement.value = this._country.dialCode.replace('+', '');
+      this.renderer.setProperty(this.dialCodeInput.nativeElement, 'value', this._country.dialCode.replace('+', ''));
       this.countrySelect.value = this._country.name;
     }
   }
@@ -105,7 +106,7 @@ export class MobileInputComponent implements OnInit, AfterViewInit {
     const country = this.countries.find(country => country.code === countryCode);
     if (country) {
       this.country = country;
-      this.dialCodeInput.nativeElement.value = this._country.dialCode.replace('+', '');
+      this.renderer.setProperty(this.dialCodeInput.nativeElement, 'value', this._country.dialCode.replace('+', ''));
     }
   }
 
