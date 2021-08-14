@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Inject, Input, OnInit, Optional, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Inject, Input, OnInit, Optional, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelect } from '@angular/material/select';
@@ -32,6 +32,7 @@ export class MobileInputComponent implements OnInit, AfterViewInit {
   constructor(
     private authenticationService: AuthenticationService,
     private focusChangeObserver: FocusChangeObserver,
+    private chnageDetector: ChangeDetectorRef,
     @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: { form: FormGroup }
   ) {  }
 
@@ -50,6 +51,7 @@ export class MobileInputComponent implements OnInit, AfterViewInit {
     setTimeout(() =>
       this.focusChangeObserver.observeFocusChangeOfElement(this.inputMobile, this.shouldAsyncValidateMobile, ['Login'])
     );
+    this.matchCountryWithMobile();
   }
 
   trackFunction(index: number, country: Record<string, string>): string {
@@ -89,8 +91,7 @@ export class MobileInputComponent implements OnInit, AfterViewInit {
   }
 
   onMobileInput(number: string): void {
-    this.mobile?.setValue(number);
-    const countryCode = this.authenticationService.getCountryFromMobile(number);
+    const countryCode = this.authenticationService.getCountryCodeFromMobile(number);
     if (!countryCode) { return; }
     const country = this.countries.find(country => country.code === countryCode);
     if (country) {
@@ -102,5 +103,16 @@ export class MobileInputComponent implements OnInit, AfterViewInit {
   clearErrors(control: AbstractControl | null, canAsyncValidate?: Subject<boolean>): void {
     canAsyncValidate?.next(false);
     control?.setErrors(null);
+  }
+
+  private matchCountryWithMobile(): void {
+    const mobileNumber = this.inputMobile.nativeElement.value;
+    if (!mobileNumber) return;
+    const countryCode = this.authenticationService.getCountryCodeFromMobile(mobileNumber);
+    if (!countryCode) return;
+    const country = this.countries.find(country => country.code === countryCode);
+    if (!country) return;
+    this.country = country;
+    this.chnageDetector.detectChanges();
   }
 }
