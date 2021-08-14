@@ -202,6 +202,5 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
-    this.homeService.user.next(null);
   }
 }
