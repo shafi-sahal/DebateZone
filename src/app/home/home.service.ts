@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { filter, first, map, switchMap, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { User } from '../shared/models/user.model';
 
@@ -14,6 +15,10 @@ export class HomeService {
   constructor(private http: HttpClient) {}
 
   load(buttonIndex: number): void {
-    if (buttonIndex === 1) this.http.get<User>(BACKEND_URL).subscribe(user => this.user.next(user));
+    this.user.pipe(
+      first(user => user === null && buttonIndex === 1),
+      switchMap(() => this.http.get<User>(BACKEND_URL))
+    )
+    .subscribe(user => this.user.next(user));
   }
 }
