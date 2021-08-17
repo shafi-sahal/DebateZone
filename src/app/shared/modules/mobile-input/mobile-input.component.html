@@ -75,9 +75,9 @@
       <span *ngIf="countrySelect.value === labelUnknownDialCode; else invalidMobileForCountry">Invalid mobile number</span>
       <ng-template #invalidMobileForCountry>Invalid mobile number for the given country</ng-template>
     </div>
-    <p *ngIf="(mobile?.statusChanges | async) === 'INVALID' && mobile?.hasError('isDuplicateMobile')">
+    <span *ngIf="(mobile?.statusChanges | async) === 'INVALID' && mobile?.hasError('isDuplicateMobile')">
       An account with the same mobile number already exists
-    </p>
+    </span>
   </div>
 </mat-dialog-content>
 
