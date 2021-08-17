@@ -176,7 +176,6 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
   changeMobileValidator(): void {
     this.mobile?.setValidators([Validators.required, validateMobile(this.country.code as CountryCode)]);
     this.mobile?.updateValueAndValidity();
-    //this.shouldAsyncValidateMobile.next(true);
   }
 
   clearErrors(control: AbstractControl | null, canAsyncValidate?: Subject<boolean>): void {
