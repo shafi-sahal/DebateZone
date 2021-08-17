@@ -7,6 +7,7 @@ import { catchError, debounceTime, first, map, switchMap } from 'rxjs/operators'
 import { AuthenticationService } from '../authentication/authentication.service';
 import { User } from './models/user.model';
 
+
 @Injectable()
 export class UsernameAvailabilityCheck implements AsyncValidator {
   private isDuplicateUsername = false;
@@ -86,12 +87,15 @@ export class MobileUniquenessValidator implements AsyncValidator {
   private country = { name: 'India', dialCode: '+91', code: 'IN' };
   private shouldAsyncValidateMobile = new Subject<boolean>();
   private user: User = { name: '', username: ''};
+  private isDuplicateMobile = false;
+  private cachedMobile = '';
 
   constructor(private authenticationService: AuthenticationService) {}
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
     const mobile = control.value;
     if (this.user && this.user.mobile === mobile) return of(null);
+    if (this.cachedMobile === mobile) return of({ isDuplicateMobile: this.isDuplicateMobile });
 
     return this.shouldAsyncValidateMobile.pipe(
       first(),
@@ -99,7 +103,11 @@ export class MobileUniquenessValidator implements AsyncValidator {
         if (!canValidate) return of(false);
         return this.authenticationService.isDuplicateMobile(mobile, this.country.code);
       }),
-      map(isDuplicateMobile => isDuplicateMobile ? { isDuplicateMobile: true } : null),
+      map(isDuplicateMobile => {
+        this.cachedMobile = mobile;
+        this.isDuplicateMobile = isDuplicateMobile;
+        return isDuplicateMobile ? { isDuplicateMobile: true } : null;
+      } ),
       catchError(() => of({ unknownError: true }))
     );
   }
@@ -169,11 +177,10 @@ export function validateMobile(countryCode: CountryCode): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const mobile: string = control.value;
     if (!mobile) return null;
-
     try {
       const mobileParsed = parsePhoneNumber(mobile, countryCode);
       const isValid =  mobileParsed.isValid() && mobileParsed.country === countryCode;
-      if(!isValid) return { invalidMobile: true };
+      if (!isValid) return { invalidMobile: true };
     } catch {
       return { invalidMobile: true };
     }

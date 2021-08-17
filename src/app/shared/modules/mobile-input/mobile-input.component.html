@@ -65,14 +65,14 @@
           matInput
           formControlName="mobile"
           placeholder="Ex: 7012154608"
-          (input)="onMobileInput(inputMobile.value); clearErrors(mobile, shouldAsyncValidateMobile)">
+          (input)="clearErrors()">
           <mat-spinner *ngIf="(mobile?.statusChanges | async) === 'PENDING'" [diameter]="17"></mat-spinner>
       </div>
     </mat-form-field>
   </div>
   <div class="invalid">
     <div *ngIf="mobile?.hasError('invalidMobile')">
-      <p *ngIf="countrySelect.value === labelUnknownDialCode; else invalidMobileForCountry">Invalid mobile number</p>
+      <span *ngIf="countrySelect.value === labelUnknownDialCode; else invalidMobileForCountry">Invalid mobile number</span>
       <ng-template #invalidMobileForCountry>Invalid mobile number for the given country</ng-template>
     </div>
     <p *ngIf="(mobile?.statusChanges | async) === 'INVALID' && mobile?.hasError('isDuplicateMobile')">

@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { AuthenticationService } from 'src/app/authentication/authentication.service';
 import { countries } from '../../datasets';
 import { FocusChangeObserver } from '../../validator';
+import { CountryCode, parsePhoneNumber} from 'libphonenumber-js';
 
 @Component({
   selector: 'app-mobile-input',
@@ -82,6 +83,17 @@ export class MobileInputComponent implements OnInit, AfterViewInit {
       this.renderer.setProperty(this.dialCodeInput.nativeElement, 'value', this._country.dialCode.replace('+', ''));
       this.countrySelect.value = this._country.name;
     }
+    /*try {
+      const mobileParsed = parsePhoneNumber(this.inputMobile.nativeElement.value, this._country.code as CountryCode);
+      const isValid =  mobileParsed.isValid() && mobileParsed.country === this._country.code;
+      if(!isValid){
+        this.mobile?.setErrors({ invalidMobile: true });
+        return;
+      }
+      this.mobile?.setErrors(null);
+    } catch {
+      this.mobile?.setErrors({ invalidMobile: true });
+    }*/
   }
 
   setDialCodeWeight(): void {
@@ -110,9 +122,9 @@ export class MobileInputComponent implements OnInit, AfterViewInit {
     }
   }
 
-  clearErrors(control: AbstractControl | null, canAsyncValidate?: Subject<boolean>): void {
-    canAsyncValidate?.next(false);
-    control?.setErrors(null);
+  clearErrors(): void {
+    this.shouldAsyncValidateMobile.next(false);
+    this.mobile?.setErrors(null);
   }
 
   private matchCountryWithMobile(): void {
