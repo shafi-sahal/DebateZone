@@ -32,3 +32,6 @@ input.dial-code {
 mat-form-field.mobile {
   width: calc(100% - (#{$form-field-dial-code-width} + #{$space}));
 }
+button.diagonal-rounded-small {
+  color: white;
+}
