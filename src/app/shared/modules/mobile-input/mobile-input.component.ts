@@ -6,7 +6,6 @@ import { Subject } from 'rxjs';
 import { AuthenticationService } from 'src/app/authentication/authentication.service';
 import { countries } from '../../datasets';
 import { FocusChangeObserver } from '../../validator';
-import { CountryCode, parsePhoneNumber} from 'libphonenumber-js';
 
 @Component({
   selector: 'app-mobile-input',
