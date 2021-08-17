@@ -1,85 +1,84 @@
-<mat-dialog-content>
-  <mat-form-field>
-    <mat-label>Country</mat-label>
-    <mat-select
-      #countrySelect
-      [value]="_country.name"
-      placeholder="India"
-      (selectionChange)="onCountrySelectionChange($event.value)"
-      (openedChange)="onCountryOpenedChanged()">
-      <mat-select-trigger
-        *ngIf="countrySelect.value === labelUnknownDialCode; else countryName"
-        class="invalid">
-        {{countrySelect.value}}
-      </mat-select-trigger>
-      <ng-template
-        #countryName>
-        <mat-select-trigger class="valid-select">{{_country.name}}</mat-select-trigger>
-      </ng-template>
-      <mat-option>
-        <lib-mat-select-search
-        [list]="countries"
-        [searchProperties]="['dialCode', 'name']"
-        [clearSearchInput]="true"
-        (filtered)="filteredCountries = $event">
-      </lib-mat-select-search>
-      </mat-option>
-      <mat-option
-        appMultiLine
-        *ngFor="let country of filteredCountries; trackBy: trackFunction"
-        [value]="country.name">
-        <div class="container-country">
-          <p>{{country.name}}</p><p>{{country.dialCode}}</p>
-        </div>
-      </mat-option>
-      <mat-option
-        *ngIf="countrySelect.value === labelUnknownDialCode"
-        [value]="labelUnknownDialCode">
-        {{labelUnknownDialCode}}
-      </mat-option>
-    </mat-select>
+<mat-form-field>
+  <mat-label>Country</mat-label>
+  <mat-select
+    #countrySelect
+    [value]="_country.name"
+    placeholder="India"
+    (selectionChange)="onCountrySelectionChange($event.value)"
+    (openedChange)="onCountryOpenedChanged()">
+    <mat-select-trigger
+      *ngIf="countrySelect.value === labelUnknownDialCode; else countryName"
+      class="invalid">
+      {{countrySelect.value}}
+    </mat-select-trigger>
+    <ng-template
+      #countryName>
+      <mat-select-trigger class="valid-select">{{_country.name}}</mat-select-trigger>
+    </ng-template>
+    <mat-option>
+      <lib-mat-select-search
+      [list]="countries"
+      [searchProperties]="['dialCode', 'name']"
+      [clearSearchInput]="true"
+      (filtered)="filteredCountries = $event">
+    </lib-mat-select-search>
+    </mat-option>
+    <mat-option
+      appMultiLine
+      *ngFor="let country of filteredCountries; trackBy: trackFunction"
+      [value]="country.name">
+      <div class="container-country">
+        <p>{{country.name}}</p><p>{{country.dialCode}}</p>
+      </div>
+    </mat-option>
+    <mat-option
+      *ngIf="countrySelect.value === labelUnknownDialCode"
+      [value]="labelUnknownDialCode">
+      {{labelUnknownDialCode}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<div class="container-mobile">
+  <mat-form-field class="dial-code">
+  <mat-label>Dial Code</mat-label>
+    <div [class]="classDialCode">+
+      <input
+        #dialCodeInput
+        class="dial-code"
+        required
+        matInput
+        [value]="_country.dialCode.replace('+', '')"
+        (focus)="classDialCode = 'dial-code-normal'"
+        (blur)="setDialCodeWeight()"
+        (input)="onDialCodeInput()">
+    </div>
   </mat-form-field>
 
-  <div class="container-mobile">
-    <mat-form-field class="dial-code">
-    <mat-label>Dial Code</mat-label>
-      <div [class]="classDialCode">+
-        <input
-          #dialCodeInput
-          class="dial-code"
-          required
-          matInput
-          [value]="_country.dialCode.replace('+', '')"
-          (focus)="classDialCode = 'dial-code-normal'"
-          (blur)="setDialCodeWeight()"
-          (input)="onDialCodeInput()">
-      </div>
-    </mat-form-field>
-
-    <mat-form-field  class="mobile" [formGroup]="formGroup">
-      <mat-label>Mobile Number</mat-label>
-      <div class="container-input-with-spinner">
-        <input
-          #inputMobile
-          cdkFocusInitial
-          matInput
-          formControlName="mobile"
-          placeholder="Ex: 7012154608"
-          (input)="clearErrors()">
-          <mat-spinner *ngIf="(mobile?.statusChanges | async) === 'PENDING'" [diameter]="17"></mat-spinner>
-      </div>
-    </mat-form-field>
-  </div>
-  <div class="invalid">
-    <div *ngIf="mobile?.hasError('invalidMobile')">
-      <span *ngIf="countrySelect.value === labelUnknownDialCode; else invalidMobileForCountry">Invalid mobile number</span>
-      <ng-template #invalidMobileForCountry>Invalid mobile number for the given country</ng-template>
+  <mat-form-field  class="mobile" [formGroup]="formGroup">
+    <mat-label>Mobile Number</mat-label>
+    <div class="container-input-with-spinner">
+      <input
+        #inputMobile
+        cdkFocusInitial
+        matInput
+        formControlName="mobile"
+        placeholder="Ex: 7012154608"
+        (input)="clearErrors()">
+        <mat-spinner *ngIf="(mobile?.statusChanges | async) === 'PENDING'" [diameter]="17"></mat-spinner>
     </div>
-    <span *ngIf="(mobile?.statusChanges | async) === 'INVALID' && mobile?.hasError('isDuplicateMobile')">
-      An account with the same mobile number already exists
-    </span>
+  </mat-form-field>
+</div>
+<div class="invalid">
+  <div *ngIf="mobile?.hasError('invalidMobile')">
+    <span *ngIf="countrySelect.value === labelUnknownDialCode; else invalidMobileForCountry">Invalid mobile number</span>
+    <ng-template #invalidMobileForCountry>Invalid mobile number for the given country</ng-template>
   </div>
-</mat-dialog-content>
+  <span *ngIf="(mobile?.statusChanges | async) === 'INVALID' && mobile?.hasError('isDuplicateMobile')">
+    An account with the same mobile number already exists
+  </span>
+</div>
+
 
 <mat-dialog-actions *ngIf="dialogData" align="center">
   <button class="diagonal-rounded-small" mat-raised-button>Update</button>
