@@ -82,17 +82,6 @@ export class MobileInputComponent implements OnInit, AfterViewInit {
       this.renderer.setProperty(this.dialCodeInput.nativeElement, 'value', this._country.dialCode.replace('+', ''));
       this.countrySelect.value = this._country.name;
     }
-    /*try {
-      const mobileParsed = parsePhoneNumber(this.inputMobile.nativeElement.value, this._country.code as CountryCode);
-      const isValid =  mobileParsed.isValid() && mobileParsed.country === this._country.code;
-      if(!isValid){
-        this.mobile?.setErrors({ invalidMobile: true });
-        return;
-      }
-      this.mobile?.setErrors(null);
-    } catch {
-      this.mobile?.setErrors({ invalidMobile: true });
-    }*/
   }
 
   setDialCodeWeight(): void {
