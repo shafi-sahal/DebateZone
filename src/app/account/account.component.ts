@@ -34,7 +34,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   usernameStatus: 'INVALID' | 'PENDING' | 'VALID' = 'INVALID';
   isLoading = true;
   user: User = { name: '', username: '' };
-  shouldDisableButton = true;
+  isButtonDisabled = true;
   keepMeLoggedIn = true;
 
   private subscriptions = new Subscription();
@@ -169,7 +169,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const isUserDataChanged = Object.keys(this.userDataChangeSnapshot).length > 0;
     if (!isUserDataChanged) {
-      this.shouldDisableButton = true;
+      this.isButtonDisabled = true;
       this.changeDetector.markForCheck();
       this.spinner.hide();
       return;
@@ -180,7 +180,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
       this.homeService.user.next(this.user);
       this.userDataChangeSnapshot = {};
       this.usernameStatus = 'PENDING';
-      this.shouldDisableButton = true;
+      this.isButtonDisabled = true;
       this.changeDetector.markForCheck();
       this.homeService.changes.next();
       this.spinner.hide();
@@ -228,7 +228,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   private setDisableButton(): void {
     const isUserDataChanged = Object.keys(this.userDataChangeSnapshot).length > 0;
     const isFormValueChanged = isUserDataChanged || this.keepUserLoggedInChanged;
-    this.shouldDisableButton = !isFormValueChanged || !this.form.valid;
+    this.isButtonDisabled = !isFormValueChanged || !this.form.valid;
   }
 
   private changeMobileValidator(): void {
