@@ -30,9 +30,9 @@ export class AuthenticationService {
     return this.http.get<boolean>(IS_DUPLICATE_URL + '?email=' + email);
   }
 
-  isDuplicateMobile(mobile: string, countryCode: string): Observable<boolean> {
-    const mobileParsed = this.parseMobile(mobile, countryCode).replace('+', '%2B');
-    return this.http.get<boolean>(IS_DUPLICATE_URL + '?mobile=' + mobileParsed);
+  isDuplicateMobile(mobile: string): Observable<boolean> {
+    const mobileForUrl = mobile.replace('+', '%2B');
+    return this.http.get<boolean>(IS_DUPLICATE_URL + '?mobile=' + mobileForUrl);
   }
 
   addUser(): Observable<boolean> {

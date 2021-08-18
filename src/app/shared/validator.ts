@@ -93,7 +93,15 @@ export class MobileUniquenessValidator implements AsyncValidator {
   constructor(private authenticationService: AuthenticationService) {}
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
-    const mobile = control.value;
+    let mobile = control.value;
+
+    try {
+      mobile = parsePhoneNumber(mobile, this.country.code as CountryCode).number;
+    } catch(error) {
+      console.error(error);
+    }
+    console.log((mobile));
+
     if (this.user && this.user.mobile === mobile) return of(null);
     if (this.cachedMobile === mobile) {
       return this.isDuplicateMobile ? of({ isDuplicateMobile: true }) : of(null);
@@ -103,7 +111,7 @@ export class MobileUniquenessValidator implements AsyncValidator {
       first(),
       switchMap(canValidate => {
         if (!canValidate) return of(false);
-        return this.authenticationService.isDuplicateMobile(mobile, this.country.code);
+        return this.authenticationService.isDuplicateMobile(mobile);
       }),
       map(isDuplicateMobile => {
         this.cachedMobile = mobile;
