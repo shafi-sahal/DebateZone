@@ -42,6 +42,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   private keepUserLoggedInChanged = false;
   private userDataChangeSnapshot: Record<string, string> = {};
   private country = { name: 'India', dialCode: '+91', code: 'IN' };
+  private userCountry = this.country;
 
   form = this.formBuilder.group({
     name: [
@@ -63,7 +64,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
       '',
       {
         updateOn: 'blur',
-        validators: validateMobile(this.country.code as CountryCode),
+        validators: [Validators.required, validateMobile(this.country.code as CountryCode)],
         asyncValidators: this.mobileUniquenessValidator.validate.bind(this)
       }
     ]
@@ -150,13 +151,24 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
       { data: { form: this.form, shouldAsyncValidateMobile: this.shouldAsyncValidateMobile }, panelClass: 'dialog-rounded' }
     );
 
+    setTimeout(() => {
+      this.userCountry = dialogRef.componentInstance.userMobileData.country;
+      this.form.get('mobile')?.setValidators([Validators.required, validateMobile(this.userCountry.code as CountryCode)]);
+      this.form.get('mobile')?.updateValueAndValidity();
+    });
+
     this.subscriptions
       .add(dialogRef.componentInstance.countryChanged.subscribe(country => {
         this.country = country;
         this.changeMobileValidator();
         this.changeDetector.detectChanges();
       }))
-      .add(dialogRef.afterClosed().subscribe(() => this.form.get('mobile')?.setValue(this.user.mobile)));
+      .add(dialogRef.afterClosed().subscribe(() => {
+        this.country = this.userCountry;
+        this.changeMobileValidator();
+        this.form.get('mobile')?.setValue(this.user.mobile);
+      })
+    );
   }
 
   onFormSubmit(): void {
@@ -232,8 +244,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private changeMobileValidator(): void {
-    this.form.get('mobile')?.setValidators(validateMobile(this.country.code as CountryCode));
-    this.form.get('mobile')?.updateValueAndValidity();
+    this.form.get('mobile')?.setValidators([Validators.required, validateMobile(this.country.code as CountryCode)]);
   }
 
   ngOnDestroy(): void { this.subscriptions.unsubscribe(); }

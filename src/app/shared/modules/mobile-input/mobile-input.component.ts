@@ -1,8 +1,9 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Inject, Input, OnInit, Optional, Output, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Inject, Input, OnDestroy, OnInit, Optional, Output, Renderer2, ViewChild } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelect } from '@angular/material/select';
-import { Subject } from 'rxjs';
+import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
+import { Subject, Subscription } from 'rxjs';
 import { AuthenticationService } from 'src/app/authentication/authentication.service';
 import { countries } from '../../datasets';
 import { FocusChangeObserver } from '../../validator';
@@ -14,7 +15,7 @@ import { FocusChangeObserver } from '../../validator';
   providers: [AuthenticationService, FocusChangeObserver],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MobileInputComponent implements OnInit, AfterViewInit {
+export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() form!: FormGroup;
   @Input() shouldAsyncValidateMobile!: Subject<boolean>;
   @Output() countryChanged = new EventEmitter<{ name: string, dialCode: string, code: string}>()
@@ -27,8 +28,11 @@ export class MobileInputComponent implements OnInit, AfterViewInit {
   labelUnknownDialCode = 'Unknown Dial Code';
   classDialCode = 'dial-code-normal';
   formGroup!: FormGroup;
+  isButtonDisabled = true;
+  userMobileData = { country: { name: '', dialCode: '', code: '' }, mobileNumber: '' };
 
   private validateForNullRelatedTargetBlur = true;
+  private subscriptions = new Subscription();
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -42,6 +46,8 @@ export class MobileInputComponent implements OnInit, AfterViewInit {
     this._country = country;
     this.countrySelect.value = this._country.name;
     this.countryChanged.emit(this._country);
+    console.log(this.mobile?.errors);
+    this.setButtonDisabled();
   }
 
   get mobile(): AbstractControl | null { return this.formGroup.get('mobile'); }
@@ -56,12 +62,14 @@ export class MobileInputComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.matchCountryWithMobile();
+
     setTimeout(() =>
       this.focusChangeObserver.observeFocusChangeOfElement(
         this.inputMobile, this.shouldAsyncValidateMobile, ['Login'], this.validateForNullRelatedTargetBlur
       )
     );
-    this.matchCountryWithMobile();
+    this.subscriptions.add(this.mobile?.statusChanges.subscribe(() => this.setButtonDisabled()));
   }
 
   trackFunction(index: number, country: Record<string, string>): string {
@@ -71,10 +79,11 @@ export class MobileInputComponent implements OnInit, AfterViewInit {
   onCountrySelectionChange(countryName: string): void {
     const country = this.countries.find(country => country.name === countryName);
     if (country) {
-      this._country = country;
-      this.countryChanged.emit(this._country);
+      this.country = country;
     }
     this.classDialCode = 'dial-code-normal';
+    this.clearErrors();
+    this.mobile?.updateValueAndValidity();
   }
 
   onCountryOpenedChanged(): void {
@@ -89,11 +98,13 @@ export class MobileInputComponent implements OnInit, AfterViewInit {
   }
 
   onDialCodeInput(): void {
+    this.clearErrors();
     const inputValue = this.dialCodeInput.nativeElement.value;
     const dialCode = '+' + inputValue;
     const country = this.countries.find(country => country.dialCode === dialCode.trim());
     if (country) {
       this.country = country;
+      this.mobile?.updateValueAndValidity();
     } else {
       this.countrySelect.value = this.labelUnknownDialCode;
       if (this.mobile?.value) { this.mobile?.setErrors({ invalidMobile: true }); }
@@ -101,13 +112,29 @@ export class MobileInputComponent implements OnInit, AfterViewInit {
   }
 
   onMobileInput(number: string): void {
+    this.clearErrors();
     const countryCode = this.authenticationService.getCountryCodeFromMobile(number);
-    if (!countryCode) { return; }
+    if (!countryCode) return;
     const country = this.countries.find(country => country.code === countryCode);
     if (country) {
       this.country = country;
       this.renderer.setProperty(this.dialCodeInput.nativeElement, 'value', this._country.dialCode.replace('+', ''));
     }
+  }
+
+  setButtonDisabled(): void {
+    let mobileNumber = this.inputMobile.nativeElement.value;
+
+    try {
+      mobileNumber = parsePhoneNumber(mobileNumber, this._country.code as CountryCode).number;
+    } catch(error) {
+      console.error(error);
+    }
+
+    const isCountryChanged = this.userMobileData.country.code !== this._country.code;
+    const isMobileNumberChanged = this.userMobileData.mobileNumber !== mobileNumber;
+
+    this.isButtonDisabled = (!isCountryChanged && !isMobileNumberChanged) || !!this.mobile?.errors || !mobileNumber;
   }
 
   clearErrors(): void {
@@ -122,7 +149,11 @@ export class MobileInputComponent implements OnInit, AfterViewInit {
     if (!countryCode) return;
     const country = this.countries.find(country => country.code === countryCode);
     if (!country) return;
+    this.userMobileData.country = country;
+    this.userMobileData.mobileNumber = mobileNumber;
     this.country = country;
     this.chnageDetector.detectChanges();
   }
+
+  ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
 }

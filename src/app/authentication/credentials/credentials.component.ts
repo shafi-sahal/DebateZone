@@ -141,7 +141,7 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
     private usernameAvailabilityCheck: UsernameAvailabilityCheck,
     private emailUniquenessValidator: EmailUniquenessValidator,
     private mobileUniquenessValidator: MobileUniquenessValidator,
-    private changeDetector: ChangeDetectorRef,
+    public changeDetector: ChangeDetectorRef,
     private router: Router,
     private focusChangeObserver: FocusChangeObserver,
     private spinner: Spinner
@@ -175,7 +175,6 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
 
   changeMobileValidator(): void {
     this.mobile?.setValidators([Validators.required, validateMobile(this.country.code as CountryCode)]);
-    this.mobile?.updateValueAndValidity();
   }
 
   clearErrors(control: AbstractControl | null, canAsyncValidate?: Subject<boolean>): void {

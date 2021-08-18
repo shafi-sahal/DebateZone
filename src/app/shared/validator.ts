@@ -95,7 +95,9 @@ export class MobileUniquenessValidator implements AsyncValidator {
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
     const mobile = control.value;
     if (this.user && this.user.mobile === mobile) return of(null);
-    if (this.cachedMobile === mobile) return of({ isDuplicateMobile: this.isDuplicateMobile });
+    if (this.cachedMobile === mobile) {
+      return this.isDuplicateMobile ? of({ isDuplicateMobile: true }) : of(null);
+    }
 
     return this.shouldAsyncValidateMobile.pipe(
       first(),
