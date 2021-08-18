@@ -18,6 +18,7 @@ import { FocusChangeObserver } from '../../validator';
 export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() form!: FormGroup;
   @Input() shouldAsyncValidateMobile!: Subject<boolean>;
+  @Input() mode: 'SIGNUP' | 'EDIT' = 'EDIT';
   @Output() countryChanged = new EventEmitter<{ name: string, dialCode: string, code: string}>()
   @ViewChild('countrySelect') countrySelect!: MatSelect;
   @ViewChild('dialCodeInput') private dialCodeInput!: ElementRef;
@@ -46,8 +47,7 @@ export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
     this._country = country;
     this.countrySelect.value = this._country.name;
     this.countryChanged.emit(this._country);
-    console.log(this.mobile?.errors);
-    this.setButtonDisabled();
+    if (this.mode === 'EDIT') this.setButtonDisabled();
   }
 
   get mobile(): AbstractControl | null { return this.formGroup.get('mobile'); }
@@ -69,6 +69,7 @@ export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
         this.inputMobile, this.shouldAsyncValidateMobile, ['Login'], this.validateForNullRelatedTargetBlur
       )
     );
+    if (this.mode === 'SIGNUP') return;
     this.subscriptions.add(this.mobile?.statusChanges.subscribe(() => this.setButtonDisabled()));
   }
 
