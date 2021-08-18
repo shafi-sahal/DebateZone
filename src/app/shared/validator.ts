@@ -100,7 +100,6 @@ export class MobileUniquenessValidator implements AsyncValidator {
     } catch(error) {
       console.error(error);
     }
-    console.log((mobile));
 
     if (this.user && this.user.mobile === mobile) return of(null);
     if (this.cachedMobile === mobile) {
