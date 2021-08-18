@@ -117,7 +117,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
             );
         });
       })
-      .add(this.form.statusChanges.subscribe(() => this.setDisableButton()))
+      .add(this.form.statusChanges.subscribe(() => this.setButtonDisabled()))
     );
   }
 
@@ -142,7 +142,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.setUserDataChanged(inputElement);
     }
-    this.setDisableButton();
+    this.setButtonDisabled();
   }
 
   onEditMobileClicked(): void {
@@ -237,7 +237,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  private setDisableButton(): void {
+  private setButtonDisabled(): void {
     const isUserDataChanged = Object.keys(this.userDataChangeSnapshot).length > 0;
     const isFormValueChanged = isUserDataChanged || this.keepUserLoggedInChanged;
     this.isButtonDisabled = !isFormValueChanged || !this.form.valid;
