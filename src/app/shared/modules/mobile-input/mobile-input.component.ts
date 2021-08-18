@@ -28,7 +28,6 @@ export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
   filteredCountries: Record<string, string>[] = countries;
   labelUnknownDialCode = 'Unknown Dial Code';
   classDialCode = 'dial-code-normal';
-  formGroup!: FormGroup;
   isButtonDisabled = true;
   userMobileData = { country: { name: '', dialCode: '', code: '' }, mobileNumber: '' };
 
@@ -50,10 +49,10 @@ export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.mode === 'EDIT') this.setButtonDisabled();
   }
 
-  get mobile(): AbstractControl | null { return this.formGroup.get('mobile'); }
+  get mobile(): AbstractControl | null { return this.form.get('mobile'); }
 
   ngOnInit(): void {
-    this.formGroup = this.form ? this.form : this.dialogData.form;
+    if (this.dialogData) this.form = this.dialogData.form;
     this.shouldAsyncValidateMobile = this.shouldAsyncValidateMobile
       ? this.shouldAsyncValidateMobile
       : this.dialogData.shouldAsyncValidateMobile;
