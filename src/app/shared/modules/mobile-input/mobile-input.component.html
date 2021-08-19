@@ -80,5 +80,11 @@
 </div>
 
 <mat-dialog-actions *ngIf="dialogData" align="center">
-  <button class="diagonal-rounded-small" mat-raised-button color="primary" [disabled]="isButtonDisabled">Update</button>
+  <button
+    class="diagonal-rounded-small"
+    mat-raised-button color="primary"
+    [disabled]="isButtonDisabled"
+    (click)="updateClicked.next()">
+    Update
+  </button>
 </mat-dialog-actions>

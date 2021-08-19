@@ -20,6 +20,7 @@ export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() shouldAsyncValidateMobile!: Subject<boolean>;
   @Input() mode: 'SIGNUP' | 'EDIT' = 'EDIT';
   @Output() countryChanged = new EventEmitter<{ name: string, dialCode: string, code: string}>()
+  @Output() updateClicked = new Subject<void>();
   @ViewChild('countrySelect') countrySelect!: MatSelect;
   @ViewChild('dialCodeInput') private dialCodeInput!: ElementRef;
   @ViewChild('inputMobile') private inputMobile!: ElementRef;
@@ -105,6 +106,7 @@ export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
     if (country) {
       this.country = country;
       this.mobile?.updateValueAndValidity();
+      this.shouldAsyncValidateMobile.next(true);
     } else {
       this.countrySelect.value = this.labelUnknownDialCode;
       if (this.mobile?.value) { this.mobile?.setErrors({ invalidMobile: true }); }
