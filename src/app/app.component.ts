@@ -44,7 +44,7 @@ export class AppComponent {
 
   private checkKeepUserLoggedIn(): void {
     if (!this.sessionService.keepUserLoggedIn) {
-      const beforeUnload = this.renderer.listen(this.windowRef.nativeWindow, 'beforeUnload', () => {
+      const beforeUnload = this.renderer.listen(this.windowRef.nativeWindow, 'beforeunload', () => {
         this.sessionService.destroySession();
         beforeUnload();
       });
