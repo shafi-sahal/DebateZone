@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { DeviceTypeChecker } from '../device-type-checker.service';
@@ -13,8 +13,8 @@ import { EmailUniquenessValidator, FocusChangeObserver, MobileUniquenessValidato
 import { AccountService } from './account.service';
 import { InputFieldsComponent } from './input-fields/input-fields.component';
 import { takeWhile } from 'rxjs/operators';
-import { MatDialog } from '@angular/material/dialog';
-import { CountryCode } from 'libphonenumber-js';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 import { MobileInputComponent } from '../shared/modules/mobile-input/mobile-input.component';
 
 @Component({
@@ -36,8 +36,10 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   user: User = { name: '', username: '' };
   isButtonDisabled = true;
   keepMeLoggedIn = true;
+  isUserMobileUpdated = false;
 
   private subscriptions = new Subscription();
+  private dialogSubscriptions = new Subscription();
   private isMobile = true;
   private keepUserLoggedInChanged = false;
   private userDataChangeSnapshot: Record<string, string> = {};
@@ -86,6 +88,8 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     private sessionService: SessionService,
     private dialog: MatDialog
   ) { this.spinner.hide(); }
+
+  get mobile(): AbstractControl | null { return this.form.get('mobile'); }
 
   ngOnInit(): void {
     this.accountService.keepUserLoggedIn = this.sessionService.keepUserLoggedIn;
@@ -146,6 +150,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onEditMobileClicked(): void {
+    this.isUserMobileUpdated = false;
     const dialogRef = this.dialog.open(
       MobileInputComponent,
       { data: { form: this.form, shouldAsyncValidateMobile: this.shouldAsyncValidateMobile }, panelClass: 'dialog-rounded' }
@@ -153,22 +158,38 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
 
     setTimeout(() => {
       this.userCountry = dialogRef.componentInstance.userMobileData.country;
-      this.form.get('mobile')?.setValidators([Validators.required, validateMobile(this.userCountry.code as CountryCode)]);
-      this.form.get('mobile')?.updateValueAndValidity();
+      this.mobile?.setValidators([Validators.required, validateMobile(this.userCountry.code as CountryCode)]);
+      this.mobile?.updateValueAndValidity();
     });
 
-    this.subscriptions
+    this.dialogSubscriptions
       .add(dialogRef.componentInstance.countryChanged.subscribe(country => {
         this.country = country;
         this.changeMobileValidator();
         this.changeDetector.detectChanges();
       }))
+      .add(dialogRef.componentInstance.updateClicked.subscribe(() => this.updateUserMobile(dialogRef)))
       .add(dialogRef.afterClosed().subscribe(() => {
+        if (this.isUserMobileUpdated) return;
         this.country = this.userCountry;
         this.changeMobileValidator();
-        this.form.get('mobile')?.setValue(this.user.mobile);
+        this.mobile?.setValue(this.user.mobile);
       })
     );
+  }
+
+  updateUserMobile(dialogRef: MatDialogRef<MobileInputComponent, any>): void {
+    if(!this.mobile?.valid) return;
+    this.spinner.show('Updating...');
+    this.isUserMobileUpdated = true;
+    const mobileParsed = parsePhoneNumber(this.mobile?.value, this.country.code as CountryCode).number.toString();
+    this.accountService.updateUser({ mobile:  mobileParsed}).subscribe(() => {
+      this.user.mobile = mobileParsed;
+      this.mobile?.setValue(mobileParsed);
+      this.changeMobileValidator();
+      dialogRef.close();
+      this.spinner.hide();
+    });
   }
 
   onFormSubmit(): void {
@@ -244,8 +265,11 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private changeMobileValidator(): void {
-    this.form.get('mobile')?.setValidators([Validators.required, validateMobile(this.country.code as CountryCode)]);
+    this.mobile?.setValidators([Validators.required, validateMobile(this.country.code as CountryCode)]);
   }
 
-  ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+    this.dialogSubscriptions.unsubscribe();
+  }
 }
