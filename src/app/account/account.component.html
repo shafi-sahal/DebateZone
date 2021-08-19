@@ -11,7 +11,7 @@
     (input)="onInput($event)"
     (controlBlur)="onControlBlur($event)"
     (editMobileClicked)="onEditMobileClicked()"
-    (formSubmit)="onFormSubmit()">
+    (formSubmit)="updateUser()">
   </app-input-fields>
 
   <ng-template #inputFieldsWithCard>
@@ -27,7 +27,7 @@
         (input)="onInput($event)"
         (controlBlur)="onControlBlur($event)"
         (editMobileClicked)="onEditMobileClicked()"
-        (formSubmit)="onFormSubmit()">
+        (formSubmit)="updateUser()">
       </app-input-fields>
     </mat-card>
   </ng-template>

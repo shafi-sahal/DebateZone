@@ -9,7 +9,8 @@ export class SessionService {
   private _keepUserLoggedIn = this.readKeepUserLoggedIn();
 
   set user(user: User | null) {
-    localStorage.setItem('user', JSON.stringify(user));
+    const userDataToStore = { name: user?.name, username: user?.username };
+    localStorage.setItem('user', JSON.stringify(userDataToStore));
     this._user = user;
   }
   get user(): User | null { return this._user; }

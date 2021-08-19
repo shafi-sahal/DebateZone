@@ -192,7 +192,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  onFormSubmit(): void {
+  updateUser(): void {
     if (!this.form.valid) return;
     this.spinner.show('Updating...');
 
@@ -222,8 +222,9 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private prepareForm(user: User): void {
     this.isLoading = false;
-    this.user = user;
+    this.user = this.sessionService.user = user;
     this.changeDetector.markForCheck();
+    this.homeService.changes.next();
     this.form.setValue(user);
     setTimeout(() => {
       this.form.get('username')?.setAsyncValidators(this.usernameAvailabilityCheck.validate.bind(this));
