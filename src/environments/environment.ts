@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   database: 'debatezone',
-  apiUrl: 'http://localhost:3000/api'
+  apiUrl: 'http://192.168.10.9:3000/api'
 };
 
 /*
