@@ -9,7 +9,6 @@ const BACKEND_URL = environment.apiUrl + '/user';
 @Injectable()
 export class AccountService {
   user: User = { name: '', username: '', email: '', mobile: '' };
-  keepUserLoggedIn = true;
 
   constructor(private http: HttpClient) {}
 

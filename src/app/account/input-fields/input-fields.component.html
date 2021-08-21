@@ -40,13 +40,6 @@
       <button mat-icon-button (click)="editMobileClicked.emit()"><mat-icon>edit</mat-icon></button>
     </div>
 
-    <mat-checkbox color="primary" [checked]="keepMeLoggedIn">
-      Keep me logged in
-    </mat-checkbox>
-    <p class="keep-me-logged-in">
-      Unchecking this will force you to enter your login details whenever you open DebateZone from this device
-    </p>
-
     <button class="diagonal-rounded-large" mat-raised-button color="primary" [disabled]="isButtonDisabled">Update</button>
   </form>
 </body>

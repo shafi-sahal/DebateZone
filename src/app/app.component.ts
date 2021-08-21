@@ -24,9 +24,9 @@ export class AppComponent {
     private deviceTypeChecker: DeviceTypeChecker
   ) {
     this.spinner.show('I am coming...');
-    this.checkKeepUserLoggedIn();
     this.checkDeviceType();
     this.username = sessionService.user?.username;
+     sessionStorage.setItem('logoutOnClose', 'true');
   }
 
   @HostListener('window:storage', ['$event'])
@@ -40,14 +40,5 @@ export class AppComponent {
   private checkDeviceType(): void {
     const isMobile = this.windowRef.nativeWindow.innerWidth < screenSizes.desktopWidth;
     this.deviceTypeChecker.isMobile.next(isMobile);
-  }
-
-  private checkKeepUserLoggedIn(): void {
-    if (!this.sessionService.keepUserLoggedIn) {
-      const beforeUnload = this.renderer.listen(this.windowRef.nativeWindow, 'beforeunload', () => {
-        this.sessionService.destroySession();
-        beforeUnload();
-      });
-    }
   }
 }

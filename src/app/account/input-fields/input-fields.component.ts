@@ -20,7 +20,6 @@ export class InputFieldsComponent implements AfterViewInit {
   @Input() usernameStatus: 'INVALID' | 'PENDING' | 'VALID' = 'INVALID';
   @Input() isLoading = false;
   @Input() isButtonDisabled = true;
-  @Input() keepMeLoggedIn = true;
   @Output() inputFields = new EventEmitter<this>();
   @Output() keepMeLoogedIn = new EventEmitter<boolean>();
   @Output() controlBlur = new EventEmitter<FocusEvent>();

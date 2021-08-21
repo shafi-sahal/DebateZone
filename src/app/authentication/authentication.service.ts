@@ -39,7 +39,6 @@ export class AuthenticationService {
     return this.http.post<{ token: string, user: User }>(USER_URL + '/signup', this._user).pipe(
       map(response => {
         this.sessionService.createSession(response.token, response.user);
-        this.sessionService.keepUserLoggedIn = true;
         return true;
       }),
       catchError(() => of(false))

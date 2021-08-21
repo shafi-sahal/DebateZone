@@ -35,13 +35,11 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = true;
   user: User = { name: '', username: '' };
   isButtonDisabled = true;
-  keepMeLoggedIn = true;
   isUserMobileUpdated = false;
 
   private subscriptions = new Subscription();
   private dialogSubscriptions = new Subscription();
   private isMobile = true;
-  private keepUserLoggedInChanged = false;
   private userDataChangeSnapshot: Record<string, string> = {};
   private country = { name: 'India', dialCode: '+91', code: 'IN' };
   private userCountry = this.country;
@@ -92,8 +90,6 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   get mobile(): AbstractControl | null { return this.form.get('mobile'); }
 
   ngOnInit(): void {
-    this.accountService.keepUserLoggedIn = this.sessionService.keepUserLoggedIn;
-    this.keepMeLoggedIn = this.accountService.keepUserLoggedIn;
     this.subscriptions
       .add(this.deviceTypeChecker.isMobile.subscribe(isMobile => this.isMobile = isMobile))
       .add(this.homeService.user.pipe(
@@ -139,13 +135,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   onInput(event: Event): void {
     const inputEvent = event as InputEvent;
     const inputElement = inputEvent.target as HTMLInputElement;
-    const inputFromKeepMeLoggedIn = inputElement.getAttribute('aria-checked');
-
-    if (inputFromKeepMeLoggedIn) {
-      this.setKeepUserLoggedInChanged(inputFromKeepMeLoggedIn);
-    } else {
-      this.setUserDataChanged(inputElement);
-    }
+    this.setUserDataChanged(inputElement);
     this.setButtonDisabled();
   }
 
@@ -194,19 +184,9 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
 
   updateUser(): void {
     if (!this.form.valid) return;
-    this.spinner.show('Updating...');
-
-    if (this.keepUserLoggedInChanged) {
-      this.sessionService.keepUserLoggedIn = this.accountService.keepUserLoggedIn = this.keepMeLoggedIn;
-    }
-
     const isUserDataChanged = Object.keys(this.userDataChangeSnapshot).length > 0;
-    if (!isUserDataChanged) {
-      this.isButtonDisabled = true;
-      this.changeDetector.markForCheck();
-      this.spinner.hide();
-      return;
-    }
+    if (!isUserDataChanged) return;
+    this.spinner.show('Updating...');
 
     this.accountService.updateUser(this.userDataChangeSnapshot).subscribe(() => {
       this.user = this.sessionService.user = {...this.user, ...this.userDataChangeSnapshot};
@@ -241,12 +221,6 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     return textContents;
   }
 
-  private setKeepUserLoggedInChanged(inputFromKeepMeLoggedIn: string): void {
-    const keepUserLoggedIn = inputFromKeepMeLoggedIn === 'true';
-    this.keepMeLoggedIn = keepUserLoggedIn;
-    this.keepUserLoggedInChanged = keepUserLoggedIn !== this.accountService.keepUserLoggedIn;
-  }
-
   private setUserDataChanged(inputElement: HTMLInputElement): void {
     // Gets the formControlName of the input element
     // To work correctly place formControlName as the second attribute of the input element
@@ -261,8 +235,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private setButtonDisabled(): void {
     const isUserDataChanged = Object.keys(this.userDataChangeSnapshot).length > 0;
-    const isFormValueChanged = isUserDataChanged || this.keepUserLoggedInChanged;
-    this.isButtonDisabled = !isFormValueChanged || !this.form.valid;
+    this.isButtonDisabled = !isUserDataChanged || !this.form.valid;
   }
 
   private changeMobileValidator(): void {

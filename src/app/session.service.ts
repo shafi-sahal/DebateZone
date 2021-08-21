@@ -6,7 +6,6 @@ export class SessionService {
   private _token: string | null = this.readToken();
   private _isAuthenticated = !!this._token;
   private _user: User | null = this.readUser();
-  private _keepUserLoggedIn = this.readKeepUserLoggedIn();
 
   set user(user: User | null) {
     const userDataToStore = { name: user?.name, username: user?.username };
@@ -15,12 +14,6 @@ export class SessionService {
   }
   get user(): User | null { return this._user; }
 
-  set keepUserLoggedIn(keepUserLoggedIn: boolean) {
-    localStorage.setItem('keepUserLoggedIn', keepUserLoggedIn.toString());
-    this._keepUserLoggedIn = keepUserLoggedIn;
-  }
-
-  get keepUserLoggedIn(): boolean { return this._keepUserLoggedIn; }
   get token(): string | null { return this._token; }
   get isAuthenticated(): boolean { return this._isAuthenticated; }
 
@@ -44,11 +37,8 @@ export class SessionService {
     this._token = this.readToken();
     this._isAuthenticated = !!this._token;
     this._user = this.readUser();
-    this.keepUserLoggedIn = this.readKeepUserLoggedIn();
   }
 
-
-  private readKeepUserLoggedIn(): boolean { return localStorage.getItem('keepUserLoggedIn') === 'true'; }
   private readToken(): string | null { return localStorage.getItem('token'); }
 
   private readUser(): User | null {
