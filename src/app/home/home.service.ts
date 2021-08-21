@@ -33,7 +33,6 @@ export class HomeService implements OnDestroy{
   private fetchUser(): void {
     this.http.get<User>(BACKEND_URL).subscribe(user => {
       this.user.next(user);
-      this.hasUser = true;
       this.isLoading = false;
       this.changes.next();
     });
