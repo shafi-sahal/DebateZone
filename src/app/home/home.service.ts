@@ -15,7 +15,7 @@ export class HomeService implements OnDestroy{
   user = new BehaviorSubject<User | null>(null);
   changes = new Subject<undefined>();
   isLoading = false;
-  hasUser = false;
+  private hasUser = false;
   private subscriptions = new Subscription();
 
   constructor(private http: HttpClient) {
