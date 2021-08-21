@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { DeviceTypeChecker } from 'src/app/device-type-checker.service';
 import { SessionService } from 'src/app/session.service';
@@ -33,8 +33,9 @@ export class NavElementsComponent implements OnInit, OnDestroy {
     this.homeService.load(this.navService.clickedNavbuttonIndex);
     this.subscriptions
       .add(this.router.events.subscribe(event => {
-        if (!(event instanceof NavigationEnd)) return;
-        this.navService.clickedNavbuttonIndex = this.navService.navButtons.findIndex(button => button.route === this.router.url);
+        console.log(event);
+        if (!(event instanceof NavigationStart)) return;
+        this.navService.clickedNavbuttonIndex = this.navService.navButtons.findIndex(button => button.route === event.url);
         this.changeDetector.markForCheck();
         this.homeService.changes.next();})
       .add(this.homeService.changes.subscribe(() => this.changeDetector.markForCheck()))
