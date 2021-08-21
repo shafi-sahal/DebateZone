@@ -10,7 +10,7 @@ const BACKEND_URL = environment.apiUrl + '/user';
 @Injectable()
 export class HomeService {
   user = new BehaviorSubject<User | null>(null);
-  changes = new Subject<undefined>();
+  changes = new Subject<void>();
   isLoading = false;
 
   constructor(private http: HttpClient) {}
