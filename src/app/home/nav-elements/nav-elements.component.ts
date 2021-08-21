@@ -33,11 +33,11 @@ export class NavElementsComponent implements OnInit, OnDestroy {
     this.homeService.load(this.navService.clickedNavbuttonIndex);
     this.subscriptions
       .add(this.router.events.subscribe(event => {
-        console.log(event);
         if (!(event instanceof NavigationStart)) return;
         this.navService.clickedNavbuttonIndex = this.navService.navButtons.findIndex(button => button.route === event.url);
         this.changeDetector.markForCheck();
-        this.homeService.changes.next();})
+        this.homeService.changes.next();
+      })
       .add(this.homeService.changes.subscribe(() => this.changeDetector.markForCheck()))
     );
   }

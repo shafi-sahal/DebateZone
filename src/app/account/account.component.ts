@@ -168,20 +168,6 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  updateUserMobile(dialogRef: MatDialogRef<MobileInputComponent, any>): void {
-    if(!this.mobile?.valid) return;
-    this.spinner.show('Updating...');
-    this.isUserMobileUpdated = true;
-    const mobileParsed = parsePhoneNumber(this.mobile?.value, this.country.code as CountryCode).number.toString();
-    this.accountService.updateUser({ mobile:  mobileParsed}).subscribe(() => {
-      this.user.mobile = mobileParsed;
-      this.mobile?.setValue(mobileParsed);
-      this.changeMobileValidator();
-      dialogRef.close();
-      this.spinner.hide();
-    });
-  }
-
   updateUser(): void {
     if (!this.form.valid) return;
     const isUserDataChanged = Object.keys(this.userDataChangeSnapshot).length > 0;
@@ -196,6 +182,20 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
       this.isButtonDisabled = true;
       this.changeDetector.markForCheck();
       this.homeService.changes.next();
+      this.spinner.hide();
+    });
+  }
+
+  private updateUserMobile(dialogRef: MatDialogRef<MobileInputComponent, any>): void {
+    if(!this.mobile?.valid) return;
+    this.spinner.show('Updating...');
+    this.isUserMobileUpdated = true;
+    const mobileParsed = parsePhoneNumber(this.mobile?.value, this.country.code as CountryCode).number.toString();
+    this.accountService.updateUser({ mobile:  mobileParsed}).subscribe(() => {
+      this.user.mobile = mobileParsed;
+      this.mobile?.setValue(mobileParsed);
+      this.changeMobileValidator();
+      dialogRef.close();
       this.spinner.hide();
     });
   }
