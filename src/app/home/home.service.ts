@@ -26,8 +26,10 @@ export class HomeService implements OnDestroy{
   load(buttonIndex: number): void {
     this.isLoading = true;
 
-    if (buttonIndex === Button.DEBATES) this.isLoading = false;
-    if (buttonIndex === Button.ACCOUNT) {
+    if (buttonIndex === Button.DEBATES) {
+      this.isLoading = false;
+    }
+    else if (buttonIndex === Button.ACCOUNT) {
       if (this.hasUser) this.isLoading = false; else this.fetchUser();
     }
   }
