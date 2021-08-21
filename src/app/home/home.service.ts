@@ -7,6 +7,7 @@ import { User } from '../shared/models/user.model';
 const BACKEND_URL = environment.apiUrl + '/user';
 
 enum Button {
+  DEBATES = 0,
   ACCOUNT = 1
 }
 
@@ -25,6 +26,7 @@ export class HomeService implements OnDestroy{
   load(buttonIndex: number): void {
     this.isLoading = true;
 
+    if (buttonIndex === Button.DEBATES) this.isLoading = false;
     if (buttonIndex === Button.ACCOUNT) {
       if (this.hasUser) this.isLoading = false; else this.fetchUser();
     }
