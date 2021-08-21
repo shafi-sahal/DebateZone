@@ -166,11 +166,11 @@ export function validateUsername(): ValidatorFn {
     const username: string = control.value;
     if (!username) return null;
 
+    const allowedCharacters = /^[a-zA-Z0-9._@-]+$/;
+    if (!allowedCharacters.test(username)) return { disallowedCharacter: true };
+
     const disAllowedStartingCharacters = /^[.]/;
     if (disAllowedStartingCharacters.test(username)) return { disallowedStartingCharacter: true };
-
-    const allowedCharacters = /[a-zA-Z0-9._@-]+$/;
-    if (!allowedCharacters.test(username)) return { disallowedCharacter: true };
 
     const allowedEndingCharcters = /[a-zA-Z0-9_@-]+(?<!\.)$/;
     if (!allowedEndingCharcters.test(username)) return { disallowedEndingCharacter: true };
