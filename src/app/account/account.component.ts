@@ -226,7 +226,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     // To work correctly place formControlName as the second attribute of the input element
     const controlName = inputElement.attributes[2].nodeValue;
     if (!controlName) return;
-    if (inputElement.value !== this.user[controlName as keyof User]) {
+    if (inputElement.value.trim() !== this.user[controlName as keyof User]) {
       this.userDataChangeSnapshot[controlName] = inputElement.value;
     } else {
       delete this.userDataChangeSnapshot[controlName];
