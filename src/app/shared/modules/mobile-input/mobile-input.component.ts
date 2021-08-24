@@ -32,7 +32,6 @@ export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
   isButtonDisabled = true;
 
   private validateForNullRelatedTargetBlur = true;
-  private userMobileNumber = '';
   private subscriptions = new Subscription();
 
   constructor(
@@ -78,7 +77,6 @@ export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if(!this.dialogData) return;
     this._country = this.dialogData.country;
-    this.userMobileNumber = this.dialogData.mobileNumber;
   }
 
   trackFunction(index: number, country: Record<string, string>): string {
