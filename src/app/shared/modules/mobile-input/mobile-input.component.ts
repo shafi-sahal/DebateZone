@@ -30,9 +30,9 @@ export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
   labelUnknownDialCode = 'Unknown Dial Code';
   classDialCode = 'dial-code-normal';
   isButtonDisabled = true;
-  userMobileData = { country: { name: '', dialCode: '', code: '' }, mobileNumber: '' };
 
   private validateForNullRelatedTargetBlur = true;
+  private userMobileNumber = '';
   private subscriptions = new Subscription();
 
   constructor(
@@ -40,7 +40,13 @@ export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
     private focusChangeObserver: FocusChangeObserver,
     private chnageDetector: ChangeDetectorRef,
     private renderer: Renderer2,
-    @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: { form: FormGroup, shouldAsyncValidateMobile: Subject<boolean> }
+    @Optional() @Inject(MAT_DIALOG_DATA)
+    public dialogData: {
+      form: FormGroup,
+      shouldAsyncValidateMobile: Subject<boolean>,
+      country: { name: string, dialCode: string, code: string },
+      mobileNumber: string
+    }
   ) {}
 
   set country(country: { name: string, dialCode: string, code: string }) {
@@ -62,8 +68,6 @@ export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.matchCountryWithMobile();
-
     setTimeout(() =>
       this.focusChangeObserver.observeFocusChangeOfElement(
         this.inputMobile, this.shouldAsyncValidateMobile, ['Login'], this.validateForNullRelatedTargetBlur
@@ -71,6 +75,10 @@ export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
     );
     if (this.mode === 'SIGNUP') return;
     this.subscriptions.add(this.mobile?.statusChanges.subscribe(() => this.setButtonDisabled()));
+
+    if(!this.dialogData) return;
+    this._country = this.dialogData.country;
+    this.userMobileNumber = this.dialogData.mobileNumber;
   }
 
   trackFunction(index: number, country: Record<string, string>): string {
@@ -133,8 +141,8 @@ export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
       console.error(error);
     }
 
-    const isCountryChanged = this.userMobileData.country.code !== this._country.code;
-    const isMobileNumberChanged = this.userMobileData.mobileNumber !== mobileNumber;
+    const isCountryChanged = this.dialogData.country.code !== this._country.code;
+    const isMobileNumberChanged = this.dialogData.mobileNumber !== mobileNumber;
 
     this.isButtonDisabled = (!isCountryChanged && !isMobileNumberChanged) || !!this.mobile?.errors || !mobileNumber;
   }
@@ -142,19 +150,6 @@ export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
   clearErrors(): void {
     this.shouldAsyncValidateMobile.next(false);
     this.mobile?.setErrors(null);
-  }
-
-  private matchCountryWithMobile(): void {
-    const mobileNumber = this.inputMobile.nativeElement.value;
-    if (!mobileNumber) return;
-    const countryCode = this.authenticationService.getCountryCodeFromMobile(mobileNumber);
-    if (!countryCode) return;
-    const country = this.countries.find(country => country.code === countryCode);
-    if (!country) return;
-    this.userMobileData.country = country;
-    this.userMobileData.mobileNumber = mobileNumber;
-    this.country = country;
-    this.chnageDetector.detectChanges();
   }
 
   ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
