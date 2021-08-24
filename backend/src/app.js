@@ -1,10 +1,12 @@
 const express = require('express');
+const compression = require('compression');
 const app = express();
 require('./database/connection');
 const userRoutes = require('./routes/user');
 const path = require('path');
 
 app.use(express.json());
+app.use(compression());
 app.use('/', express.static(path.join(__dirname, '../frontend')));
 
 app.use((req, res, next) => {
