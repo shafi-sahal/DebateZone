@@ -16,6 +16,7 @@ import { takeWhile } from 'rxjs/operators';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 import { MobileInputComponent } from '../shared/modules/mobile-input/mobile-input.component';
+import { countries } from '../shared/datasets';
 
 @Component({
   selector: 'app-account',
@@ -42,7 +43,6 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   private isMobile = true;
   private userDataChangeSnapshot: Record<string, string> = {};
   private country = { name: 'India', dialCode: '+91', code: 'IN' };
-  private userCountry = this.country;
 
   form = this.formBuilder.group({
     name: [
@@ -102,6 +102,9 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    this.matchCountryWithMobile();
+    this.changeMobileValidator();
+    this.mobile?.updateValueAndValidity();
     // Used to preserve the state and functions of the form on device changes
     this.subscriptions.
       add(this.inputFields.subscribe(inputFields => {
@@ -143,14 +146,16 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isUserMobileUpdated = false;
     const dialogRef = this.dialog.open(
       MobileInputComponent,
-      { data: { form: this.form, shouldAsyncValidateMobile: this.shouldAsyncValidateMobile }, panelClass: 'dialog-rounded' }
+      {
+        data: {
+          form: this.form,
+          shouldAsyncValidateMobile: this.shouldAsyncValidateMobile,
+          country: this.country,
+          mobileNumber: this.mobile?.value
+        },
+        panelClass: 'dialog-rounded'
+      }
     );
-
-    setTimeout(() => {
-      this.userCountry = dialogRef.componentInstance.userMobileData.country;
-      this.mobile?.setValidators([Validators.required, validateMobile(this.userCountry.code as CountryCode)]);
-      this.mobile?.updateValueAndValidity();
-    });
 
     this.dialogSubscriptions
       .add(dialogRef.componentInstance.countryChanged.subscribe(country => {
@@ -161,7 +166,6 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
       .add(dialogRef.componentInstance.updateClicked.subscribe(() => this.updateUserMobile(dialogRef)))
       .add(dialogRef.afterClosed().subscribe(() => {
         if (this.isUserMobileUpdated) return;
-        this.country = this.userCountry;
         this.changeMobileValidator();
         this.mobile?.setValue(this.user.mobile);
       })
@@ -184,6 +188,16 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
       this.homeService.changes.next();
       this.spinner.hide();
     });
+  }
+
+
+  private matchCountryWithMobile(): void {
+    const mobileNumber = this.mobile?.value;
+    const countryCode = this.authenticationService.getCountryCodeFromMobile(mobileNumber);
+    if (!countryCode) return;
+    const country = countries.find(country => country.code === countryCode);
+    if (!country) return;
+    this.country = country;
   }
 
   private updateUserMobile(dialogRef: MatDialogRef<MobileInputComponent, any>): void {
@@ -227,14 +241,16 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     const controlName = inputElement.attributes[2].nodeValue;
     if (!controlName) return;
     if (inputElement.value.trim() !== this.user[controlName as keyof User]) {
-      this.userDataChangeSnapshot[controlName] = inputElement.value;
+      this.userDataChangeSnapshot[controlName] = inputElement.value.trim();
     } else {
       delete this.userDataChangeSnapshot[controlName];
     }
+    console.log(this.userDataChangeSnapshot);
   }
 
   private setButtonDisabled(): void {
     const isUserDataChanged = Object.keys(this.userDataChangeSnapshot).length > 0;
+    console.log(this.form.valid);
     this.isButtonDisabled = !isUserDataChanged || !this.form.valid;
   }
 
