@@ -141,7 +141,6 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onEditMobileClicked(): void {
-    this.isUserMobileUpdated = false;
     const dialogRef = this.dialog.open(
       MobileInputComponent,
       {
@@ -163,7 +162,6 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
       }))
       .add(dialogRef.componentInstance.updateClicked.subscribe(() => this.updateUserMobile(dialogRef)))
       .add(dialogRef.afterClosed().subscribe(() => {
-        if (this.isUserMobileUpdated) return;
         this.changeMobileValidator();
         this.mobile?.setValue(this.user.mobile);
       })
