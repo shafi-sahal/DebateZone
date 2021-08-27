@@ -142,13 +142,14 @@ export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
     const isCountryChanged = this.dialogData.country.code !== this._country.code;
     const isMobileNumberChanged = this.dialogData.mobileNumber !== mobileNumber;
 
-    this.isButtonDisabled = (!isCountryChanged && !isMobileNumberChanged) || !!this.mobile?.errors || !mobileNumber;
+    this.isButtonDisabled = (!isCountryChanged && !isMobileNumberChanged) || !this.mobile?.valid || !mobileNumber;
   }
 
   clearErrors(): void {
     this.shouldAsyncValidateMobile.next(false);
     this.mobile?.setErrors(null);
   }
+  print(event:any){console.log(event);}
 
   ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
 }
