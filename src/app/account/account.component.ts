@@ -36,7 +36,6 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = true;
   user: User = { name: '', username: '' };
   isButtonDisabled = true;
-  isUserMobileUpdated = false;
 
   private subscriptions = new Subscription();
   private dialogSubscriptions = new Subscription();
@@ -219,9 +218,6 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
       dialogRef.close();
       this.spinner.hide();
     });
-    /*this.accountService.updateUser({ mobile:  mobileParsed}).subscribe(() => {
-
-    });*/
   }
 
   private prepareForm(user: User): void {
