@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, of, Subject, Subscription } from 'rxjs';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { DeviceTypeChecker } from '../device-type-checker.service';
 import { NavService } from '../home/nav-elements/nav.service';
@@ -12,7 +12,7 @@ import { User } from '../shared/models/user.model';
 import { EmailUniquenessValidator, FocusChangeObserver, MobileUniquenessValidator, UsernameAvailabilityCheck, validateMobile, validateUsername } from '../shared/validator';
 import { AccountService } from './account.service';
 import { InputFieldsComponent } from './input-fields/input-fields.component';
-import { takeWhile } from 'rxjs/operators';
+import { switchMap, takeWhile } from 'rxjs/operators';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 import { MobileInputComponent } from '../shared/modules/mobile-input/mobile-input.component';
@@ -64,8 +64,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
       '',
       {
         updateOn: 'blur',
-        validators: [Validators.required, validateMobile(this.country.code as CountryCode)],
-        asyncValidators: this.mobileUniquenessValidator.validate.bind(this)
+        validators: [Validators.required, validateMobile(this.country.code as CountryCode)]
       }
     ]
   })
@@ -202,16 +201,27 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private updateUserMobile(dialogRef: MatDialogRef<MobileInputComponent, any>): void {
     if(!this.mobile?.valid) return;
-    this.spinner.show('Updating...');
-    this.isUserMobileUpdated = true;
     const mobileParsed = parsePhoneNumber(this.mobile?.value, this.country.code as CountryCode).number.toString();
-    this.accountService.updateUser({ mobile:  mobileParsed}).subscribe(() => {
+    this.authenticationService.isDuplicateMobile(mobileParsed).pipe(
+      switchMap(isDuplicateMobile => {
+        if (isDuplicateMobile) {
+          dialogRef.componentInstance.mobile?.setErrors({ isDuplicateMobile: true });
+          return of({ isDuplicateMobile: true });
+        }
+        this.spinner.show('Updating...');
+        return this.accountService.updateUser({ mobile: mobileParsed });
+      })
+    ).subscribe(status => {
+      if (status?.isDuplicateMobile) return;
       this.user.mobile = mobileParsed;
       this.mobile?.setValue(mobileParsed);
       this.changeMobileValidator();
       dialogRef.close();
       this.spinner.hide();
     });
+    /*this.accountService.updateUser({ mobile:  mobileParsed}).subscribe(() => {
+
+    });*/
   }
 
   private prepareForm(user: User): void {
@@ -245,12 +255,10 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       delete this.userDataChangeSnapshot[controlName];
     }
-    console.log(this.userDataChangeSnapshot);
   }
 
   private setButtonDisabled(): void {
     const isUserDataChanged = Object.keys(this.userDataChangeSnapshot).length > 0;
-    console.log(this.form.valid);
     this.isButtonDisabled = !isUserDataChanged || !this.form.valid;
   }
 
