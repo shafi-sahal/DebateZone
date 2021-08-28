@@ -199,15 +199,17 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   private updateUserMobile(dialogRef: MatDialogRef<MobileInputComponent, any>): void {
     if(!this.mobile?.valid) return;
     const mobileParsed = parsePhoneNumber(this.mobile?.value, this.country.code as CountryCode).number.toString();
+    dialogRef.componentInstance.mobile?.markAsPending();
     this.authenticationService.isDuplicateMobile(mobileParsed).pipe(
       switchMap(isDuplicateMobile => {
         if (isDuplicateMobile) {
           dialogRef.componentInstance.mobile?.setErrors({ isDuplicateMobile: true });
           return of({ isDuplicateMobile: true });
         }
+        dialogRef.componentInstance.mobile?.setErrors(null);
         this.spinner.show('Updating...');
         return this.accountService.updateUser({ mobile: mobileParsed });
-      })
+      }),
     ).subscribe(status => {
       if (status?.isDuplicateMobile) return;
       this.user.mobile = mobileParsed;
