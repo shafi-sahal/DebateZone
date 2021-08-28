@@ -186,7 +186,6 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-
   private matchCountryWithMobile(): void {
     const mobileNumber = this.mobile?.value;
     const countryCode = this.authenticationService.getCountryCodeFromMobile(mobileNumber);
@@ -204,14 +203,14 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
       switchMap(isDuplicateMobile => {
         if (isDuplicateMobile) {
           dialogRef.componentInstance.mobile?.setErrors({ isDuplicateMobile: true });
-          return of({ isDuplicateMobile: true });
+          return of(true);
         }
         dialogRef.componentInstance.mobile?.setErrors(null);
         this.spinner.show('Updating...');
         return this.accountService.updateUser({ mobile: mobileParsed });
       }),
-    ).subscribe(status => {
-      if (status?.isDuplicateMobile) return;
+    ).subscribe(isDuplicateMobile => {
+      if (isDuplicateMobile) return;
       this.user.mobile = mobileParsed;
       this.mobile?.setValue(mobileParsed);
       this.changeMobileValidator();
@@ -222,6 +221,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private prepareForm(user: User): void {
     this.isLoading = false;
+    this.homeService.isLoading = false;
     this.user = this.sessionService.user = user;
     this.changeDetector.markForCheck();
     this.homeService.changes.next();
