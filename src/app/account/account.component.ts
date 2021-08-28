@@ -170,7 +170,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
 
   updateUser(): void {
     if (!this.form.valid) return;
-    const isUserDataChanged = Object.keys(this.userDataChangeSnapshot).length > 0;
+    const isUserDataChanged = Object.keys(this.userDataChangeSnapshot).length;
     if (!isUserDataChanged) return;
     this.spinner.show('Updating...');
 
@@ -254,7 +254,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private setButtonDisabled(): void {
-    const isUserDataChanged = Object.keys(this.userDataChangeSnapshot).length > 0;
+    const isUserDataChanged = Object.keys(this.userDataChangeSnapshot).length;
     this.isButtonDisabled = !isUserDataChanged || !this.form.valid;
   }
 
