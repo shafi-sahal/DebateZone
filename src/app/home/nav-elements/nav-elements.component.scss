@@ -38,15 +38,17 @@ button.nav, button.logout, button.nav-active {
 }
 .container-create-debate {
   display: flex;
+  flex-direction: column;
   width: 100%;
-  justify-content: center;
+  align-items: center;
   margin-top: 30px;
 }
 button.create-debate {
   color: white;
+  font-size: medium;
   background-color: #{colors.$primary-deep};
   width: 90%;
-  border-radius: #{border-radius.$large};
+  border-radius: 30px 30px 30px 30px;
   height: 50px;
 }
 button.logout {

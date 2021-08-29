@@ -9,7 +9,7 @@
 
   <div *ngIf="!(deviceTypeChecker.isMobile | async)">
     <button
-      *ngFor="let button of navService.navButtons index as i"
+      *ngFor="let button of navService.navButtons | slice:0:-1 index as i"
       [class]="i === navService.clickedNavbuttonIndex ? 'nav-active' : 'nav'"
       mat-button
       [routerLink]="button.route"
@@ -23,11 +23,14 @@
     </button>
 
     <div class="container-create-debate">
-      <button mat-button class="create-debate" color="primary">Create a Debate</button>
+      <button
+        mat-button class="create-debate"
+        [routerLink]="navService.navButtons[NavButton.CREATE_A_DEBATE].route">
+        Create a Debate
+      </button>
     </div>
 
   </div>
-
 
   <button class="logout" mat-button (click)="onLogoutClick()">Log out</button>
 </body>
