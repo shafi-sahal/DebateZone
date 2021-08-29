@@ -36,6 +36,19 @@ button.nav, button.logout, button.nav-active {
   height: 50px;
   width: 100%;
 }
+.container-create-debate {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin-top: 30px;
+}
+button.create-debate {
+  color: white;
+  background-color: #{colors.$primary-deep};
+  width: 90%;
+  border-radius: #{border-radius.$large};
+  height: 50px;
+}
 button.logout {
   margin-top: 10%;
 }
