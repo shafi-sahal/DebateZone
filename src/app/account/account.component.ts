@@ -148,7 +148,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
           country: this.country,
           mobileNumber: this.mobile?.value
         },
-        panelClass: 'dialog-rounded'
+        panelClass: 'dialog-diagonal-rounded'
       }
     );
 
