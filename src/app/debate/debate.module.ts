@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { DebateRoutingModule } from './debate-routing.module';
 import { DebateComponent } from './debate.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
@@ -11,7 +13,9 @@ import { DebateComponent } from './debate.component';
   ],
   imports: [
     CommonModule,
-    DebateRoutingModule
+    DebateRoutingModule,
+    MatButtonModule,
+    MatIconModule
   ]
 })
 export class DebateModule { }
