@@ -1,5 +1,6 @@
 @use '../shared/styles/screen-sizes';
 @use '../shared/styles/colors';
+@use '../shared/styles/dimensions';
 
 
 mat-sidenav-container {
@@ -23,9 +24,8 @@ mat-sidenav-container {
     .router-outlet {
       width: 100%;
       $header-height: 60px;
-      $bottom-nav-height: 40px;
-      padding-top: $header-height;
-      padding-bottom: #{$bottom-nav-height + 10px};
+      padding-top: #{dimensions.$header-height};
+      padding-bottom: #{dimensions.$bottom-nav-height + 10px};
       padding-left: 5%;
       padding-right: 5%;
       overflow: auto;
