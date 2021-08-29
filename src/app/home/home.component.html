@@ -6,8 +6,8 @@
     <mat-sidenav-content>
       <app-header (menuClicked)="sidenav.toggle()"></app-header>
       <div class="router-outlet">
-          <mat-spinner *ngIf="homeService.isLoading" [diameter]="40"></mat-spinner>
-          <router-outlet *ngIf="!homeService.isLoading"></router-outlet>
+          <mat-spinner *ngIf="homeService.isDataLoading || homeService.isRouting else routerOutlet" [diameter]="40"></mat-spinner>
+          <ng-template #routerOutlet><router-outlet></router-outlet></ng-template>
       </div>
       <app-bottom-nav *ngIf="deviceTypeChecker.isMobile | async"></app-bottom-nav>
     </mat-sidenav-content>
