@@ -1,16 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, EMPTY, Subject } from 'rxjs';
-import { first, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { first, switchMap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { User } from '../shared/models/user.model';
+import { NavButton } from './nav-buttons-enum';
 
 const BACKEND_URL = environment.apiUrl + '/user';
-
-enum Button {
-  DEBATES = 0,
-  ACCOUNT = 1
-}
 
 @Injectable()
 export class HomeService {
@@ -22,8 +18,8 @@ export class HomeService {
 
   load(buttonIndex: number): void {
     this.isDataLoading = true;
-    if (buttonIndex === Button.DEBATES) this.isDataLoading = false;
-    else if (buttonIndex === Button.ACCOUNT) this.fetchUser();
+    if (buttonIndex === NavButton.DEBATES) this.isDataLoading = false;
+    else if (buttonIndex === NavButton.ACCOUNT) this.fetchUser();
   }
 
   private fetchUser(): void {
