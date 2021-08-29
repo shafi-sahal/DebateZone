@@ -64,8 +64,7 @@
         matInput
         formControlName="mobile"
         placeholder="Ex: 7012154608"
-        (input)="onMobileInput(inputMobile.value)"
-        (blur)="print($event)">
+        (input)="onMobileInput(inputMobile.value)">
         <mat-spinner *ngIf="(mobile?.statusChanges | async) === 'PENDING'" [diameter]="17"></mat-spinner>
     </div>
   </mat-form-field>

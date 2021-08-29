@@ -149,7 +149,5 @@ export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
     this.shouldAsyncValidateMobile.next(false);
     this.mobile?.setErrors(null);
   }
-  print(event:any){console.log(event);}
-
   ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
 }
