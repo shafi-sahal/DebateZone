@@ -1,0 +1,13 @@
+@use '../shared/styles/dimensions';
+
+button.mat-fab {
+  position: absolute;
+  color: white;
+  width: 55px;
+  height: 55px;
+  $button-width: 50px;
+  $button-padding-bottom: 20px;
+  $button-padding-left: 30px;
+  top: calc(100% - #{$button-width + $button-padding-bottom + dimensions.$bottom-nav-height});
+  left: calc(100% - #{$button-width + $button-padding-left});
+}
