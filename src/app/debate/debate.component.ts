@@ -1,15 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { DeviceTypeChecker } from '../device-type-checker.service';
 
 @Component({
   selector: 'app-debate',
   templateUrl: './debate.component.html',
   styleUrls: ['./debate.component.scss']
 })
-export class DebateComponent implements OnInit {
+export class DebateComponent {
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+  constructor(public deviceTypeChecker: DeviceTypeChecker) { }
 
 }

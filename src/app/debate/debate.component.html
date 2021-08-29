@@ -1,1 +1,1 @@
-<button mat-fab color="primary"><mat-icon>add</mat-icon></button>
+<button *ngIf="deviceTypeChecker.isMobile | async" mat-fab color="primary"><mat-icon>add</mat-icon></button>
