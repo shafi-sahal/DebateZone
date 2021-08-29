@@ -5,6 +5,7 @@ import { DeviceTypeChecker } from 'src/app/device-type-checker.service';
 import { SessionService } from 'src/app/session.service';
 import { Spinner } from 'src/app/shared/components/spinner/spinner.service';
 import { HomeService } from '../home.service';
+import { NavButton } from '../nav-buttons-enum';
 import { NavService } from './nav.service';
 
 @Component({
@@ -16,6 +17,7 @@ import { NavService } from './nav.service';
 export class NavElementsComponent implements OnInit, OnDestroy {
   @Output() private closeButtonClicked = new EventEmitter();
   @Input() isMobile = true;
+  NavButton = NavButton;
   private subscriptions = new Subscription();
 
   constructor(
