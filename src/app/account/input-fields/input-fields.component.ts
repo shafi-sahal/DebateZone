@@ -36,7 +36,7 @@ export class InputFieldsComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.inputFields.emit(this);
 
-    // Preserve the valifation errors on device change
+    // Preserve the validation errors on device change
     if(this.isDuplicateUsername) this.username?.setErrors({ isDuplicateUsername: true });
     if(this.isDuplicateEmail) this.email?.setErrors({ isDuplicateEmail: true });
     setTimeout(() => this.changeDetector.markForCheck());
