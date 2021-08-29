@@ -12,7 +12,7 @@ import { User } from '../shared/models/user.model';
 import { EmailUniquenessValidator, FocusChangeObserver, MobileUniquenessValidator, UsernameAvailabilityCheck, validateMobile, validateUsername } from '../shared/validator';
 import { AccountService } from './account.service';
 import { InputFieldsComponent } from './input-fields/input-fields.component';
-import { switchMap, takeWhile } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 import { MobileInputComponent } from '../shared/modules/mobile-input/mobile-input.component';
@@ -90,9 +90,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     this.subscriptions
       .add(this.deviceTypeChecker.isMobile.subscribe(isMobile => this.isMobile = isMobile))
-      .add(this.homeService.user.pipe(
-        takeWhile(() => this.isLoading === true),
-      ).subscribe(user => {
+      .add(this.homeService.user.subscribe(user => {
         if(!user) return;
         this.prepareForm(user);
       })
@@ -221,8 +219,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private prepareForm(user: User): void {
     this.isLoading = false;
-    this.homeService.isLoading = false;
-    this.user = this.sessionService.user = user;
+    this.user = user;
     this.changeDetector.markForCheck();
     this.homeService.changes.next();
     this.form.setValue(user);
