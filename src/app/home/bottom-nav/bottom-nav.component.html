@@ -1,6 +1,6 @@
 <body>
   <button
-    *ngFor="let button of navService.navButtons index as i"
+    *ngFor="let button of navService.navButtons | slice:0:-1 index as i"
     mat-icon-button
     [color]="i === navService.clickedNavbuttonIndex ? 'primary' : ''"
     [routerLink]="button.route"

@@ -20,6 +20,7 @@ export class HomeService {
     this.isDataLoading = true;
     if (buttonIndex === NavButton.DEBATES) this.isDataLoading = false;
     else if (buttonIndex === NavButton.ACCOUNT) this.fetchUser();
+    else this.isDataLoading = false;
   }
 
   private fetchUser(): void {

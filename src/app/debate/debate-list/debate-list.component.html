@@ -1,1 +1,7 @@
-<button *ngIf="deviceTypeChecker.isMobile | async" mat-fab color="primary"><mat-icon>add</mat-icon></button>
+<button
+  *ngIf="deviceTypeChecker.isMobile | async"
+  mat-fab
+  color="primary"
+  [routerLink]="navService.navButtons[NavButton.CREATE_A_DEBATE].route">
+  <mat-icon>add</mat-icon>
+</button>
