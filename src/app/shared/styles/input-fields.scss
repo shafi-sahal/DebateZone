@@ -1,0 +1,26 @@
+@use './screen-sizes';
+@use './dimensions';
+
+body {
+  display: flex;
+  justify-content: center;
+}
+app-input-fields {
+  width: 100%;
+}
+
+@media only screen and (min-width: #{screen-sizes.$small-desktop-width}) {
+  body {
+    justify-content: flex-start;
+  }
+  mat-card {
+    display: flex;
+    justify-content: center;
+    height: fit-content;
+    width: #{dimensions.$card-form-width-max};
+
+    app-input-fields {
+      width: 90%;
+    }
+  }
+}

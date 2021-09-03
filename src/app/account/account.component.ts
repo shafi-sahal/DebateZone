@@ -21,7 +21,7 @@ import { countries } from '../shared/datasets';
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html',
-  styleUrls: ['./account.component.scss'],
+  styleUrls: ['../shared/styles/input-fields.scss', './account.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [UsernameAvailabilityCheck, EmailUniquenessValidator, FocusChangeObserver, AuthenticationService, NavService, MobileUniquenessValidator]
 })

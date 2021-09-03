@@ -1,1 +1,7 @@
-<p>debate-create works!</p>
+<body>
+  <app-input-fields *ngIf="deviceTypeChecker.isMobile | async else inputFieldsWithCard"></app-input-fields>
+
+  <ng-template #inputFieldsWithCard>
+    <mat-card [class.mat-elevation-z5]="true"><app-input-fields></app-input-fields></mat-card>
+  </ng-template>
+</body>
