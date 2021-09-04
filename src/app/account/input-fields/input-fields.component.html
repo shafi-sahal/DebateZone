@@ -12,7 +12,6 @@
         <mat-spinner *ngIf="(username?.statusChanges | async) === 'PENDING'" [diameter]="17"></mat-spinner>
       </div>
     </mat-form-field>
-    <app-username-validation-errors [errors]="username?.errors"></app-username-validation-errors>
     <p
       *ngIf="usernameStatus === 'VALID'"
       class="valid">

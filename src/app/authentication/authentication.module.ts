@@ -9,7 +9,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FocusInvalidInputDirective } from '../shared/directives/focus-invalid-input.directive';
 import { AngularMaterialModule } from '../angular-material.module';
 import { MatSelectSearchModule } from 'mat-select-search';
-import { UsernameValidationErrorsModule } from '../shared/modules/username-validation-errors/username-validation-errors.module';
 import { MobileInputModule } from '../shared/modules/mobile-input/mobile-input.module';
 
 
@@ -27,7 +26,6 @@ import { MobileInputModule } from '../shared/modules/mobile-input/mobile-input.m
     AngularMaterialModule,
     ReactiveFormsModule,
     MatSelectSearchModule,
-    UsernameValidationErrorsModule,
     MobileInputModule
   ]
 })
