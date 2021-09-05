@@ -38,6 +38,7 @@ export class NavElementsComponent implements OnInit, OnDestroy {
         if (event instanceof NavigationStart) {
           this.homeService.isRouting = true;
           this.navService.clickedNavbuttonIndex = this.navService.navButtons.findIndex(button => button.route === event.url);
+          if (this.navService.clickedNavbuttonIndex === -1) return;
           this.changeDetector.markForCheck();
           this.homeService.changes.next();
         }
