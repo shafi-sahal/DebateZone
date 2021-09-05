@@ -3,6 +3,22 @@
 @use './app/shared/styles/border-radius';
 @import "~@angular/material/theming";
 
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.mat-card.mat-card, button.diagonal-rounded-large, .dialog-diagonal-rounded > mat-dialog-container {
+  border-radius: #{border-radius.$large};
+}
+button.diagonal-rounded-small {
+  border-radius: #{border-radius.$small};
+}
+.mat-button-toggle.mat-button-toggle {
+  background-color: #{colors.$primary-1};
+}
+.mat-button-toggle-checked.mat-button-toggle-checked {
+  background-color: #{colors.$primary-2};
+}
+
 // Workaround for https://github.com/angular/material2/issues/4580.
 @mixin mat-form-field-multiline-workaround($typography-config: null) {
   @if $typography-config == null {
@@ -45,19 +61,3 @@
 }
 
 @include mat-form-field-multiline-workaround();
-
-
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-.mat-card.mat-card, button.diagonal-rounded-large, .dialog-diagonal-rounded > mat-dialog-container {
-  border-radius: #{border-radius.$large};
-}
-button.diagonal-rounded-small {
-  border-radius: #{border-radius.$small};
-}
-.mat-button-toggle.mat-button-toggle {
-  background-color: #{colors.$primary-1};
-}
-.mat-button-toggle-checked.mat-button-toggle-checked {
-  background-color: #{colors.$primary-2};
-}
