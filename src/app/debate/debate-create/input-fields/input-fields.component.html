@@ -14,7 +14,7 @@
       placeholder="Ex: When programs and algorithms get smarter and smarter to a point where they themselves improvise the algorithms..."
     ></textarea>
     <mat-hint *ngIf="description.value" align="end">
-      <span [class]="description.value.length > 512 ? 'limit-exceeded' : 'limit-in-range'">
+      <span [class]="description.value.length > 512 ? 'invalid' : 'limit-in-range'">
         ( {{description.value.length}} / 512 ) characters
       </span>
     </mat-hint>
