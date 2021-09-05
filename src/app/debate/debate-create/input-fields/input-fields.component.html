@@ -7,10 +7,17 @@
   <mat-form-field>
     <mat-label>Description (optional)</mat-label>
     <textarea
+      #description
       matInput
       cdkTextareaAutosize
+      maxlength="512"
       placeholder="Ex: When programs and algorithms get smarter and smarter to a point where they themselves improvise the algorithms..."
-      ></textarea>
+    ></textarea>
+    <mat-hint *ngIf="description.value" align="end">
+      <span [class]="description.value.length > 512 ? 'limit-exceeded' : 'limit-in-range'">
+        ( {{description.value.length}} / 512 ) characters
+      </span>
+    </mat-hint>
   </mat-form-field>
 </body>
 

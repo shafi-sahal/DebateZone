@@ -6,5 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./input-fields.component.scss']
 })
 export class InputFieldsComponent {
-
+  onDescriptionKeyDown(isCharLimitExceeded: boolean, event: Event): void {
+    if (isCharLimitExceeded) event.preventDefault();
+  }
 }

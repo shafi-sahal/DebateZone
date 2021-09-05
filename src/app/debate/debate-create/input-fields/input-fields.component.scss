@@ -1,4 +1,13 @@
+@use '../../../shared/styles/colors';
+
 mat-form-field {
   width: 100%;
 }
-
+mat-hint {
+  span.limit-in-range {
+    color: #{colors.$primary-deep};
+  }
+  span.limit-exceeded {
+    color: red;
+  }
+}
