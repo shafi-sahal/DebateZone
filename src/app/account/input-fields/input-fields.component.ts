@@ -6,11 +6,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { SessionService } from 'src/app/session.service';
 import { MobileInputComponent } from 'src/app/shared/modules/mobile-input/mobile-input.component';
+import { UsernameErrorMessageService } from 'src/app/shared/services/username-error-message.service';
 
 @Component({
   selector: 'app-input-fields',
   templateUrl: './input-fields.component.html',
   styleUrls: ['./input-fields.component.scss', '../../shared/styles/messages.scss'],
+  providers: [UsernameErrorMessageService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputFieldsComponent implements AfterViewInit {
@@ -27,7 +29,11 @@ export class InputFieldsComponent implements AfterViewInit {
   @Output() editMobileClicked = new EventEmitter<void>();
   @ViewChild('inputEmail')  inputEmail!: ElementRef;
 
-  constructor(public changeDetector: ChangeDetectorRef, public sessionService: SessionService) {}
+  constructor(
+    public changeDetector: ChangeDetectorRef,
+    public sessionService: SessionService,
+    public usernameErrorMessageService: UsernameErrorMessageService
+  ) {}
 
   get name(): AbstractControl | null { return this.form.get('name'); }
   get username(): AbstractControl | null { return this.form.get('username'); }

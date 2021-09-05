@@ -73,10 +73,7 @@ export class CredentialsComponent implements AfterViewInit, OnDestroy {
   }
 
   signUpForm = this.formBuilder.group({
-    name: [
-      '',
-     [Validators.required, Validators.pattern(regexes.name)]
-    ],
+    name: ['', [Validators.required, Validators.pattern(regexes.name)]],
     username: ['', [Validators.required, validateUsername()], this.usernameAvailabilityCheck.validate.bind(this)],
     email: [
       '',

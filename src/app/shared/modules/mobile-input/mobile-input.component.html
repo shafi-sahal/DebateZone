@@ -67,16 +67,16 @@
         (input)="onMobileInput(inputMobile.value)">
         <mat-spinner *ngIf="(mobile?.statusChanges | async) === 'PENDING'" [diameter]="17"></mat-spinner>
     </div>
+    <mat-error>
+      <div *ngIf="mobile?.hasError('invalidMobile')">
+        <span *ngIf="countrySelect.value === labelUnknownDialCode; else invalidMobileForCountry">Invalid mobile number</span>
+        <ng-template #invalidMobileForCountry>Invalid mobile number for the given country</ng-template>
+      </div>
+      <span *ngIf="(mobile?.statusChanges | async) === 'INVALID' && mobile?.hasError('isDuplicateMobile')">
+        An account with the same mobile number already exists
+      </span>
+    </mat-error>
   </mat-form-field>
-</div>
-<div class="invalid">
-  <div *ngIf="mobile?.hasError('invalidMobile')">
-    <span *ngIf="countrySelect.value === labelUnknownDialCode; else invalidMobileForCountry">Invalid mobile number</span>
-    <ng-template #invalidMobileForCountry>Invalid mobile number for the given country</ng-template>
-  </div>
-  <span *ngIf="(mobile?.statusChanges | async) === 'INVALID' && mobile?.hasError('isDuplicateMobile')">
-    An account with the same mobile number already exists
-  </span>
 </div>
 
 <mat-dialog-actions *ngIf="dialogData" align="center">

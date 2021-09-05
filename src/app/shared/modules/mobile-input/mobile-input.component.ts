@@ -89,7 +89,6 @@ export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
       this.country = country;
     }
     this.classDialCode = 'dial-code-normal';
-    this.clearErrors();
     this.mobile?.updateValueAndValidity();
   }
 
@@ -105,7 +104,6 @@ export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onDialCodeInput(): void {
-    this.clearErrors();
     const inputValue = this.dialCodeInput.nativeElement.value;
     const dialCode = '+' + inputValue;
     const country = this.countries.find(country => country.dialCode === dialCode.trim());
@@ -120,7 +118,6 @@ export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onMobileInput(number: string): void {
-    this.clearErrors();
     const countryCode = this.authenticationService.getCountryCodeFromMobile(number);
     if (!countryCode) return;
     const country = this.countries.find(country => country.code === countryCode);
@@ -145,9 +142,5 @@ export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isButtonDisabled = (!isCountryChanged && !isMobileNumberChanged) || !this.mobile?.valid || !mobileNumber;
   }
 
-  clearErrors(): void {
-    this.shouldAsyncValidateMobile.next(false);
-    this.mobile?.setErrors(null);
-  }
   ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
 }

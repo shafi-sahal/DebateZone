@@ -2,7 +2,8 @@
   <form [formGroup]="form" (ngSubmit)="formSubmit.emit()">
     <mat-form-field>
       <mat-label>Full name</mat-label>
-      <input matInput formControlName="name" (input)="name?.setErrors(null)" (blur)="controlBlur.emit($event)">
+      <input matInput formControlName="name" (blur)="controlBlur.emit($event)">
+      <mat-error *ngIf="name?.hasError('pattern')">Give a valid name, buddy</mat-error>
     </mat-form-field>
 
     <mat-form-field>
@@ -11,25 +12,27 @@
         <input matInput formControlName="username" (blur)="controlBlur.emit($event)">
         <mat-spinner *ngIf="(username?.statusChanges | async) === 'PENDING'" [diameter]="17"></mat-spinner>
       </div>
+      <mat-hint
+        *ngIf="usernameStatus === 'VALID'"
+        class="valid">
+        Username is available!!!
+      </mat-hint>
+      <mat-hint
+        class="invalid"
+        *ngIf="(username?.statusChanges | async) === 'INVALID' && username?.hasError('isDuplicateUsername')">
+        Username already taken. Try a different one
+      </mat-hint>
+      <mat-error *ngIf="usernameErrorMessageService.getErrorMessage(username) as message">{{message}}</mat-error>
     </mat-form-field>
-    <p
-      *ngIf="usernameStatus === 'VALID'"
-      class="valid">
-      Username is available!!!
-    </p>
 
     <mat-form-field>
       <mat-label>Email</mat-label>
       <div class="container-input-with-spinner">
-        <input #inputEmail matInput type="email" formControlName="email" (input)="email?.setErrors(null)" (blur)="controlBlur.emit($event)">
+        <input #inputEmail matInput type="email" formControlName="email" (blur)="controlBlur.emit($event)">
         <mat-spinner *ngIf="(email?.statusChanges | async) === 'PENDING'" [diameter]="17"></mat-spinner>
       </div>
+      <mat-error *ngIf="email?.hasError('isDuplicateEmail')">An account with the same email already exists</mat-error>
     </mat-form-field>
-    <div class="invalid">
-      <p *ngIf="email?.hasError('isDuplicateEmail')">
-        An account with the same email already exists
-      </p>
-    </div>
 
     <div class="container-mobile">
       <mat-form-field class="mobile">
@@ -39,6 +42,8 @@
       <button mat-icon-button type="button" (click)="editMobileClicked.emit()"><mat-icon>edit</mat-icon></button>
     </div>
 
-    <button class="diagonal-rounded-large" type="submit" mat-raised-button color="primary" [disabled]="isButtonDisabled">Update</button>
+    <button class="diagonal-rounded-large" type="submit" mat-raised-button color="primary" [disabled]="isButtonDisabled">
+      Update
+    </button>
   </form>
 </body>

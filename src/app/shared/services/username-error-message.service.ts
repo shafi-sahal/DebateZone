@@ -9,10 +9,9 @@ export class UsernameErrorMessageService {
     if (username.hasError('isTooBig')) return 'Username must only have a maximum of 30 characters';
     if (username.hasError('disallowedStartingCharacter')) return 'Username should not start with a period';
     if (username.hasError('disallowedCharacter')) {
-      return 'Username should only contain letters, numbers, periods, underscores, hyspanhens and @';
+      return 'Username should only contain letters, numbers, periods, underscores, hyphens and @';
     }
     if (username.hasError('disallowedEndingCharacter')) return 'Username should not end with a period';
-    if (username.hasError('isDuplicateUsername')) return 'Username already taken. Try a different one';
     return '';
   }
 }

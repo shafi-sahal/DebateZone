@@ -38,19 +38,12 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   isButtonDisabled = true;
 
   private subscriptions = new Subscription();
-  private dialogSubscriptions = new Subscription();
   private isMobile = true;
   private userDataChangeSnapshot: Record<string, string> = {};
   private country = { name: 'India', dialCode: '+91', code: 'IN' };
 
   form = this.formBuilder.group({
-    name: [
-      '',
-      {
-        updateOn: 'blur',
-        validators: [Validators.required, Validators.pattern(regexes.name)]
-      }
-    ],
+    name: ['', [Validators.required, Validators.pattern(regexes.name)]],
     username: ['', [Validators.required, validateUsername()]],
     email: [
       '',
@@ -152,7 +145,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     );
 
-    this.dialogSubscriptions
+    this.subscriptions
       .add(dialogRef.componentInstance.countryChanged.subscribe(country => {
         this.country = country;
         this.changeMobileValidator();
@@ -259,8 +252,5 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     this.mobile?.setValidators([Validators.required, validateMobile(this.country.code as CountryCode)]);
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
-    this.dialogSubscriptions.unsubscribe();
-  }
+  ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
 }
