@@ -2,7 +2,7 @@
 @include mat.core();
 $primary: (
   app-deep-purple: hsl(260, 100%, 65%),
-  contrast: (app-deep-purple: hsl(100%, 100%, 100%))
+  contrast: (app-deep-purple: hsl(100, 100%, 100%))
 );
 
 $app-primary: mat.define-palette($primary, app-deep-purple);
