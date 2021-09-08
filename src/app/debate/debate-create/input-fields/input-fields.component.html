@@ -19,5 +19,15 @@
       </span>
     </mat-hint>
   </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Add Moderators</mat-label>
+    <mat-chip-list #chiplist>
+      <mat-chip
+      [removable]="true">iam_sania</mat-chip>
+      <mat-chip >Thasmeer P</mat-chip>
+      <input [matChipInputFor]="chiplist">
+    </mat-chip-list>
+  </mat-form-field>
 </body>
 
