@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { ExploreRoutingModule } from './explore-routing.module';
 import { ExploreComponent } from './explore.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 
 @NgModule({
@@ -11,7 +13,9 @@ import { ExploreComponent } from './explore.component';
   ],
   imports: [
     CommonModule,
-    ExploreRoutingModule
+    ExploreRoutingModule,
+    MatFormFieldModule,
+    MatInputModule
   ]
 })
 export class ExploreModule { }
