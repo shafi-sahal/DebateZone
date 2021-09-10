@@ -13,7 +13,7 @@
         <mat-spinner *ngIf="(username?.statusChanges | async) === 'PENDING'" [diameter]="17"></mat-spinner>
       </div>
       <mat-hint
-        *ngIf="usernameStatus === 'VALID'"
+        *ngIf="isUsernameAvailable"
         class="valid">
         Username is available!!!
       </mat-hint>

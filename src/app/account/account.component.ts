@@ -29,10 +29,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   inputFields = new BehaviorSubject<InputFieldsComponent | null>(null);
   shouldAsyncValidateEmail = new Subject<boolean>();
   shouldAsyncValidateMobile = new Subject<boolean>();
-  isDuplicateUsername = false;
-  isDuplicateEmail = false;
-  cachedEmail = '';
-  usernameStatus: 'INVALID' | 'PENDING' | 'VALID' = 'INVALID';
+  isUsernameAvailable = false;
   isLoading = true;
   user: User = { name: '', username: '' };
   isButtonDisabled = true;
@@ -67,7 +64,6 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     private formBuilder: FormBuilder,
     private usernameAvailabilityCheck: UsernameAvailabilityCheck,
     private emailUniquenessValidator: EmailUniquenessValidator,
-    private mobileUniquenessValidator: MobileUniquenessValidator,
     private focusChangeObserver: FocusChangeObserver,
     private authenticationService: AuthenticationService,
     private navService: NavService,
@@ -97,8 +93,6 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
     // Used to preserve the state and functions of the form on device changes
     this.subscriptions.
       add(this.inputFields.subscribe(inputFields => {
-        this.shouldAsyncValidateEmail.next(false);
-        this.cachedEmail = this.form.get('email')?.value;
         if (!inputFields) return;
         // Since the changed InputFieldsComponent has new input for email,
         // it is needed to listen to the blur event of the new input.
@@ -169,7 +163,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
       this.user = this.sessionService.user = {...this.user, ...this.userDataChangeSnapshot};
       this.homeService.user.next(this.user);
       this.userDataChangeSnapshot = {};
-      this.usernameStatus = 'PENDING';
+      this.isUsernameAvailable = false;
       this.isButtonDisabled = true;
       this.changeDetector.markForCheck();
       this.homeService.changes.next();

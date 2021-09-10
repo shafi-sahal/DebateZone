@@ -68,9 +68,7 @@ export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     setTimeout(() =>
-      this.focusChangeObserver.observeFocusChangeOfElement(
-        this.inputMobile, this.shouldAsyncValidateMobile, ['Login'], this.validateForNullRelatedTargetBlur
-      )
+      this.focusChangeObserver.observeFocusChangeOfElement(this.inputMobile, this.shouldAsyncValidateMobile, ['Login'])
     );
     if (this.mode === 'SIGNUP') return;
     this.subscriptions.add(this.mobile?.statusChanges.subscribe(() => this.setButtonDisabled()));

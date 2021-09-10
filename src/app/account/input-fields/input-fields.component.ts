@@ -2,10 +2,7 @@ import {
   AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild
 } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { Subscription } from 'rxjs';
 import { SessionService } from 'src/app/session.service';
-import { MobileInputComponent } from 'src/app/shared/modules/mobile-input/mobile-input.component';
 import { UsernameErrorMessageService } from 'src/app/shared/services/username-error-message.service';
 
 @Component({
@@ -17,13 +14,10 @@ import { UsernameErrorMessageService } from 'src/app/shared/services/username-er
 })
 export class InputFieldsComponent implements AfterViewInit {
   @Input() form!: FormGroup;
-  @Input() isDuplicateUsername = false;
-  @Input() isDuplicateEmail = false;
-  @Input() usernameStatus: 'INVALID' | 'PENDING' | 'VALID' = 'INVALID';
+  @Input() isUsernameAvailable = false;
   @Input() isLoading = false;
   @Input() isButtonDisabled = true;
   @Output() inputFields = new EventEmitter<this>();
-  @Output() keepMeLoogedIn = new EventEmitter<boolean>();
   @Output() controlBlur = new EventEmitter<FocusEvent>();
   @Output() formSubmit = new EventEmitter();
   @Output() editMobileClicked = new EventEmitter<void>();
@@ -39,12 +33,5 @@ export class InputFieldsComponent implements AfterViewInit {
   get username(): AbstractControl | null { return this.form.get('username'); }
   get email(): AbstractControl | null { return this.form.get('email'); }
 
-  ngAfterViewInit(): void {
-    this.inputFields.emit(this);
-
-    // Preserve the validation errors on device change
-    if(this.isDuplicateUsername) this.username?.setErrors({ isDuplicateUsername: true });
-    if(this.isDuplicateEmail) this.email?.setErrors({ isDuplicateEmail: true });
-    setTimeout(() => this.changeDetector.markForCheck());
-  }
+  ngAfterViewInit(): void { this.inputFields.emit(this); }
 }

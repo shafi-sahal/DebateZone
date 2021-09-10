@@ -2,9 +2,7 @@
   <app-input-fields
     *ngIf="(deviceTypeChecker.isMobile | async) else inputFieldsWithCard"
     [form]="form"
-    [isDuplicateUsername]="isDuplicateUsername"
-    [isDuplicateEmail]="isDuplicateEmail"
-    [usernameStatus]="usernameStatus"
+    [isUsernameAvailable]="isUsernameAvailable"
     [isButtonDisabled]="isButtonDisabled"
     (inputFields)="inputFields.next($event)"
     (input)="onInput($event)"
@@ -17,9 +15,7 @@
     <mat-card [class.mat-elevation-z5]="true">
       <app-input-fields
         [form]="form"
-        [isDuplicateUsername]="isDuplicateUsername"
-        [isDuplicateEmail]="isDuplicateEmail"
-        [usernameStatus]="usernameStatus"
+        [isUsernameAvailable]="isUsernameAvailable"
         [isButtonDisabled]="isButtonDisabled"
         (inputFields)="inputFields.next($event)"
         (input)="onInput($event)"

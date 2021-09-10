@@ -10,34 +10,25 @@ import { User } from './models/user.model';
 
 @Injectable()
 export class UsernameAvailabilityCheck implements AsyncValidator {
-  private isDuplicateUsername = false;
-  private usernameStatus: 'INVALID' | 'PENDING' | 'VALID' = 'INVALID';
-  private cachedUsername = '';
+  private isUsernameAvailable = false;
   private user: User = { name: '', username: '' };
 
   constructor(private authenticationService: AuthenticationService) {}
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
     const username = control.value;
-    if (this.cachedUsername !== username) this.usernameStatus = 'PENDING';
-    if (this.user && this.user.username === username) {
-      this.isDuplicateUsername = false;
-      return of(null);
-    }
+    if (this.user && this.user.username === username) return of(null);
 
     return control.valueChanges.pipe(
       debounceTime(1000),
       switchMap(username => {
-        this.cachedUsername = username;
         return this.authenticationService.isDuplicateUsername(username);
       }),
       map(isDuplicateUsername => {
-        this.isDuplicateUsername = isDuplicateUsername;
-        // Username validation status is handled manually since new status changes listeners are called on device change,
-        // Manually setting the validation status solves the ptoblem
-        this.usernameStatus = this.isDuplicateUsername ? 'INVALID' : 'VALID';
+        // Storing whether username is available so that the "username is available!!!" message is persisted on device changes
+        this.isUsernameAvailable = !isDuplicateUsername;
         return isDuplicateUsername ? { isDuplicateUsername: true } : null;
-      } ),
+      }),
       first(),
       catchError(() => of({ unknownError: true }))
     );
@@ -47,9 +38,6 @@ export class UsernameAvailabilityCheck implements AsyncValidator {
 @Injectable()
 export class EmailUniquenessValidator implements AsyncValidator {
   private shouldAsyncValidateEmail = new Subject<boolean>();
-  private isDuplicateEmail = false;
-  private cachedEmail!: string;
-  private isLoading = true;
   private user: User = { name: '', username: ''};
 
   constructor(private authenticationService: AuthenticationService) {}
@@ -57,26 +45,16 @@ export class EmailUniquenessValidator implements AsyncValidator {
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
     const email = control.value;
     if (this.user && this.user.email === email) {
-      this.isDuplicateEmail = false;
       return of(null);
     }
 
     return this.shouldAsyncValidateEmail.pipe(
       first(),
       switchMap(canValidate => {
-        if (!canValidate) return of(this.isDuplicateEmail);
-        // To prevent unnecessary requests to server even if the value is not changed and request happens only because of
-        // device change
-        if (this.cachedEmail === email) {
-          this.cachedEmail = '';
-          return of(this.isDuplicateEmail);
-        }
+        if (!canValidate) return of(null);
         return this.authenticationService.isDuplicateEmail(email);
       }),
-      map(isDuplicateEmail => {
-        this.isDuplicateEmail = isDuplicateEmail;
-        return isDuplicateEmail ? { isDuplicateEmail: true } : null;
-      }),
+      map(isDuplicateEmail => isDuplicateEmail ? { isDuplicateEmail: true } : null),
       catchError(() => of({ unknownError: true }))
     );
   }
@@ -86,9 +64,6 @@ export class EmailUniquenessValidator implements AsyncValidator {
 export class MobileUniquenessValidator implements AsyncValidator {
   private country = { name: 'India', dialCode: '+91', code: 'IN' };
   private shouldAsyncValidateMobile = new Subject<boolean>();
-  private user: User = { name: '', username: ''};
-  private isDuplicateMobile = false;
-  private cachedMobile = '';
 
   constructor(private authenticationService: AuthenticationService) {}
 
@@ -101,22 +76,13 @@ export class MobileUniquenessValidator implements AsyncValidator {
       console.error(error);
     }
 
-    if (this.user && this.user.mobile === mobile) return of(null);
-    if (this.cachedMobile === mobile) {
-      return this.isDuplicateMobile ? of({ isDuplicateMobile: true }) : of(null);
-    }
-
     return this.shouldAsyncValidateMobile.pipe(
       first(),
       switchMap(canValidate => {
         if (!canValidate) return of(false);
         return this.authenticationService.isDuplicateMobile(mobile);
       }),
-      map(isDuplicateMobile => {
-        this.cachedMobile = mobile;
-        this.isDuplicateMobile = isDuplicateMobile;
-        return isDuplicateMobile ? { isDuplicateMobile: true } : null;
-      } ),
+      map(isDuplicateMobile =>  isDuplicateMobile ? { isDuplicateMobile: true } : null),
       catchError(() => of({ unknownError: true }))
     );
   }
@@ -131,15 +97,9 @@ export class FocusChangeObserver implements OnDestroy {
   observeFocusChangeOfElement(
     element: ElementRef,
     shouldAsyncValidateElement: Subject<boolean>,
-    exceptValidationTextContents: string[],
-    validateForNullRelatedTargetBlur = true
+    exceptValidationTextContents: string[]
   ): void {
     this.listenerBlur = this.renderer.listen(element.nativeElement, 'blur', blur => {
-      if(!validateForNullRelatedTargetBlur && !blur.relatedTarget) {
-        shouldAsyncValidateElement.next(false);
-        return;
-      }
-
       const button = (blur.relatedTarget as HTMLButtonElement);
       if (!button) {
         shouldAsyncValidateElement.next(true);
