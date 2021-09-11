@@ -7,7 +7,9 @@ const user = require('../models/user');
 
 exports.isDuplicate = async (req, res) => {
   const query = req.query;
-  if (!(query.username || query.email || query.mobile)) return errorHandler(res);
+  if (!(query.username || query.email || query.mobile)) {
+    return errorHandler(res, new Error('Username, email or mobile required to check for duplicate user'));
+  }
   const user = await checkUserExistence(query);
   res.send(!!user);
 }
@@ -18,7 +20,7 @@ exports.createUser = async (req, res) => {
     const token = generateToken({ userId: user.id });
     res.status(201).json({ token: token, user: { name: user.name, username: user.username }});
   } catch(error) {
-    if (error.name !== 'SequelizeUniqueConstraintError') return errorHandler(res, error)
+    if (error.name !== 'SequelizeUniqueConstraintError') return errorHandler(res, new Error(error))
     message = handleDuplicateUserErrors(error);
     res.status(400).json({ message: message });
   }
@@ -27,7 +29,7 @@ exports.createUser = async (req, res) => {
 exports.login = async (req, res) => {
   const loginKey = req.body.loginKey;
   const password = req.body.password;
-  if (!loginKey || !password) return errorHandler(res, 'loginKey and password is required for login');
+  if (!loginKey || !password) return errorHandler(res, new Error('loginKey and password is required for login'));
 
   try {
     const user = await User.findOne({
@@ -37,14 +39,14 @@ exports.login = async (req, res) => {
       }
     });
 
-    if(!user) return errorHandler(res, 'Unauthorized (User does not exist)', 401);
+    if(!user) return errorHandler(res, new Error('Unauthorized (User does not exist)'), 401);
     const pepper = process.env.PEPPER;
     const isPasswordMatching = await bcrypt.compare(password + pepper, user.password);
-    if (!isPasswordMatching) return errorHandler(res, 'Unauthorized (Password mismatch)', 401);
+    if (!isPasswordMatching) return errorHandler(res, new Error('Unauthorized (Password mismatch)'), 401);
     const token = generateToken({ userId: user.id });
     res.json({ token: token, user: { name: user.name, username: user.username } });
   } catch(error) {
-    errorHandler(res, error);
+    errorHandler(res, new Error(error));
   }
 }
 
@@ -53,7 +55,7 @@ exports.fetchUser = async (req, res) => {
     const user = await User.findOne({ attributes: ['name', 'username', 'email', 'mobile'], where: { id: req.userId } });
     res.send(user);
   } catch(error) {
-    errorHandler(res, error);
+    errorHandler(res, new Error(error));
   }
 }
 
@@ -72,7 +74,7 @@ exports.fetchUsers = (req, res) => {
       fetchedUsers.push(users);
       res.send(fetchedUsers);
     })
-    .catch(error => errorHandler(res, error)
+    .catch(error => errorHandler(res, new Error(error))
   );
 }
 
@@ -81,14 +83,14 @@ exports.updateUser = async (req, res) => {
     await User.update(req.body, { where: { id: req.userId } });
     res.sendStatus(204);
   } catch(error) {
-    if (error.name !== 'SequelizeUniqueConstraintError') return errorHandler(res, error)
+    if (error.name !== 'SequelizeUniqueConstraintError') return errorHandler(res, new Error(error))
     message = handleDuplicateUserErrors(error);
     res.status(400).json({ message: message });
   }
 }
 
 const handleDuplicateUserErrors = error => {
-  console.log(error);
+  console.log(new Error(error));
   const duplicateField = error.errors[0].path.split('.')[1];
   let message = ''
   if (duplicateField === 'username'){
@@ -104,7 +106,12 @@ const handleDuplicateUserErrors = error => {
 
 const checkUserExistence = async query => {
   const conditionKey = Object.keys(query)[0];
-  return await User.findOne({ attributes: ['id'], where: { [conditionKey]: query[conditionKey] } });
+
+  try {
+    return await User.findOne({ attributes: ['id'], where: { [conditionKey]: query[conditionKey] } });
+  } catch(error){
+    errorHandler(res, new Error(error));
+  }
 }
 
 const capitalizeFirstLetter = word => {
