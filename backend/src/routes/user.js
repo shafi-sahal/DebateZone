@@ -11,5 +11,6 @@ router.post('/signup', userSignUpDataValidation, encryptPassword, UserController
 router.put('', userUpdateDataValidation, checkAuth, UserController.updateUser);
 router.get('', checkAuth, UserController.fetchUser);
 router.get('/is-duplicate', UserController.isDuplicate);
+router.get('/search', UserController.fetchUsers);
 
 module.exports = router;
