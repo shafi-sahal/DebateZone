@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 const errorHandler = require('../shared/error-handler');
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
@@ -10,8 +11,12 @@ exports.isDuplicate = async (req, res) => {
   if (!(query.username || query.email || query.mobile)) {
     return errorHandler(res, new Error('Username, email or mobile required to check for duplicate user'));
   }
-  const user = await checkUserExistence(query);
-  res.send(!!user);
+  try {
+    const user = await checkUserExistence(query);
+    res.send(!!user);
+  } catch(error) {
+    errorHandler(res, new Error(error));
+  }
 }
 
 exports.createUser = async (req, res) => {
@@ -35,7 +40,7 @@ exports.login = async (req, res) => {
     const user = await User.findOne({
       attributes: ['id', 'name', 'username', 'password'],
       where: {
-        [Sequelize.Op.or]: [ { email: loginKey }, { username: loginKey }, { mobile: loginKey } ]
+        [Op.or]: [ { email: loginKey }, { username: loginKey }, { mobile: loginKey } ]
       }
     });
 
@@ -59,23 +64,33 @@ exports.fetchUser = async (req, res) => {
   }
 }
 
-exports.fetchUsers = (req, res) => {
+exports.fetchUsers = async (req, res) => {
   const query = req.query.query;
-  let fetchedUsers = [];
-  searchUsers('%' +query + '%')
-    .then(users => {
-      if (users.length === 9) return res.send(users);
-      else {
-        fetchedUsers.push(users);
-        return searchUsers('% ' + query + '%');
-      }
-    })
-    .then(users => {
-      fetchedUsers.push(users);
-      res.send(fetchedUsers);
-    })
-    .catch(error => errorHandler(res, new Error(error))
-  );
+  let numberOfUsersToBeFetched = 9;
+  let condition = getConditionToMatchFirstNameStartsWithQuery(query + '%');
+  try {
+    const firstNameStartsWithQueryMatchingUsers = await searchUsers(condition, numberOfUsersToBeFetched);
+    if (firstNameStartsWithQueryMatchingUsers.length === numberOfUsersToBeFetched){
+      return res.send(firstNameStartsWithQueryMatchingUsers);
+    }
+
+    condition = getConditionToMatchRemainingUsers('% ' + query+ '%', firstNameStartsWithQueryMatchingUsers);
+    let numberOfUsersRemainingToBeFetched = numberOfUsersToBeFetched - firstNameStartsWithQueryMatchingUsers.length;
+    const lastNameStartsWithQueryMatchingUsers = await searchUsers(condition, numberOfUsersRemainingToBeFetched);
+    const firstAndLastNameStartsWithQueryMatchingUsers =
+      [...firstNameStartsWithQueryMatchingUsers, ...lastNameStartsWithQueryMatchingUsers];
+
+    if (firstAndLastNameStartsWithQueryMatchingUsers.length === numberOfUsersToBeFetched) {
+      return res.send(firstAndLastNameStartsWithQueryMatchingUsers);
+    }
+
+    condition = getConditionToMatchRemainingUsers('%' + query + '%', firstAndLastNameStartsWithQueryMatchingUsers);
+    numberOfUsersRemainingToBeFetched = numberOfUsersToBeFetched - firstAndLastNameStartsWithQueryMatchingUsers.length;
+    const nameWithQueryInBetweenMatchingUsers = await searchUsers(condition, numberOfUsersRemainingToBeFetched);
+    return res.send([...firstAndLastNameStartsWithQueryMatchingUsers, ...nameWithQueryInBetweenMatchingUsers]);
+  } catch(error) {
+    errorHandler(res, new Error(error));
+  }
 }
 
 exports.updateUser = async (req, res) => {
@@ -83,7 +98,7 @@ exports.updateUser = async (req, res) => {
     await User.update(req.body, { where: { id: req.userId } });
     res.sendStatus(204);
   } catch(error) {
-    if (error.name !== 'SequelizeUniqueConstraintError') return errorHandler(res, new Error(error))
+    if (error.name !== 'SequelizeUniqueConstraintError') return errorHandler(res, new Error(error));
     message = handleDuplicateUserErrors(error);
     res.status(400).json({ message: message });
   }
@@ -106,12 +121,7 @@ const handleDuplicateUserErrors = error => {
 
 const checkUserExistence = async query => {
   const conditionKey = Object.keys(query)[0];
-
-  try {
-    return await User.findOne({ attributes: ['id'], where: { [conditionKey]: query[conditionKey] } });
-  } catch(error){
-    errorHandler(res, new Error(error));
-  }
+  return await User.findOne({ attributes: ['id'], where: { [conditionKey]: query[conditionKey] } });
 }
 
 const capitalizeFirstLetter = word => {
@@ -125,17 +135,35 @@ const generateToken = payload => {
   return sign(payload);
 }
 
-const searchUsers = likeQuery => {
-  return new Promise(resolve => {
-    User.findAll({
-      attributes: ['name', 'username'],
-      where: {
-        [Sequelize.Op.or]: [
-           { name: { [Sequelize.Op.like]: likeQuery }}, { username: { [Sequelize.Op.like]: likeQuery } }
-        ]
+const getConditionToMatchFirstNameStartsWithQuery = likeQuery => {
+  return {
+    [Op.or]: [
+      { name: { [Op.like]: likeQuery }}, { username: { [Op.like]: likeQuery } }
+   ]
+  }
+}
+
+const getConditionToMatchRemainingUsers = (likeQuery, lastMatchedList) => {
+  return {
+    [Op.or]: [
+      {
+        name: {
+          [Op.and]: [ { [Op.like]: likeQuery }, { [Op.not]: lastMatchedList.map(user => user.name) } ]
+        },
       },
-      limit: 9
-    })
-    .then(users => resolve(users));
+      {
+        username: {
+          [Op.and]: [ { [Op.like]: likeQuery }, { [Op.not]: lastMatchedList.map(user => user.username) } ]
+        }
+      }
+    ]
+  };
+}
+
+const searchUsers = async (condition, limit) => {
+  return await User.findAll({
+    attributes: ['name', 'username'],
+    where: condition,
+    limit: limit
   });
 }
