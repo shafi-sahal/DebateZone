@@ -143,17 +143,17 @@ const getConditionToMatchFirstNameStartsWithQuery = likeQuery => {
   }
 }
 
-const getConditionToMatchRemainingUsers = (likeQuery, lastMatchedList) => {
+const getConditionToMatchRemainingUsers = (likeQuery, lastMatchedUsers) => {
   return {
     [Op.or]: [
       {
         name: {
-          [Op.and]: [ { [Op.like]: likeQuery }, { [Op.not]: lastMatchedList.map(user => user.name) } ]
+          [Op.and]: [ { [Op.like]: likeQuery }, { [Op.not]: lastMatchedUsers.map(user => user.name) } ]
         },
       },
       {
         username: {
-          [Op.and]: [ { [Op.like]: likeQuery }, { [Op.not]: lastMatchedList.map(user => user.username) } ]
+          [Op.and]: [ { [Op.like]: likeQuery }, { [Op.not]: lastMatchedUsers.map(user => user.username) } ]
         }
       }
     ]
