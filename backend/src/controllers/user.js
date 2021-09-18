@@ -26,7 +26,7 @@ exports.createUser = async (req, res) => {
     const token = generateToken({ userId: user.id });
     res.status(201).json({ token: token, user: { name: user.name, username: user.username }});
   } catch(error) {
-    if (error.name !== 'SequelizeUniqueConstraintError') return errorHandler(res, new Error(error))
+    if (error.name !== 'SequelizeUniqueConstraintError') return errorHandler(res, error)
     message = handleDuplicateUserErrors(error);
     res.status(400).json({ message: message });
   }
@@ -98,25 +98,19 @@ exports.updateUser = async (req, res) => {
     await User.update(req.body, { where: { id: req.userId } });
     res.sendStatus(204);
   } catch(error) {
-    if (error.name !== 'SequelizeUniqueConstraintError') return errorHandler(res, new Error(error));
-    message = handleDuplicateUserErrors(error);
+    if (error.name !== 'SequelizeUniqueConstraintError') return errorHandler(res, error);
+    const message = handleDuplicateUserErrors(error);
     res.status(400).json({ message: message });
   }
 }
 
 const handleDuplicateUserErrors = error => {
-  console.log(new Error(error));
+  console.log(error);
   const duplicateField = error.errors[0].path.split('.')[1];
-  let message = ''
-  if (duplicateField === 'username'){
-    message = 'Username already exists. Try again';
-  } else if (duplicateField === 'email') {
-    message = 'An account with the same email already exists';
-  } else if (duplicateField === 'mobile') {
-    message = 'An account with same mobile number already exists'
-  }
 
-  return message;
+  if (duplicateField === 'username') return 'Username already exists. Try again';
+  if (duplicateField === 'email') return 'An account with the same email already exists';
+  if (duplicateField === 'mobile') return 'An account with same mobile number already exists';
 }
 
 const checkUserExistence = async query => {
