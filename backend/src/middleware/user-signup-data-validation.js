@@ -1,3 +1,4 @@
+'use strict';
 const errorHandler = require('../shared/error-handler');
 const regexes = require('../shared/regexes');
 const isMobileFormatCorrect = require('../shared/check-mobile-format');
@@ -10,7 +11,7 @@ module.exports = (req, res, next) => {
       if (!regexes[key].test(req.body[key])) return errorHandler(res, 'Invalid ' + key);
     }
   } catch(error) {
-    return errorHandler(res, error);
+    return errorHandler(res, new Error(error));
   }
 
   if (mobile && !isMobileFormatCorrect(mobile)) return errorHandler(res, 'Invalid mobile');
