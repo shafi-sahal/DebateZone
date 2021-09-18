@@ -66,6 +66,7 @@ exports.fetchUser = async (req, res) => {
 }
 
 exports.fetchUsers = async (req, res) => {
+  let time = Date.now();
   const query = req.query.query;
   const numberOfUsersToBeFetched = 9;
   let condition = getConditionToMatchFirstNameStartsWithQuery(query + '%');
@@ -85,6 +86,7 @@ exports.fetchUsers = async (req, res) => {
     condition = getConditionToMatchRemainingUsers('%' + query + '%', firstAndLastNameStartsWithQueryMatchingUsers);
     let numberOfUsersRemainingToBeFetched = numberOfUsersToBeFetched - firstAndLastNameStartsWithQueryMatchingUsers.length;
     const nameWithQueryInBetweenMatchingUsers = await searchUsers(condition, numberOfUsersRemainingToBeFetched);
+    console.log((Date.now()-time)/1000)
     return res.send([...firstAndLastNameStartsWithQueryMatchingUsers, ...nameWithQueryInBetweenMatchingUsers]);
   } catch(error) {
     errorHandler(res, new Error(error));
@@ -143,17 +145,17 @@ const getConditionToMatchFirstNameStartsWithQuery = likeQuery => {
 }
 
 const getConditionToMatchRemainingUsers = (likeQuery, lastMatchedUsers) => {
-  return {
+  const attributeMatchCondition = {
     [Op.or]: [
+      { name: { [Op.like]: likeQuery } }, { username: { [Op.like]: likeQuery } }
+    ]
+  };
+
+  return {
+    [Op.and]: [
+      attributeMatchCondition,
       {
-        name: {
-          [Op.and]: [ { [Op.like]: likeQuery }, { [Op.not]: lastMatchedUsers.map(user => user.name) } ]
-        },
-      },
-      {
-        username: {
-          [Op.and]: [ { [Op.like]: likeQuery }, { [Op.not]: lastMatchedUsers.map(user => user.username) } ]
-        }
+        username: { [Op.not]: lastMatchedUsers.map(user => user.username) }
       }
     ]
   };
