@@ -119,7 +119,8 @@ const handleDuplicateUserErrors = error => {
 
 const checkUserExistence = async query => {
   const conditionKey = Object.keys(query)[0];
-  return await User.findOne({ attributes: ['id'], where: { [conditionKey]: query[conditionKey] } });
+  const user = await User.findOne({ attributes: ['id'], where: { [conditionKey]: query[conditionKey] } });
+  return user;
 }
 
 const capitalizeFirstLetter = word => {
