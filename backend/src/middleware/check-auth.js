@@ -10,6 +10,6 @@ module.exports = (req, res, next) => {
     req.userId = payload.userId;
     next();
   } catch(error) {
-    errorHandler(res, error, 403);
+    errorHandler(res, new Error(error), 403);
   }
 }

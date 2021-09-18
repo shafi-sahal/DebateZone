@@ -7,14 +7,14 @@ module.exports = (req, res, next) => {
 
   const mobile = req.body.mobile
   if (mobile) {
-    if (!isMobileFormatCorrect(mobile)) return errorHandler(res, 'Invalid mobile');
+    if (!isMobileFormatCorrect(mobile)) return errorHandler(res, new Error('Invalid mobile'));
     req.body = { mobile: mobile };
     return next();
   }
 
   try {
     for (const key of Object.keys(req.body)) {
-      if (!regexes[key].test(req.body[key])) return errorHandler(res, 'Invalid ' + key);
+      if (!regexes[key].test(req.body[key])) return errorHandler(res, new Error('Invalid ' + key));
     }
   } catch(error) {
     return errorHandler(res, new Error(error));
