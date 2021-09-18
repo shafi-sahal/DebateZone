@@ -1,10 +1,10 @@
+'use strict';
 const app = require('./src/app');
 const debug = require('debug')('node-angular');
 const http = require('http');
 const dotenv = require('dotenv');
 
 dotenv.config();
-
 const normalizePort = val => {
   var port = parseInt(val);
 
@@ -51,4 +51,4 @@ app.set('port', port);
 const server = http.createServer(app);
 server.on('error', onError);
 server.on("listening", onListening);
-server.listen(port, '192.168.10.9', () => console.log('Server started'));
+server.listen(port,  () => console.log('Server started'));

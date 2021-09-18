@@ -1,3 +1,4 @@
+'use strict';
 const parsePhoneNumber = require('libphonenumber-js');
 
 module.exports = number => {

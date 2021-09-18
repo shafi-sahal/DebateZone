@@ -1,3 +1,4 @@
+'use strict';
 const messages = {
   insertionError: 'Error while inserting'
 }

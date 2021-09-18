@@ -1,3 +1,4 @@
+'use strict';
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const errorHandler = require('../shared/error-handler');
@@ -66,7 +67,7 @@ exports.fetchUser = async (req, res) => {
 
 exports.fetchUsers = async (req, res) => {
   const query = req.query.query;
-  let numberOfUsersToBeFetched = 9;
+  const numberOfUsersToBeFetched = 9;
   let condition = getConditionToMatchFirstNameStartsWithQuery(query + '%');
   try {
     const firstNameStartsWithQueryMatchingUsers = await searchUsers(condition, numberOfUsersToBeFetched);
@@ -74,18 +75,15 @@ exports.fetchUsers = async (req, res) => {
       return res.send(firstNameStartsWithQueryMatchingUsers);
     }
 
-    condition = getConditionToMatchRemainingUsers('% ' + query+ '%', firstNameStartsWithQueryMatchingUsers);
-    let numberOfUsersRemainingToBeFetched = numberOfUsersToBeFetched - firstNameStartsWithQueryMatchingUsers.length;
-    const lastNameStartsWithQueryMatchingUsers = await searchUsers(condition, numberOfUsersRemainingToBeFetched);
     const firstAndLastNameStartsWithQueryMatchingUsers =
-      [...firstNameStartsWithQueryMatchingUsers, ...lastNameStartsWithQueryMatchingUsers];
+      await searchRemainingUsers('% ' + query + '%', numberOfUsersToBeFetched, firstNameStartsWithQueryMatchingUsers);
 
     if (firstAndLastNameStartsWithQueryMatchingUsers.length === numberOfUsersToBeFetched) {
       return res.send(firstAndLastNameStartsWithQueryMatchingUsers);
     }
 
     condition = getConditionToMatchRemainingUsers('%' + query + '%', firstAndLastNameStartsWithQueryMatchingUsers);
-    numberOfUsersRemainingToBeFetched = numberOfUsersToBeFetched - firstAndLastNameStartsWithQueryMatchingUsers.length;
+    let numberOfUsersRemainingToBeFetched = numberOfUsersToBeFetched - firstAndLastNameStartsWithQueryMatchingUsers.length;
     const nameWithQueryInBetweenMatchingUsers = await searchUsers(condition, numberOfUsersRemainingToBeFetched);
     return res.send([...firstAndLastNameStartsWithQueryMatchingUsers, ...nameWithQueryInBetweenMatchingUsers]);
   } catch(error) {
@@ -160,10 +158,23 @@ const getConditionToMatchRemainingUsers = (likeQuery, lastMatchedUsers) => {
   };
 }
 
+const searchRemainingUsers = async (likeQuery, numberOfUsersToBeFetched, lastMatchedUsers) => {
+  const condition = getConditionToMatchRemainingUsers(likeQuery, lastMatchedUsers);
+  const numberOfUsersRemainingToBeFetched = numberOfUsersToBeFetched - lastMatchedUsers.length;
+  try {
+    const remainingUsers = await searchUsers(condition, numberOfUsersRemainingToBeFetched);
+    return [...lastMatchedUsers, ...remainingUsers];
+  } catch(error) {
+    console.log(error);
+  }
+
+}
+
 const searchUsers = async (condition, limit) => {
-  return await User.findAll({
+  const user = await User.findAll({
     attributes: ['name', 'username'],
     where: condition,
     limit: limit
   });
+  return user;
 }

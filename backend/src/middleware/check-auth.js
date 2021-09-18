@@ -1,3 +1,4 @@
+'use strict';
 const { createVerifier } = require('fast-jwt');
 const errorHandler = require('../shared/error-handler');
 
