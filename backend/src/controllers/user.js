@@ -33,17 +33,16 @@ exports.createUser = async (req, res) => {
 }
 
 exports.login = async (req, res) => {
-  const loginKey = req.body.loginKey;
-  const password = req.body.password;
+  const { loginKey, password } = req.body;
   if (!loginKey || !password) return errorHandler(res, new Error('loginKey and password is required for login'));
 
+  let attribute = '';
+  if (loginKey.includes('@')) attribute = 'email';
+  else if(loginKey.includes('+')) attribute = 'mobile';
+  else attribute = 'username';
+
   try {
-    const user = await User.findOne({
-      attributes: ['id', 'name', 'username', 'password'],
-      where: {
-        [Op.or]: [ { email: loginKey }, { username: loginKey }, { mobile: loginKey } ]
-      }
-    });
+    const user = await User.findOne({ attributes: ['id', 'name', 'username', 'password'], where: { [attribute]: loginKey } });
 
     if(!user) return errorHandler(res, new Error('Unauthorized (User does not exist)'), 401);
     const pepper = process.env.PEPPER;
