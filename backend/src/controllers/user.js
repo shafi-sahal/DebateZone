@@ -65,26 +65,32 @@ exports.fetchUser = async (req, res) => {
 }
 
 exports.fetchUsers = async (req, res) => {
-  const query = req.query.query;
+  let query = req.query.query;
   const numberOfUsersToBeFetched = 9;
-  let condition = getConditionToMatchFirstNameStartsWithQuery(query + '%');
+  const isUsernameQuery = query.includes('@');
+  if (isUsernameQuery) query = query.replace('@', '');
+  let condition = getAttributeMatchCondition(query + '%', isUsernameQuery);
+
   try {
-    const firstNameStartsWithQueryMatchingUsers = await searchUsers(condition, numberOfUsersToBeFetched);
-    if (firstNameStartsWithQueryMatchingUsers.length === numberOfUsersToBeFetched){
-      return res.send(firstNameStartsWithQueryMatchingUsers);
+    const nameStartsWithQueryMatchingUsers = await searchUsers(condition, numberOfUsersToBeFetched);
+    if (nameStartsWithQueryMatchingUsers.length === numberOfUsersToBeFetched){
+      return res.send(nameStartsWithQueryMatchingUsers);
     }
 
-    const firstAndLastNameStartsWithQueryMatchingUsers =
-      await searchRemainingUsers('% ' + query + '%', numberOfUsersToBeFetched, firstNameStartsWithQueryMatchingUsers);
+    let remainingUsersFetchMetadata = {
+      numberOfUsersToBeFetched: numberOfUsersToBeFetched,
+      lastMatchedUsers: nameStartsWithQueryMatchingUsers,
+      isUsernameQuery: isUsernameQuery
+    };
+    const likeQuery = isUsernameQuery ? '%\\_' + query + '%' : '% ' + query + '%';
+    await searchRemainingUsers(likeQuery, remainingUsersFetchMetadata);
 
-    if (firstAndLastNameStartsWithQueryMatchingUsers.length === numberOfUsersToBeFetched) {
-      return res.send(firstAndLastNameStartsWithQueryMatchingUsers);
+    if (remainingUsersFetchMetadata.lastMatchedUsers.length === numberOfUsersToBeFetched) {
+      return res.send(remainingUsersFetchMetadata.lastMatchedUsers);
     }
 
-    condition = getConditionToMatchRemainingUsers('%' + query + '%', firstAndLastNameStartsWithQueryMatchingUsers);
-    let numberOfUsersRemainingToBeFetched = numberOfUsersToBeFetched - firstAndLastNameStartsWithQueryMatchingUsers.length;
-    const nameWithQueryInBetweenMatchingUsers = await searchUsers(condition, numberOfUsersRemainingToBeFetched);
-    return res.send([...firstAndLastNameStartsWithQueryMatchingUsers, ...nameWithQueryInBetweenMatchingUsers]);
+    await searchRemainingUsers('%' + query + '%', remainingUsersFetchMetadata);
+    res.send(remainingUsersFetchMetadata.lastMatchedUsers);
   } catch(error) {
     errorHandler(res, new Error(error));
   }
@@ -127,20 +133,20 @@ const generateToken = payload => {
   return sign(payload);
 }
 
-const getConditionToMatchFirstNameStartsWithQuery = likeQuery => {
+const getAttributeMatchCondition = (likeQuery, isUsernameQuery) => {
+  if (isUsernameQuery) {
+    return { username: { [Op.like]: likeQuery } };
+  }
+
   return {
     [Op.or]: [
-      { name: { [Op.like]: likeQuery }}, { username: { [Op.like]: likeQuery } }
+      { name: { [Op.like]: likeQuery } }, { username: { [Op.like]: likeQuery } }
    ]
   }
 }
 
-const getConditionToMatchRemainingUsers = (likeQuery, lastMatchedUsers) => {
-  const attributeMatchCondition = {
-    [Op.or]: [
-      { name: { [Op.like]: likeQuery } }, { username: { [Op.like]: likeQuery } }
-    ]
-  };
+const getConditionToMatchRemainingUsers = (likeQuery, isUsernameQuery, lastMatchedUsers) => {
+  const attributeMatchCondition = getAttributeMatchCondition(likeQuery, isUsernameQuery);
 
   return {
     [Op.and]: [
@@ -152,16 +158,12 @@ const getConditionToMatchRemainingUsers = (likeQuery, lastMatchedUsers) => {
   };
 }
 
-const searchRemainingUsers = async (likeQuery, numberOfUsersToBeFetched, lastMatchedUsers) => {
-  const condition = getConditionToMatchRemainingUsers(likeQuery, lastMatchedUsers);
+const searchRemainingUsers = async (likeQuery, remainingUsersFetchMetadata) => {
+  const { numberOfUsersToBeFetched, lastMatchedUsers, isUsernameQuery } = remainingUsersFetchMetadata;
+  const condition = getConditionToMatchRemainingUsers(likeQuery, isUsernameQuery, lastMatchedUsers);
   const numberOfUsersRemainingToBeFetched = numberOfUsersToBeFetched - lastMatchedUsers.length;
-  try {
-    const remainingUsers = await searchUsers(condition, numberOfUsersRemainingToBeFetched);
-    return [...lastMatchedUsers, ...remainingUsers];
-  } catch(error) {
-    console.log(error);
-  }
-
+  const remainingUsers = await searchUsers(condition, numberOfUsersRemainingToBeFetched);
+  remainingUsersFetchMetadata.lastMatchedUsers = [...lastMatchedUsers, ...remainingUsers];
 }
 
 const searchUsers = async (condition, limit) => {
