@@ -65,15 +65,14 @@ exports.fetchUser = async (req, res) => {
 }
 
 exports.fetchUsers = async (req, res) => {
-  let query = req.query.query;
+  const query = req.query.query;
   const numberOfUsersToBeFetched = 9;
-  const isUsernameQuery = query.includes('@');
-  if (isUsernameQuery) query = query.replace('@', '');
+  const isUsernameQuery = req.isUsernameQuery;
   let condition = getAttributeMatchCondition(query + '%', isUsernameQuery);
 
   try {
     const nameStartsWithQueryMatchingUsers = await searchUsers(condition, numberOfUsersToBeFetched);
-    if (nameStartsWithQueryMatchingUsers.length === numberOfUsersToBeFetched){
+    if (nameStartsWithQueryMatchingUsers.length === numberOfUsersToBeFetched) {
       return res.send(nameStartsWithQueryMatchingUsers);
     }
 
@@ -82,11 +81,16 @@ exports.fetchUsers = async (req, res) => {
       lastMatchedUsers: nameStartsWithQueryMatchingUsers,
       isUsernameQuery: isUsernameQuery
     };
-    const likeQuery = isUsernameQuery ? '%\\_' + query + '%' : '% ' + query + '%';
-    await searchRemainingUsers(likeQuery, remainingUsersFetchMetadata);
 
-    if (remainingUsersFetchMetadata.lastMatchedUsers.length === numberOfUsersToBeFetched) {
-      return res.send(remainingUsersFetchMetadata.lastMatchedUsers);
+    // If query starts with underscore, it has been already formatted to match the likeQuery of that
+    // particular case in the middleware(search-query-formatter)
+    if (!req.isQueryStartsWithUnderscore) {
+      const likeQuery = isUsernameQuery ? '%\\_' + query + '%' : '% ' + query + '%';
+      await searchRemainingUsers(likeQuery, remainingUsersFetchMetadata);
+
+      if (remainingUsersFetchMetadata.lastMatchedUsers.length === numberOfUsersToBeFetched) {
+        return res.send(remainingUsersFetchMetadata.lastMatchedUsers);
+      }
     }
 
     await searchRemainingUsers('%' + query + '%', remainingUsersFetchMetadata);
