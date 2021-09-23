@@ -1,7 +1,6 @@
 'use strict';
 
 module.exports = (req, res, next) => {
-  console.log(req.query.query);
   let query = req.query.query;
   const hasAmpersand = query.includes('@');
   if (hasAmpersand) query = query.replace('@','');
