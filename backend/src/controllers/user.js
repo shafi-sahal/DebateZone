@@ -82,9 +82,8 @@ exports.fetchUsers = async (req, res) => {
       isUsernameQuery: isUsernameQuery
     };
 
-    // If query starts with underscore, it has been already formatted to match the likeQuery of that
-    // particular case in the middleware(search-query-formatter)
-    if (!req.isQueryStartsWithUnderscore) {
+    // If query starts with underscore, the underscore has already been escaped by middleware(search-query-formatter)
+    if (!req.isQueryStartWithUnderscore) {
       const likeQuery = isUsernameQuery ? '%\\_' + query + '%' : '% ' + query + '%';
       await searchRemainingUsers(likeQuery, remainingUsersFetchMetadata);
 

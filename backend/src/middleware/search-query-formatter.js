@@ -6,10 +6,12 @@ module.exports = (req, res, next) => {
   const hasAmpersand = query.includes('@');
   if (hasAmpersand) query = query.replace('@','');
   const hasUnderscore = query.includes('_');
-  const isQueryStartsWithUnderscore = query.charAt(0) === '_';
-  if (isQueryStartsWithUnderscore) query = '\\' + query;
-  req.query.query = query;console.log(req.query.query);
+  const isQueryStartWithUnderscore = query.charAt(0) === '_';
+  if (isQueryStartWithUnderscore) query = '\\' + query;
+  const isQueryEndWithUnderscore = query.charAt(query.length - 1) === '_';
+  if (isQueryEndWithUnderscore) query = query.slice(0, -1) + '\\_';
+  req.query.query = query;
   req.isUsernameQuery = hasAmpersand || hasUnderscore;
-  req.isQueryStartsWithUnderscore = isQueryStartsWithUnderscore;
+  req.isQueryStartWithUnderscore = isQueryStartWithUnderscore;
   next();
 }
