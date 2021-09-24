@@ -126,7 +126,7 @@ export function validateUsername(): ValidatorFn {
     const username: string = control.value;
     if (!username) return null;
 
-    const allowedCharacters = /^[a-zA-Z0-9._]+$/;
+    const allowedCharacters = /^[\w.]+$/;
     if (!allowedCharacters.test(username)) return { disallowedCharacter: true };
 
     const disAllowedStartingCharacters = /^[.]/;
@@ -135,7 +135,7 @@ export function validateUsername(): ValidatorFn {
     const disallowedContinousCharacters = /^(?!.*\.\.)/;
     if (!disallowedContinousCharacters.test(username)) return { disallowedContinousCharacters: true };
 
-    const allowedEndingCharcters = /[a-zA-Z0-9_]+(?<!\.)$/;
+    const allowedEndingCharcters = /[\w]+(?<!\.)$/;
     if (!allowedEndingCharcters.test(username)) return { disallowedEndingCharacter: true };
 
     if (username.length < 5) return { isTooSmall: true };
