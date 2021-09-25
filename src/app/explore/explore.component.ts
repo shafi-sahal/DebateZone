@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { regexes } from '../shared/datasets';
+import { User } from '../shared/models/user.model';
 import { ExploreService } from './explore.service';
 
 @Component({
@@ -10,12 +11,18 @@ import { ExploreService } from './explore.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExploreComponent {
-  constructor(private exploreService: ExploreService) {}
+  users: User[] = [];
+
+  constructor(private exploreService: ExploreService, private changeDetector: ChangeDetectorRef) {}
 
   onInput(searchTerm: string): void {
     const isUsernameSearchTerm = searchTerm.includes('@') || searchTerm.includes('_') || searchTerm.includes('.');
     const regex = isUsernameSearchTerm ? regexes.usernameSearchTerm : regexes.searchTerm;
     if (!regex.test(searchTerm)) return;
-    this.exploreService.fetchUsers(searchTerm).subscribe(users => console.log(users));
+    if (searchTerm.includes('@') && searchTerm.length === 1) return;
+    this.exploreService.fetchUsers(searchTerm).subscribe(users => {
+      this.users = users;
+      this.changeDetector.markForCheck();
+    });
   }
 }

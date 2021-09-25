@@ -7,3 +7,10 @@
     </div>
   </span>
 </mat-form-field>
+
+<mat-list *ngFor="let user of users">
+  <mat-list-item>
+    <p mat-line>{{user.name}}</p>
+    <p mat-line>@{{user.username}}</p>
+  </mat-list-item>
+</mat-list>
