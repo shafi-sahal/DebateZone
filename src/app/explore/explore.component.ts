@@ -19,7 +19,7 @@ export class ExploreComponent {
     const isUsernameSearchTerm = searchTerm.includes('@') || searchTerm.includes('_') || searchTerm.includes('.');
     const regex = isUsernameSearchTerm ? regexes.usernameSearchTerm : regexes.searchTerm;
     if (!regex.test(searchTerm)) return;
-    if (searchTerm.includes('@') && searchTerm.length === 1) return;
+    if (searchTerm.length === 1 && searchTerm.includes('@')) return;
     this.exploreService.fetchUsers(searchTerm).subscribe(users => {
       this.users = users;
       this.changeDetector.markForCheck();
