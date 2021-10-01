@@ -8,7 +8,8 @@ module.exports = (req, res, next) => {
   if (hasAmpersand) query = query.replace('@','');
   const hasUnderscore = query.includes('_');
   const hasFullStop = query.includes('.');
-  const isUsernameQuery = hasAmpersand || hasUnderscore || hasFullStop;
+  const hasNumber = /\d/.test(query);
+  const isUsernameQuery = hasAmpersand || hasUnderscore || hasFullStop || hasNumber;
 
   const regex = isUsernameQuery ? regexes.usernameSearchTerm : regexes.searchTerm;
   if (!regex.test(query)) return errorHandler(res, new Error('Bad search'));

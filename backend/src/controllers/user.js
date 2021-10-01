@@ -66,37 +66,9 @@ exports.fetchUser = async (req, res) => {
 
 exports.fetchUsers = async (req, res) => {
   const query = req.query.query;
-  const numberOfUsersToBeFetched = 9;
-  const isUsernameQuery = req.isUsernameQuery;
-  let condition = getAttributeMatchCondition(query + '%', isUsernameQuery);
-
-  try {
-    const nameStartsWithQueryMatchingUsers = await searchUsers(condition, numberOfUsersToBeFetched);
-    if (nameStartsWithQueryMatchingUsers.length === numberOfUsersToBeFetched) {
-      return res.send(nameStartsWithQueryMatchingUsers);
-    }
-
-    let remainingUsersFetchMetadata = {
-      numberOfUsersToBeFetched: numberOfUsersToBeFetched,
-      lastMatchedUsers: nameStartsWithQueryMatchingUsers,
-      isUsernameQuery: isUsernameQuery
-    };
-
-    // If query starts with underscore, the underscore has already been escaped by middleware(search-query-formatter)
-    if (!req.isQueryStartWithUnderscore) {
-      const likeQuery = isUsernameQuery ? '%\\_' + query + '%' : '% ' + query + '%';
-      await searchRemainingUsers(likeQuery, remainingUsersFetchMetadata);
-
-      if (remainingUsersFetchMetadata.lastMatchedUsers.length === numberOfUsersToBeFetched) {
-        return res.send(remainingUsersFetchMetadata.lastMatchedUsers);
-      }
-    }
-
-    await searchRemainingUsers('%' + query + '%', remainingUsersFetchMetadata);
-    res.send(remainingUsersFetchMetadata.lastMatchedUsers);
-  } catch(error) {
-    errorHandler(res, new Error(error));
-  }
+  const queryToSearchUsers = req.isUsernameQuery ? getQueryToSearchUsersByUsername(query) : getQueryToSearchUsers(query);
+  const users = await sequelize.query(queryToSearchUsers, { model: User })
+  res.send(users);
 }
 
 exports.updateUser = async (req, res) => {
@@ -136,44 +108,66 @@ const generateToken = payload => {
   return sign(payload);
 }
 
-const getAttributeMatchCondition = (likeQuery, isUsernameQuery) => {
-  if (isUsernameQuery) {
-    return { username: { [Op.like]: likeQuery } };
-  }
-
+const getLikeQueriesToSearchUSers = query => {
   return {
-    [Op.or]: [
-      { name: { [Op.like]: likeQuery } }, { username: { [Op.like]: likeQuery } }
-   ]
+    nameStartsWithQuery: `'${query}%'`,
+    lastNameStartWithQuery: `'% ${query}%'`,
+    partAfterUnderscoreStartsWithQuery: `'%\\_${query}%'`,
+    partAfterFullStopStartsWithQuery: `'%.${query}%'`,
+    namesWithQueryInBetween: `'%${query}%'`
   }
 }
 
-const getConditionToMatchRemainingUsers = (likeQuery, isUsernameQuery, lastMatchedUsers) => {
-  const attributeMatchCondition = getAttributeMatchCondition(likeQuery, isUsernameQuery);
+const getQueryToSearchUsers = query => {
+  const likeQuerySnapshot = getLikeQueriesToSearchUSers(query);
 
-  return {
-    [Op.and]: [
-      attributeMatchCondition,
-      {
-        username: { [Op.not]: lastMatchedUsers.map(user => user.username) }
-      }
-    ]
-  };
-}
+  const likeQueries = [
+    likeQuerySnapshot.nameStartsWithQuery,
+    likeQuerySnapshot.lastNameStartWithQuery,
+    likeQuerySnapshot.namesWithQueryInBetween
+  ];
 
-const searchRemainingUsers = async (likeQuery, remainingUsersFetchMetadata) => {
-  const { numberOfUsersToBeFetched, lastMatchedUsers, isUsernameQuery } = remainingUsersFetchMetadata;
-  const condition = getConditionToMatchRemainingUsers(likeQuery, isUsernameQuery, lastMatchedUsers);
-  const numberOfUsersRemainingToBeFetched = numberOfUsersToBeFetched - lastMatchedUsers.length;
-  const remainingUsers = await searchUsers(condition, numberOfUsersRemainingToBeFetched);
-  remainingUsersFetchMetadata.lastMatchedUsers = [...lastMatchedUsers, ...remainingUsers];
-}
-
-const searchUsers = async (condition, limit) => {
-  const user = await User.findAll({
-    attributes: ['name', 'username'],
-    where: condition,
-    limit: limit
+  let queryToSearchUsers = '';
+  likeQueries.forEach((likeQuery, index) => {
+    queryToSearchUsers += `SELECT name, username FROM users WHERE name LIKE ${likeQuery} OR username LIKE ${likeQuery} UNION `;
+    if (index === 1) {
+      queryToSearchUsers += `
+        SELECT name, username FROM users
+        WHERE username LIKE ${likeQuerySnapshot.partAfterUnderscoreStartsWithQuery}
+        OR username LIKE ${likeQuerySnapshot.partAfterFullStopStartsWithQuery}
+        UNION
+      `;
+    }
   });
-  return user;
+
+  queryToSearchUsers += `
+    SELECT name, username FROM users
+    WHERE REPLACE(name, ' ', '') LIKE ${likeQuerySnapshot.namesWithQueryInBetween}
+    OR REGEXP_REPLACE(username, '[_|\.]', '') LIKE ${likeQuerySnapshot.namesWithQueryInBetween}
+    LIMIT 9;
+  `;
+
+  return queryToSearchUsers;
+}
+
+const getQueryToSearchUsersByUsername = query => {
+  const likeQuerySnapshot = getLikeQueriesToSearchUSers(query);
+
+  const likeQueries = [
+    likeQuerySnapshot.nameStartsWithQuery,
+    likeQuerySnapshot.partAfterUnderscoreStartsWithQuery,
+    likeQuerySnapshot.partAfterFullStopStartsWithQuery,
+    likeQuerySnapshot.namesWithQueryInBetween
+  ];
+  let queryToSearchUsers = '';
+  likeQueries.forEach(likeQuery =>
+    queryToSearchUsers += `SELECT name, username FROM users WHERE username LIKE ${likeQuery} UNION `
+  );
+
+  queryToSearchUsers += `
+    SELECT name, username FROM users
+    WHERE REGEXP_REPLACE(username, '[_|\.]', '') LIKE ${likeQuerySnapshot.namesWithQueryInBetween} LIMIT 9;
+  `;
+
+  return queryToSearchUsers;
 }
