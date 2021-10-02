@@ -66,7 +66,10 @@ exports.fetchUser = async (req, res) => {
 
 exports.fetchUsers = async (req, res) => {
   const query = req.query.query;
-  const queryToSearchUsers = req.isUsernameQuery ? getQueryToSearchUsersByUsername(query) : getQueryToSearchUsers(query);
+  const queryToSearchUsers = req.isUsernameQuery
+    ? getQueryToSearchUsersByUsername(query, req.containsAllowedNonAlphabet)
+    : getQueryToSearchUsers(query, req.containsAllowedNonAlphabet)
+  ;
   const users = await sequelize.query(queryToSearchUsers, { model: User })
   res.send(users);
 }
@@ -118,7 +121,7 @@ const getLikeQueriesToSearchUSers = query => {
   }
 }
 
-const getQueryToSearchUsers = query => {
+const getQueryToSearchUsers = (query, containsAllowedNonAlphabet) => {
   const likeQuerySnapshot = getLikeQueriesToSearchUSers(query);
 
   const likeQueries = [
@@ -140,17 +143,19 @@ const getQueryToSearchUsers = query => {
     }
   });
 
+  if (containsAllowedNonAlphabet) return queryToSearchUsers.slice(0, -6);
+
   queryToSearchUsers += `
     SELECT name, username FROM users
     WHERE REPLACE(name, ' ', '') LIKE ${likeQuerySnapshot.namesWithQueryInBetween}
-    OR REGEXP_REPLACE(username, '[_|\.]', '') LIKE ${likeQuerySnapshot.namesWithQueryInBetween}
+    OR REGEXP_REPLACE(username, '[0-9]|[_\\.]', '') LIKE ${likeQuerySnapshot.namesWithQueryInBetween}
     LIMIT 9;
   `;
 
   return queryToSearchUsers;
 }
 
-const getQueryToSearchUsersByUsername = query => {
+const getQueryToSearchUsersByUsername = (query, containsAllowedNonAlphabet) => {
   const likeQuerySnapshot = getLikeQueriesToSearchUSers(query);
 
   const likeQueries = [
@@ -164,9 +169,11 @@ const getQueryToSearchUsersByUsername = query => {
     queryToSearchUsers += `SELECT name, username FROM users WHERE username LIKE ${likeQuery} UNION `
   );
 
+  if (containsAllowedNonAlphabet) return queryToSearchUsers.slice(0, -6);
+
   queryToSearchUsers += `
     SELECT name, username FROM users
-    WHERE REGEXP_REPLACE(username, '[_|\.]', '') LIKE ${likeQuerySnapshot.namesWithQueryInBetween} LIMIT 9;
+    WHERE REGEXP_REPLACE(username, '[0-9]|[_\\.]', '') LIKE ${likeQuerySnapshot.namesWithQueryInBetween} LIMIT 9;
   `;
 
   return queryToSearchUsers;

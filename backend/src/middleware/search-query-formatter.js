@@ -9,17 +9,20 @@ module.exports = (req, res, next) => {
   const hasUnderscore = query.includes('_');
   const hasFullStop = query.includes('.');
   const hasNumber = /\d/.test(query);
+  const hasWhiteSpace = query.includes(' ');
+  const containsAllowedNonAlphabet = hasUnderscore || hasFullStop || hasNumber || hasWhiteSpace;
   const isUsernameQuery = hasAmpersand || hasUnderscore || hasFullStop || hasNumber;
 
   const regex = isUsernameQuery ? regexes.usernameSearchTerm : regexes.searchTerm;
   if (!regex.test(query)) return errorHandler(res, new Error('Bad search'));
 
-  const isQueryStartWithUnderscore = query.charAt(0) === '_';
-  if (isQueryStartWithUnderscore) query = '\\' + query;
+  //const isQueryStartWithUnderscore = query.charAt(0) === '_';
+  //if (isQueryStartWithUnderscore) query = '\\' + query;
   const isQueryEndWithUnderscore = query.charAt(query.length - 1) === '_';
   if (isQueryEndWithUnderscore) query = query.slice(0, -1) + '\\_';
   req.query.query = query;
+  req.containsAllowedNonAlphabet = containsAllowedNonAlphabet;
   req.isUsernameQuery = isUsernameQuery;
-  req.isQueryStartWithUnderscore = isQueryStartWithUnderscore;
+ // req.isQueryStartWithUnderscore = isQueryStartWithUnderscore;
   next();
 }
