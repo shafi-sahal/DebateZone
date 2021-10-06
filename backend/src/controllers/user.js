@@ -75,7 +75,7 @@ exports.fetchUsers = async (req, res) => {
   ;
 
   if (queryMetaData.containsAllowedNonAlphabet) {
-    const compactedQuery = query.replace(/[| 0-9_\.]/g, '');
+    const compactedQuery = query.replace(/[| 0-9_\.\\]/g, '');
     const likeQuerySnapshot = getLikeQueriesToSearchUSers(compactedQuery);
     queryToSearchUsers += getQueryToSearchUsersCompact(compactedQuery, queryMetaData.hasAmpersand, likeQuerySnapshot);
   }
