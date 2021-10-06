@@ -66,10 +66,22 @@ exports.fetchUser = async (req, res) => {
 
 exports.fetchUsers = async (req, res) => {
   const query = req.query.query;
-  const queryToSearchUsers = req.isUsernameQuery
-    ? getQueryToSearchUsersByUsername(query, req.containsAllowedNonAlphabet)
-    : getQueryToSearchUsers(query, req.containsAllowedNonAlphabet)
+  const queryMetaData = req.queryMetaData;
+  const likeQuerySnapshot = getLikeQueriesToSearchUSers(query);
+
+  let queryToSearchUsers = queryMetaData.isUsernameQuery
+    ? getQueryToSearchUsersByUsername(query, queryMetaData, likeQuerySnapshot)
+    : getQueryToSearchUsers(query, queryMetaData, likeQuerySnapshot)
   ;
+
+  if (queryMetaData.containsAllowedNonAlphabet) {
+    const compactedQuery = query.replace(/[| 0-9_\.]/g, '');
+    const likeQuerySnapshot = getLikeQueriesToSearchUSers(compactedQuery);
+    queryToSearchUsers += getQueryToSearchUsersCompact(compactedQuery, queryMetaData.hasAmpersand, likeQuerySnapshot);
+  }
+
+  queryToSearchUsers += ' LIMIT 9';
+
   const users = await sequelize.query(queryToSearchUsers, { model: User })
   res.send(users);
 }
@@ -111,22 +123,20 @@ const generateToken = payload => {
   return sign(payload);
 }
 
-const getLikeQueriesToSearchUSers = query => {
-  return {
-    nameStartsWithQuery: `'${query}%'`,
-    lastNameStartWithQuery: `'% ${query}%'`,
-    partAfterUnderscoreStartsWithQuery: `'%\\_${query}%'`,
-    partAfterFullStopStartsWithQuery: `'%.${query}%'`,
-    namesWithQueryInBetween: `'%${query}%'`
-  }
-}
+const getRegexToReplace = () => '[|0-9_\\.]';
 
-const getQueryToSearchUsers = (query, containsAllowedNonAlphabet) => {
-  const likeQuerySnapshot = getLikeQueriesToSearchUSers(query);
+const getLikeQueriesToSearchUSers = query => ({
+  nameStartsWithQuery: `'${query}%'`,
+  lastNameStartsWithQuery: `'% ${query}%'`,
+  partAfterUnderscoreStartsWithQuery: `'%\\_${query}%'`,
+  partAfterFullStopStartsWithQuery: `'%.${query}%'`,
+  namesWithQueryInBetween: `'%${query}%'`
+});
 
+const getQueryToSearchUsers = (query, queryMetaData, likeQuerySnapshot) => {
   const likeQueries = [
     likeQuerySnapshot.nameStartsWithQuery,
-    likeQuerySnapshot.lastNameStartWithQuery,
+    likeQuerySnapshot.lastNameStartsWithQuery,
     likeQuerySnapshot.namesWithQueryInBetween
   ];
 
@@ -138,43 +148,74 @@ const getQueryToSearchUsers = (query, containsAllowedNonAlphabet) => {
         SELECT name, username FROM users
         WHERE username LIKE ${likeQuerySnapshot.partAfterUnderscoreStartsWithQuery}
         OR username LIKE ${likeQuerySnapshot.partAfterFullStopStartsWithQuery}
-        UNION
       `;
+      queryToSearchUsers += ' UNION ';
     }
   });
 
-  if (containsAllowedNonAlphabet) return queryToSearchUsers.slice(0, -6);
+  if (queryMetaData.containsAllowedNonAlphabet) return queryToSearchUsers.slice(0, -6);
 
   queryToSearchUsers += `
     SELECT name, username FROM users
     WHERE REPLACE(name, ' ', '') LIKE ${likeQuerySnapshot.namesWithQueryInBetween}
-    OR REGEXP_REPLACE(username, '[0-9]|[_\\.]', '') LIKE ${likeQuerySnapshot.namesWithQueryInBetween}
-    LIMIT 9;
+    OR REGEXP_REPLACE(username, '${getRegexToReplace()}', '') LIKE ${likeQuerySnapshot.namesWithQueryInBetween}
   `;
 
   return queryToSearchUsers;
 }
 
-const getQueryToSearchUsersByUsername = (query, containsAllowedNonAlphabet) => {
-  const likeQuerySnapshot = getLikeQueriesToSearchUSers(query);
-
+const getQueryToSearchUsersByUsername = (query, queryMetaData, likeQuerySnapshot) => {
   const likeQueries = [
     likeQuerySnapshot.nameStartsWithQuery,
-    likeQuerySnapshot.partAfterUnderscoreStartsWithQuery,
-    likeQuerySnapshot.partAfterFullStopStartsWithQuery,
     likeQuerySnapshot.namesWithQueryInBetween
   ];
+
+  if (!queryMetaData.isQueryStartsWithUnderscore && !queryMetaData.isQueryStartsWithFullStop) {
+    likeQueries.splice(
+      1, 0, likeQuerySnapshot.partAfterUnderscoreStartsWithQuery, likeQuerySnapshot.partAfterFullStopStartsWithQuery
+    );
+  }
+
   let queryToSearchUsers = '';
   likeQueries.forEach(likeQuery =>
     queryToSearchUsers += `SELECT name, username FROM users WHERE username LIKE ${likeQuery} UNION `
   );
 
-  if (containsAllowedNonAlphabet) return queryToSearchUsers.slice(0, -6);
+  if (queryMetaData.containsAllowedNonAlphabet) return queryToSearchUsers.slice(0, -6);
 
   queryToSearchUsers += `
     SELECT name, username FROM users
-    WHERE REGEXP_REPLACE(username, '[0-9]|[_\\.]', '') LIKE ${likeQuerySnapshot.namesWithQueryInBetween} LIMIT 9;
+    WHERE REGEXP_REPLACE(username, '${getRegexToReplace()}', '') LIKE ${likeQuerySnapshot.namesWithQueryInBetween}
   `;
 
   return queryToSearchUsers;
+}
+
+const getQueryToSearchUsersCompact = (query, hasAmpersand, likeQuerySnapshot) => {
+  const likeQueries = [
+    likeQuerySnapshot.nameStartsWithQuery,
+    likeQuerySnapshot.namesWithQueryInBetween
+  ]
+
+  let queryToSearchUsers = ' UNION ';
+  if (hasAmpersand) {
+    likeQueries.forEach(likeQuery => {
+      queryToSearchUsers += `
+        SELECT name, username FROM users
+        WHERE REGEXP_REPLACE(username, '[0-9]|[_\\.]', '') LIKE ${likeQuery}
+      `;
+      queryToSearchUsers += ' UNION ';
+    });
+  } else {
+    likeQueries.forEach(likeQuery => {
+      queryToSearchUsers += `
+        SELECT name, username FROM users
+        WHERE REPLACE(name, ' ', '') LIKE ${likeQuery}
+        OR REGEXP_REPLACE(username, '[0-9]|[_\\.]', '') LIKE ${likeQuery}
+      `;
+      queryToSearchUsers += ' UNION ';
+    });
+  }
+
+  return queryToSearchUsers.slice(0, -6);
 }
