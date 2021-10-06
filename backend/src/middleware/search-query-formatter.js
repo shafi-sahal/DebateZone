@@ -16,13 +16,24 @@ module.exports = (req, res, next) => {
   const regex = isUsernameQuery ? regexes.usernameSearchTerm : regexes.searchTerm;
   if (!regex.test(query)) return errorHandler(res, new Error('Bad search'));
 
-  //const isQueryStartWithUnderscore = query.charAt(0) === '_';
+  const isQueryStarstWithUnderscore = query.charAt(0) === '_';
+  const isQueryStartsWithFullStop = query.charAt(0) === '.';
   //if (isQueryStartWithUnderscore) query = '\\' + query;
-  const isQueryEndWithUnderscore = query.charAt(query.length - 1) === '_';
-  if (isQueryEndWithUnderscore) query = query.slice(0, -1) + '\\_';
+  //const isQueryEndWithUnderscore = query.charAt(query.length - 1) === '_';
+  //if (isQueryEndWithUnderscore) query = query.slice(0, -1) + '\\_';
   req.query.query = query;
+
+  req.queryMetaData = {
+    hasAmpersand: hasAmpersand,
+    containsAllowedNonAlphabet: containsAllowedNonAlphabet,
+    isUsernameQuery: isUsernameQuery,
+    isQueryStartsWithUnderscore: isQueryStarstWithUnderscore,
+    isQueryStartsWithFullStop: isQueryStartsWithFullStop
+  }
+  /*req.hasAmpersand = hasAmpersand;
   req.containsAllowedNonAlphabet = containsAllowedNonAlphabet;
   req.isUsernameQuery = isUsernameQuery;
- // req.isQueryStartWithUnderscore = isQueryStartWithUnderscore;
+  req.isQueryStartWithUnderscore = isQueryStartWithUnderscore;
+  req.isQueryStartWithFullStop = isQueryStartWithFullStop;*/
   next();
 }
