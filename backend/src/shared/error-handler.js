@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (res, error = new Error('Unknown error'), status = 500) => {
-  console.log('status: ' + status);
-  console.log(error);
+  console.error('status: ' + status);
+  console.error(error);
   res.sendStatus(status);
 };
