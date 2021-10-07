@@ -13,7 +13,7 @@ module.exports = (req, res, next) => {
   const containsAllowedNonAlphabet = hasUnderscore || hasFullStop || hasNumber || hasWhiteSpace;
   const isUsernameQuery = hasAmpersand || hasUnderscore || hasFullStop || hasNumber;
   const regex = isUsernameQuery ? regexes.usernameSearchTerm : regexes.searchTerm;
-  if (!regex.test(query)) return errorHandler(res, new Error('Bad search'));
+  if (!regex.test(query)) return errorHandler(res, new Error('Bad search'), 400);
   const isQueryStarstWithUnderscore = query.charAt(0) === '_';
   const isQueryStartsWithFullStop = query.charAt(0) === '.';
   if (hasUnderscore) query = query.split('_').join('\\_');
