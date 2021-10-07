@@ -22,4 +22,8 @@ export class HomeComponent {
   ) {
     this.spinner.hide();
   }
+
+  isExploreClicked(): boolean {
+    return this.navService.navButtons[this.navService.clickedNavbuttonIndex].label === 'Explore';
+  }
 }

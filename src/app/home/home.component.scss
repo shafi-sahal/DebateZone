@@ -35,6 +35,12 @@ mat-sidenav-container {
         margin-right: auto;
       }
     }
+    .router-top-pad-low {
+      padding-top: 5px;
+    }
+    .router-top-pad-high {
+      padding-top: 50px;
+    }
     app-bottom-nav {
       display: flex;
       position: fixed;
