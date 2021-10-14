@@ -16,7 +16,9 @@ export class ExploreComponent {
   constructor(private exploreService: ExploreService, private changeDetector: ChangeDetectorRef) {}
 
   onInput(searchTerm: string): void {
-    const isUsernameSearchTerm = searchTerm.includes('@') || searchTerm.includes('_') || searchTerm.includes('.');
+    const isUsernameSearchTerm =
+      searchTerm.includes('@') || searchTerm.includes('_') || searchTerm.includes('.') || /\d/.test(searchTerm)
+    ;
     const regex = isUsernameSearchTerm ? regexes.usernameSearchTerm : regexes.searchTerm;
     if (!regex.test(searchTerm)) return;
     if (searchTerm.length === 1 && searchTerm.includes('@')) return;
