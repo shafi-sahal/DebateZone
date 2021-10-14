@@ -8,7 +8,7 @@
         *ngIf="!isExploreClicked()"
         (menuClicked)="sidenav.toggle()">
       </app-header>
-      <div class="router-outlet" [class.router-top-pad-low]="isExploreClicked()">
+      <div class="router-outlet" [class.router-top-padding-low]="isExploreClicked()">
           <mat-spinner *ngIf="homeService.isDataLoading || homeService.isRouting else routerOutlet" [diameter]="40"></mat-spinner>
           <ng-template #routerOutlet><router-outlet></router-outlet></ng-template>
       </div>
