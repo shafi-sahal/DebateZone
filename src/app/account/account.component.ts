@@ -206,7 +206,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private prepareForm(user: User): void {
     this.isLoading = false;
-    this.user = user;
+    this.user = this.sessionService.user = user;
     this.changeDetector.markForCheck();
     this.homeService.changes.next();
     this.form.setValue(user);
