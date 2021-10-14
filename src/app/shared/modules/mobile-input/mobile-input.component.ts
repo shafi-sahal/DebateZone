@@ -103,7 +103,7 @@ export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onDialCodeInput(): void {
     const inputValue = this.dialCodeInput.nativeElement.value;
-    const dialCode = '+' + inputValue;
+    const dialCode = `+${inputValue}`;
     const country = this.countries.find(country => country.dialCode === dialCode.trim());
     if (country) {
       this.country = country;

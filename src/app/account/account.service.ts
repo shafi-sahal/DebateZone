@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from '../shared/models/user.model';
 
-const BACKEND_URL = environment.apiUrl + '/user';
+const BACKEND_URL = `${environment.apiUrl}/user`;
 
 @Injectable()
 export class AccountService {

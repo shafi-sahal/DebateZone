@@ -218,8 +218,8 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private getNavButtonsTextContent(): string[] {
     const textContents = this.isMobile
-      ? this.navService.navButtons.map(button => ' ' + button.icon + ' ')
-      : this.navService.navButtons.map(button => ' ' + button.icon + ' ' + button.label);
+      ? this.navService.navButtons.map(button => ` ${button.icon} `)
+      : this.navService.navButtons.map(button => ` ${button.icon} ${button.label}`);
     textContents.splice(1);
     textContents.push('Log out');
     return textContents;

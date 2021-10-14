@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from '../shared/models/user.model';
 
-const BACKEND_URL = environment.apiUrl + '/user';
+const BACKEND_URL = `${environment.apiUrl}/user`;
 
 @Injectable()
 export class ExploreService {
@@ -13,6 +13,6 @@ export class ExploreService {
   constructor(private http: HttpClient) {}
 
   fetchUsers(searchTerm: string): Observable<User[]> {
-    return this.http.get<User[]>(BACKEND_URL + '/search?query=' + searchTerm);
+    return this.http.get<User[]>(`${BACKEND_URL}/search?query=${searchTerm}`);
   }
 }

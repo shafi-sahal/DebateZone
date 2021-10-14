@@ -7,8 +7,8 @@ import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 import { catchError, map } from 'rxjs/operators';
 import { SessionService } from '../session.service';
 
-const USER_URL = environment.apiUrl + '/user';
-const IS_DUPLICATE_URL = USER_URL + '/is-duplicate';
+const USER_URL = `${environment.apiUrl}/user`;
+const IS_DUPLICATE_URL = `${USER_URL}/is-duplicate`;
 
 @Injectable()
 export class AuthenticationService {
@@ -23,20 +23,20 @@ export class AuthenticationService {
   }
 
   isDuplicateUsername(username: string): Observable<boolean> {
-    return this.http.get<boolean>(IS_DUPLICATE_URL + '?username=' + username);
+    return this.http.get<boolean>(`${IS_DUPLICATE_URL}?username=${username}`);
   }
 
   isDuplicateEmail(email: string): Observable<boolean> {
-    return this.http.get<boolean>(IS_DUPLICATE_URL + '?email=' + email);
+    return this.http.get<boolean>(`${IS_DUPLICATE_URL}?email=${email}`);
   }
 
   isDuplicateMobile(mobile: string): Observable<boolean> {
     const mobileForUrl = mobile.replace('+', '%2B');
-    return this.http.get<boolean>(IS_DUPLICATE_URL + '?mobile=' + mobileForUrl);
+    return this.http.get<boolean>(`${IS_DUPLICATE_URL}?mobile=${mobileForUrl}`);
   }
 
   addUser(): Observable<boolean> {
-    return this.http.post<{ token: string, user: User }>(USER_URL + '/signup', this._user).pipe(
+    return this.http.post<{ token: string, user: User }>(`${USER_URL}/signup`, this._user).pipe(
       map(response => {
         this.sessionService.createSession(response.token, response.user);
         return true;
