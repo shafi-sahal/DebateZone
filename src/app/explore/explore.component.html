@@ -1,6 +1,6 @@
 <mat-form-field appearance="outline">
   <mat-label>Search debaters</mat-label>
-  <input #search matInput (input)="onInput(search.value)">
+  <input #search matInput [formControl]="searchBar">
   <span matPrefix>
     <div class="container-search-icon">
       <mat-icon>search</mat-icon>&nbsp;&nbsp;&nbsp;
