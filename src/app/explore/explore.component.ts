@@ -1,6 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { debounceTime, switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { debounceTime, filter, switchMap, tap } from 'rxjs/operators';
 import { regexes } from '../shared/datasets';
 import { User } from '../shared/models/user.model';
 import { ExploreService } from './explore.service';
@@ -27,8 +28,10 @@ export class ExploreComponent implements AfterViewInit{
       //console.log(regexes.nonUsernameChars.exec(searchTerm));
     });*/
     this.searchBar.valueChanges.pipe(
+      filter((searchTerm: string) => searchTerm.length > 0),
       //debounceTime(1000),
       switchMap((searchTerm: string) => {
+        searchTerm = searchTerm.trim();
         const isUsernameSearchTerm =
           searchTerm.includes('@') || searchTerm.includes('_') || searchTerm.includes('.') || /\d/.test(searchTerm)
         ;
@@ -36,34 +39,17 @@ export class ExploreComponent implements AfterViewInit{
         if (isUsernameSearchTerm) {
           searchTerm = searchTerm.replace(regexes.nonUsernameChars, '');
           if (searchTerm.length > 30) searchTerm = searchTerm.slice(0, 30);
+        } else {
+          searchTerm = searchTerm.replace(regexes.nonNameChars, '');
         }
         console.log(searchTerm);
-
+        if (!searchTerm.length) return of(null);
         return this.exploreService.fetchUsers(searchTerm);
       })
     ).subscribe(users => {
+      if (users === null) return;
       this.users = users;
       this.changeDetector.markForCheck();
     });
   }
-
-  /*onInput(searchTerm: string): void {
-    const isUsernameSearchTerm =
-      searchTerm.includes('@') || searchTerm.includes('_') || searchTerm.includes('.') || /\d/.test(searchTerm)
-    ;
-    const regex = isUsernameSearchTerm ? regexes.usernameSearchTerm : regexes.searchTerm;
-    if (!regex.test(searchTerm)) return;
-    if (searchTerm.length === 1 && searchTerm.includes('@')) return;
-    this.searchBar.valueChanges.pipe(
-      debounceTime(1000),
-      switchMap(searchTerm => this.exploreService.fetchUsers(searchTerm))
-    ).subscribe(users => {
-      this.users = users;
-      this.changeDetector.markForCheck();
-    });
-    /*this.exploreService.fetchUsers(searchTerm).subscribe(users => {
-      this.users = users;
-      this.changeDetector.markForCheck();
-    });
-  }*/
 }
