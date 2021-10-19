@@ -35,7 +35,7 @@ export class ExploreComponent implements AfterViewInit, OnDestroy{
     let searchTermCache = '';
     this.subscriptions.add(this.searchBar.valueChanges.pipe(
       filter((searchTerm: string) => searchTerm.length > 0),
-      debounceTime(1000),
+      debounceTime(500),
       switchMap((searchTerm: string) => {
         searchTerm = searchTerm.trim();
         const isUsernameSearchTerm =
