@@ -27,6 +27,10 @@ export class ExploreComponent implements AfterViewInit, OnDestroy{
     this.initSearchBar();
   }
 
+  trackByFunction(index: number, user: User): string {
+    return user.username;
+  }
+
   private initSearchBar(): void {
     let searchTermCache = '';
     this.subscriptions.add(this.searchBar.valueChanges.pipe(
