@@ -77,7 +77,7 @@ export class MobileInputComponent implements OnInit, AfterViewInit, OnDestroy {
     this._country = this.dialogData.country;
   }
 
-  trackFunction(index: number, country: Record<string, string>): string {
+  trackByFunction(index: number, country: Record<string, string>): string {
     return country.code;
   }
 
