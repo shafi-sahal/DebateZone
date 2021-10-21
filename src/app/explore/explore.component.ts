@@ -2,6 +2,7 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, O
 import { FormControl } from '@angular/forms';
 import { of, Subscription } from 'rxjs';
 import { debounceTime, filter, switchMap} from 'rxjs/operators';
+import { DeviceTypeChecker } from '../device-type-checker.service';
 import { regexes } from '../shared/datasets';
 import { User } from '../shared/models/user.model';
 import { ExploreService } from './explore.service';
@@ -19,6 +20,7 @@ export class ExploreComponent implements AfterViewInit, OnDestroy {
   private subscriptions = new Subscription();
 
   constructor(
+    public deviceTypeChecker: DeviceTypeChecker,
     private exploreService: ExploreService,
     private changeDetector: ChangeDetectorRef
   ) {}
