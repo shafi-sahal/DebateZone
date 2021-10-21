@@ -13,7 +13,7 @@ import { ExploreService } from './explore.service';
   providers: [ExploreService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExploreComponent implements AfterViewInit, OnDestroy{
+export class ExploreComponent implements AfterViewInit, OnDestroy {
   users: User[] = [];
   searchBar = new FormControl();
   private subscriptions = new Subscription();
@@ -35,7 +35,7 @@ export class ExploreComponent implements AfterViewInit, OnDestroy{
     let searchTermCache = '';
     this.subscriptions.add(this.searchBar.valueChanges.pipe(
       filter((searchTerm: string) => searchTerm.length > 0),
-      debounceTime(500),
+      debounceTime(400),
       switchMap((searchTerm: string) => {
         searchTerm = searchTerm.trim();
         const isUsernameSearchTerm =
