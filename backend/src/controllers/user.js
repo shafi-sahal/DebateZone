@@ -80,9 +80,7 @@ exports.fetchUsers = async (req, res) => {
     queryToSearchUsers += getQueryToSearchUsersCompact(compactedQuery, queryMetaData.hasAmpersand, likeQuerySnapshot);
   }
 
-  const limit = req.query.limit;
-  const numberOFUsersToBeFetched = limit && limit <= 9 ? limit : 9;
-  queryToSearchUsers += ` LIMIT ${numberOFUsersToBeFetched}`;
+  queryToSearchUsers += ' LIMIT 9';
 
   const users = await sequelize.query(queryToSearchUsers, { model: User })
   res.send(users);
