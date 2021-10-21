@@ -37,7 +37,6 @@ export class ExploreComponent implements AfterViewInit, OnDestroy {
       debounceTime(400),
       filter((searchTerm: string) => searchTerm.length > 0),
       switchMap((searchTerm: string) => {
-        console.log(searchTerm.length);
         searchTerm = searchTerm.trim();
         const isUsernameSearchTerm =
           searchTerm.includes('@') || searchTerm.includes('_') || searchTerm.includes('.') || /\d/.test(searchTerm)
@@ -45,7 +44,8 @@ export class ExploreComponent implements AfterViewInit, OnDestroy {
 
         if (isUsernameSearchTerm) {
           searchTerm = searchTerm.replace(regexes.nonUsernameChars, '');
-          if (searchTerm.length > 30) searchTerm = searchTerm.slice(0, 30);
+          const maxUsernameLength = 30;
+          if (searchTerm.length > maxUsernameLength) searchTerm = searchTerm.slice(0, maxUsernameLength);
         } else {
           searchTerm = searchTerm.replace(regexes.nonNameChars, '');
         }
