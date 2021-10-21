@@ -34,9 +34,10 @@ export class ExploreComponent implements AfterViewInit, OnDestroy {
   private initSearchBar(): void {
     let searchTermCache = '';
     this.subscriptions.add(this.searchBar.valueChanges.pipe(
-      filter((searchTerm: string) => searchTerm.length > 0),
       debounceTime(400),
+      filter((searchTerm: string) => searchTerm.length > 0),
       switchMap((searchTerm: string) => {
+        console.log(searchTerm.length);
         searchTerm = searchTerm.trim();
         const isUsernameSearchTerm =
           searchTerm.includes('@') || searchTerm.includes('_') || searchTerm.includes('.') || /\d/.test(searchTerm)
