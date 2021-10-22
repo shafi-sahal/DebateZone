@@ -19,7 +19,6 @@ mat-sidenav-container {
       position: fixed;
       width: 100%;
       z-index: 1;
-      margin-bottom: 50%;
     }
     .router-outlet {
       width: 100%;
@@ -28,7 +27,6 @@ mat-sidenav-container {
       padding-bottom: #{dimensions.$bottom-nav-height + 10px};
       padding-left: 5%;
       padding-right: 5%;
-      overflow: auto;
 
       mat-spinner {
         margin-left: auto;
