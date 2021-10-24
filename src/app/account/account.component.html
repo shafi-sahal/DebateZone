@@ -1,6 +1,6 @@
 <body *ngIf="!isLoading">
   <app-input-fields
-    *ngIf="(deviceTypeChecker.isMobile | async) else inputFieldsWithCard"
+    *ngIf="deviceTypeChecker.isMobile | async else inputFieldsWithCard"
     [form]="form"
     [isUsernameAvailable]="isUsernameAvailable"
     [isButtonDisabled]="isButtonDisabled"
