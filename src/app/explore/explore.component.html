@@ -8,13 +8,20 @@
   </span>
 </mat-form-field>
 
-<mat-list *ngFor="let user of users; trackBy: trackByFunction">
-  <mat-list-item *ngIf="deviceTypeChecker.isMobile | async else usersCardList">
-    <p mat-line>{{user.name}}</p>
-    <p mat-line>@{{user.username}}</p>
-  </mat-list-item>
+<ng-template *ngIf="deviceTypeChecker.isMobile | async else userCards">
+  <mat-list *ngFor="let user of users; trackBy: trackByFunction">
+    <mat-list-item>
+      <p mat-line>{{user.username}}</p>
+      <p mat-line>@{{user.username}}</p>
+    </mat-list-item>
+  </mat-list>
+</ng-template>
 
-  <ng-template #usersCardList>
-    <mat-card>{{user.name}}</mat-card>
-  </ng-template>
-</mat-list>
+<ng-template #userCards>
+  <div class="user-cards">
+    <mat-card *ngFor="let user of users; trackBy: trackByFunction">
+      {{user.name}}
+    </mat-card>
+  </div>
+</ng-template>
+

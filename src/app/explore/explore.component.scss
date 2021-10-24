@@ -11,5 +11,10 @@ mat-form-field {
   }
 }
 mat-card {
-  width: 25%;
+  width: 30%;
+}
+.user-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 4.8%;
 }
