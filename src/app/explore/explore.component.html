@@ -8,14 +8,14 @@
   </span>
 </mat-form-field>
 
-<ng-template *ngIf="deviceTypeChecker.isMobile | async else userCards">
+<ng-container *ngIf="deviceTypeChecker.isMobile | async else userCards">
   <mat-list *ngFor="let user of users; trackBy: trackByFunction">
     <mat-list-item>
-      <p mat-line>{{user.username}}</p>
+      <p mat-line>{{user.name}}</p>
       <p mat-line>@{{user.username}}</p>
     </mat-list-item>
   </mat-list>
-</ng-template>
+</ng-container>
 
 <ng-template #userCards>
   <div class="user-cards">
