@@ -1,3 +1,5 @@
+@use '../shared/styles/colors';
+
 .container-search {
   display: flex;
 }
@@ -13,6 +15,10 @@ mat-form-field {
     justify-content: center;
   }
 }
+button.mat-raised-button {
+  background-color: #{colors.$primary-4};
+  color: white;
+}
 mat-card {
   width: 30%;
 }
@@ -20,4 +26,14 @@ mat-card {
   display: flex;
   flex-wrap: wrap;
   gap: 20px 4.8%;
+
+  mat-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    span.username {
+      font-weight: lighter;
+    }
+  }
 }

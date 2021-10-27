@@ -16,6 +16,7 @@
     <mat-list-item>
       <p mat-line>{{user.name}}</p>
       <p mat-line>@{{user.username}}</p>
+      <button mat-raised-button color class="diagonal-rounded-small">Connect</button>
     </mat-list-item>
   </mat-list>
 </ng-container>
@@ -23,7 +24,8 @@
 <ng-template #userCards>
   <div class="user-cards">
     <mat-card *ngFor="let user of users; trackBy: trackByFunction">
-      {{user.name}}
+      <span>{{user.name}}</span><span class="username">@{{user.username}}</span>
+      <button mat-raised-button  class="diagonal-rounded-small">Connect</button>
     </mat-card>
   </div>
 </ng-template>
