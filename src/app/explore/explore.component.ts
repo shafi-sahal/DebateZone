@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { of, Subscription } from 'rxjs';
-import { debounceTime, filter, switchMap} from 'rxjs/operators';
+import { debounceTime, switchMap} from 'rxjs/operators';
 import { DeviceTypeChecker } from '../device-type-checker.service';
 import { regexes } from '../shared/datasets';
 import { User } from '../shared/models/user.model';
@@ -17,6 +17,7 @@ import { ExploreService } from './explore.service';
 export class ExploreComponent implements AfterViewInit, OnDestroy {
   users: User[] = [];
   searchBar = new FormControl();
+  isLoading = false;
   private subscriptions = new Subscription();
 
   constructor(
@@ -37,8 +38,9 @@ export class ExploreComponent implements AfterViewInit, OnDestroy {
     let searchTermCache = '';
     this.subscriptions.add(this.searchBar.valueChanges.pipe(
       debounceTime(400),
-      filter((searchTerm: string) => searchTerm.length > 0),
       switchMap((searchTerm: string) => {
+        if (!searchTerm.length) return of(null);
+        this.isLoading = true;
         searchTerm = searchTerm.trim();
         const isUsernameSearchTerm =
           searchTerm.includes('@') || searchTerm.includes('_') || searchTerm.includes('.') || /\d/.test(searchTerm)
@@ -56,6 +58,7 @@ export class ExploreComponent implements AfterViewInit, OnDestroy {
         return this.exploreService.fetchUsers(searchTerm);
       })
     ).subscribe(users => {
+      this.isLoading = false;
       if (users === null) return;
       this.users = users;
       this.changeDetector.markForCheck();

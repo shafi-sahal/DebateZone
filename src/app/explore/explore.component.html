@@ -1,6 +1,9 @@
 <mat-form-field appearance="outline">
   <mat-label>Search debaters</mat-label>
-  <input #search matInput [formControl]="searchBar">
+  <div class="container-search">
+    <input #search matInput [formControl]="searchBar">
+    <mat-spinner *ngIf="isLoading" [diameter]="20"></mat-spinner>
+  </div>
   <span matPrefix>
     <div class="container-search-icon">
       <mat-icon>search</mat-icon>&nbsp;&nbsp;&nbsp;
