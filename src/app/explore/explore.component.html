@@ -24,7 +24,7 @@
 <ng-template #userCards>
   <div class="user-cards">
     <mat-card *ngFor="let user of users; trackBy: trackByFunction">
-      <span>{{user.name}}</span><span class="username">@{{user.username}}</span>
+      <span class="name">{{user.name}}</span><span class="username">@{{user.username}}</span>
       <button mat-raised-button  class="diagonal-rounded-small">Connect</button>
     </mat-card>
   </div>
