@@ -28,6 +28,11 @@ body {
     p.username {
       font-weight: lighter;
     }
+    p.name, p.username {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
   }
 }
 
