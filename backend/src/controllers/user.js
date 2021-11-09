@@ -98,7 +98,6 @@ exports.updateUser = async (req, res) => {
 }
 
 const handleDuplicateUserErrors = error => {
-  console.log(error);
   const duplicateField = error.errors[0].path.split('.')[1];
 
   if (duplicateField === 'username') return 'Username already exists. Try again';
