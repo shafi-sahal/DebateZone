@@ -4,6 +4,7 @@ const compression = require('compression');
 const app = express();
 require('./database/connection');
 const userRoutes = require('./routes/user');
+const connectionRoutes = require('./routes/connection');
 const path = require('path');
 
 app.use(express.json());
@@ -21,6 +22,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/user/', userRoutes);
+app.use('/api/connection', connectionRoutes);
 app.use((req, res) => res.sendFile(path.join(__dirname, '../frontend', 'index.html')));
 
 module.exports = app;

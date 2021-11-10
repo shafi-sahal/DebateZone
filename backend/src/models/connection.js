@@ -18,7 +18,7 @@ module.exports = sequelize.define('connection', {
     allownull: false
   },
   status: {
-    type: Sequelize.TINYINT(1)
+    type: Sequelize.TINYINT(1),
     allownull: false
   }
 });
