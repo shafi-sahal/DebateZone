@@ -145,10 +145,10 @@ const getQueryToSearchUsers = (query, queryMetaData, likeQuerySnapshot) => {
 
   let queryToSearchUsers = '';
   likeQueries.forEach((likeQuery, index) => {
-    queryToSearchUsers += `SELECT name, username FROM users WHERE name LIKE ${likeQuery} OR username LIKE ${likeQuery} UNION `;
+    queryToSearchUsers += `SELECT id, name, username FROM users WHERE name LIKE ${likeQuery} OR username LIKE ${likeQuery} UNION `;
     if (index === 1) {
       queryToSearchUsers += `
-        SELECT name, username FROM users
+        SELECT id, name, username FROM users
         WHERE username LIKE ${likeQuerySnapshot.partAfterUnderscoreStartsWithQuery}
         OR username LIKE ${likeQuerySnapshot.partAfterFullStopStartsWithQuery}
       `;
@@ -159,7 +159,7 @@ const getQueryToSearchUsers = (query, queryMetaData, likeQuerySnapshot) => {
   if (queryMetaData.containsAllowedNonAlphabet) return queryToSearchUsers.slice(0, -6);
 
   queryToSearchUsers += `
-    SELECT name, username FROM users
+    SELECT id, name, username FROM users
     WHERE REPLACE(name, ' ', '') LIKE ${likeQuerySnapshot.namesWithQueryInBetween}
     OR REGEXP_REPLACE(username, '${getRegexToReplace()}', '') LIKE ${likeQuerySnapshot.namesWithQueryInBetween}
   `;
@@ -181,13 +181,13 @@ const getQueryToSearchUsersByUsername = (query, queryMetaData, likeQuerySnapshot
 
   let queryToSearchUsers = '';
   likeQueries.forEach(likeQuery =>
-    queryToSearchUsers += `SELECT name, username FROM users WHERE username LIKE ${likeQuery} UNION `
+    queryToSearchUsers += `SELECT id, name, username FROM users WHERE username LIKE ${likeQuery} UNION `
   );
 
   if (queryMetaData.containsAllowedNonAlphabet) return queryToSearchUsers.slice(0, -6);
 
   queryToSearchUsers += `
-    SELECT name, username FROM users
+    SELECT id, name, username FROM users
     WHERE REGEXP_REPLACE(username, '${getRegexToReplace()}', '') LIKE ${likeQuerySnapshot.namesWithQueryInBetween}
   `;
 
@@ -204,7 +204,7 @@ const getQueryToSearchUsersCompact = (query, hasAmpersand, likeQuerySnapshot) =>
   if (hasAmpersand) {
     likeQueries.forEach(likeQuery => {
       queryToSearchUsers += `
-        SELECT name, username FROM users
+        SELECT id, name, username FROM users
         WHERE REGEXP_REPLACE(username, '[0-9]|[_\\.]', '') LIKE ${likeQuery}
       `;
       queryToSearchUsers += ' UNION ';
@@ -212,7 +212,7 @@ const getQueryToSearchUsersCompact = (query, hasAmpersand, likeQuerySnapshot) =>
   } else {
     likeQueries.forEach(likeQuery => {
       queryToSearchUsers += `
-        SELECT name, username FROM users
+        SELECT id, name, username FROM users
         WHERE REPLACE(name, ' ', '') LIKE ${likeQuery}
         OR REGEXP_REPLACE(username, '[0-9]|[_\\.]', '') LIKE ${likeQuery}
       `;
