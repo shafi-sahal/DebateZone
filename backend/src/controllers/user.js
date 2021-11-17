@@ -82,8 +82,12 @@ exports.fetchUsers = async (req, res) => {
 
   queryToSearchUsers += ' LIMIT 9';
 
-  const users = await sequelize.query(queryToSearchUsers, { model: User })
-  res.send(users);
+  try {
+    const users = await sequelize.query(queryToSearchUsers, { model: User });
+    res.send(users);
+  } catch(error) {
+    errorHandler(res, new Error(error));
+  }
 }
 
 exports.updateUser = async (req, res) => {
