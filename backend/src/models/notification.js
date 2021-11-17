@@ -1,23 +1,19 @@
 'use-strict';
 const Sequelize = require('sequelize');
 
-module.exports = sequelize.define('connection', {
+module.exports = sequelize.define('notification',  {
   id: {
     type: Sequelize.INTEGER(11),
     allownull: false,
     autoIncrement: true,
     primaryKey: true
   },
-  sender_id: {
+  event_id: {
     type: Sequelize.INTEGER(11),
     allownull: false
   },
-  receiver_id: {
-    type: Sequelize.INTEGER(11),
-    allownull: false
-  },
-  status: {
+  event: {
     type: Sequelize.TINYINT(1),
     allownull: false
   }
-});
+})
