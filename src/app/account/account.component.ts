@@ -56,7 +56,7 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
         validators: [Validators.required, validateMobile(this.country.code as CountryCode)]
       }
     ]
-  })
+  });
 
   constructor(
     public deviceTypeChecker: DeviceTypeChecker,
@@ -77,13 +77,11 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
   get mobile(): AbstractControl | null { return this.form.get('mobile'); }
 
   ngOnInit(): void {
-    this.subscriptions
-      .add(this.deviceTypeChecker.isMobile.subscribe(isMobile => this.isMobile = isMobile))
-      .add(this.homeService.user.subscribe(user => {
+    this.subscriptions.add(this.deviceTypeChecker.isMobile.subscribe(isMobile => this.isMobile = isMobile));
+    this.subscriptions.add(this.homeService.user.subscribe(user => {
         if(!user) return;
         this.prepareForm(user);
-      })
-    );
+    }));
   }
 
   ngAfterViewInit(): void {
@@ -139,18 +137,16 @@ export class AccountComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     );
 
-    this.subscriptions
-      .add(dialogRef.componentInstance.countryChanged.subscribe(country => {
+    this.subscriptions.add(dialogRef.componentInstance.countryChanged.subscribe(country => {
         this.country = country;
         this.changeMobileValidator();
         this.changeDetector.detectChanges();
-      }))
-      .add(dialogRef.componentInstance.updateClicked.subscribe(() => this.updateUserMobile(dialogRef)))
-      .add(dialogRef.afterClosed().subscribe(() => {
+    }));
+    this.subscriptions.add(dialogRef.componentInstance.updateClicked.subscribe(() => this.updateUserMobile(dialogRef)));
+    this.subscriptions.add(dialogRef.afterClosed().subscribe(() => {
         this.changeMobileValidator();
         this.mobile?.setValue(this.user.mobile);
-      })
-    );
+    }));
   }
 
   updateUser(): void {
