@@ -13,6 +13,6 @@ router.post('/signup', userSignUpDataValidation, encryptPassword, UserController
 router.put('', userUpdateDataValidation, checkAuth, UserController.updateUser);
 router.get('', checkAuth, UserController.fetchUser);
 router.get('/is-duplicate', UserController.isDuplicate);
-router.get('/search', searchQueryFormatter, UserController.fetchUsers);
+router.get('/search', checkAuth, searchQueryFormatter, UserController.fetchUsers);
 
 module.exports = router;

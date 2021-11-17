@@ -22,7 +22,7 @@ export class ExploreComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     public deviceTypeChecker: DeviceTypeChecker,
-    private exploreService: ExploreService,
+    public exploreService: ExploreService,
     private changeDetector: ChangeDetectorRef
   ) {}
 
