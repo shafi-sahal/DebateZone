@@ -50,7 +50,11 @@ mat-card {
     span.username {
       font-weight: lighter;
     }
+
   }
+}
+button.mat-raised-button {
+  width: 30%;
 }
 
 @media only screen and (min-width: #{screen-sizes.$small-desktop-width}) {

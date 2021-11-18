@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 import { of, Subscription } from 'rxjs';
 import { debounceTime, switchMap} from 'rxjs/operators';
 import { DeviceTypeChecker } from '../device-type-checker.service';
+import { SessionService } from '../session.service';
 import { regexes } from '../shared/datasets';
 import { User } from '../shared/models/user.model';
 import { ExploreService } from './explore.service';
@@ -23,6 +24,7 @@ export class ExploreComponent implements AfterViewInit, OnDestroy {
   constructor(
     public deviceTypeChecker: DeviceTypeChecker,
     public exploreService: ExploreService,
+    public sessionService: SessionService,
     private changeDetector: ChangeDetectorRef
   ) {}
 
@@ -32,6 +34,10 @@ export class ExploreComponent implements AfterViewInit, OnDestroy {
 
   trackByFunction(index: number, user: User): string {
     return user.username;
+  }
+
+  getButtonText(username: string): string {
+    return username === this.sessionService.user?.username ? 'You' : 'Connect';
   }
 
   private initSearchBar(): void {
