@@ -4,7 +4,6 @@ const Notification = require('../models/notification');
 const errorHandler = require('../shared/error-handler');
 
 exports.sendConnectionRequest = async(req, res) => {
-  console.log('reached');
   const senderId = req.userId;
   const { receiverId } = req.body;
   try {
